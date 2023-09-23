@@ -16,7 +16,7 @@ const HeaderElement = () => {
   };
 
   return (
-    <div>
+    <div className=" w-2/3">
       <div className=" p-4 flex justify-between items-center">
         {builderHeader.map((item) => {
           return (
@@ -35,7 +35,7 @@ const HeaderElement = () => {
         })}
       </div>
 
-      <div className="bg-white p-4 text-black mt-4">
+      <div className="bg-white p-4 text-black rounded">
        <ShowElements currentTab={activeTab} />
       </div>
     </div>
