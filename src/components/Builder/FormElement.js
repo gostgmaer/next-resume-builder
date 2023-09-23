@@ -22,7 +22,7 @@ const HeaderElement = () => {
           return (
             <div
               key={item.id}
-              className={`cursor-pointer px-4 py-1   ${
+              className={`cursor-pointer px-4 py-1 capitalize  ${
                 activeTab === item.value
                   ? "scale-105 border-b-2 border-blue-600 text-blue-600"
                   : "text-gray-900 hover:text-gray-500 "
