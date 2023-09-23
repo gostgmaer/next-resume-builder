@@ -9,7 +9,7 @@ const Others = () => {
     <div>
       <Languages/>
       <Interest/>
-      <Achivements/>
+      {/* <Achivements/> */}
       <Referances/>
     </div>
   )
