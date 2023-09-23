@@ -1,3 +1,5 @@
+"use client"
+import RepeatableBlock from '@/components/resue'
 import Image from 'next/image'
 
 export default function Home() {
@@ -108,6 +110,7 @@ export default function Home() {
           </p>
         </a>
       </div>
+      <RepeatableBlock/>
     </main>
   )
 }
