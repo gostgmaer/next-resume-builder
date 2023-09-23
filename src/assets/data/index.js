@@ -28,5 +28,10 @@ export const builderHeader = [
     id: 6,
     name: "Others",
     value: "others",
+  },
+  {
+    id: 7,
+    name: "view resume",
+    value: "view",
   }
 ];

@@ -7,6 +7,8 @@ import Projects from "./Form/Projects";
 import Achivements from "./Form/Others/Achivements";
 import Others from "./Form/Others/Index";
 
+import Resume from "./view/ViewResume";
+
 const ShowElements = ({ currentTab }) => {
   switch (currentTab) {
     case "basic info":
@@ -21,6 +23,9 @@ const ShowElements = ({ currentTab }) => {
       return <Projects />;
     case "others":
       return <Others />;
+
+      case "view":
+        return <Resume />;
 
     default:
       return null;
