@@ -179,7 +179,7 @@ const Educations = () => {
           </div>
         ))}
         <div className="mb-6">
-          <h3 className="text-lg font-bold mb-2">Add School/College</h3>
+          {/* <h3 className="text-lg font-bold mb-2">Add School/College</h3> */}
           <div className="mb-6">
             {/* Input fields for the currentExperience */}
           </div>
@@ -188,7 +188,7 @@ const Educations = () => {
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleAdd}
           >
-            Add Qualification
+            Add School/College
           </button>
         </div>
         <div className="flex items-center justify-between">

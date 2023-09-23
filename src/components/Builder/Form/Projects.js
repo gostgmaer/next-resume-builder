@@ -174,7 +174,7 @@ const Projects = () => {
           </div>
         ))}
         <div className="mb-6">
-          <h3 className="text-lg font-bold mb-2">Add Project</h3>
+          {/* <h3 className="text-lg font-bold mb-2">Add Project</h3> */}
           <div className="mb-6">
             {/* Input fields for the currentExperience */}
           </div>
