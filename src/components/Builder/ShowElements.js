@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import BasicInfo from "./Form/BasicInfo";
-import Experiances from "./Form/Experiances";
+import Experiances from "./Form/experiances/Experiances";
 import Educations from "./Form/Educations";
 import Skills from "./Form/Skills";
 import Projects from "./Form/Projects";
@@ -8,24 +8,26 @@ import Achivements from "./Form/Others/Achivements";
 import Others from "./Form/Others/Index";
 
 import Resume from "./view/ViewResume";
+import { useGlobalAppContext } from "@/context/context";
 
-const ShowElements = ({ currentTab,setActiveTab }) => {
+const ShowElements = ({ currentTab }) => {
+  const { fetchResumedata, currentData,updateResumeRecord,activeTab, setActiveTab } = useGlobalAppContext();
 
   const [id, setId] = useState(undefined);
 
   switch (currentTab) {
     case "basic info":
-      return <BasicInfo setActiveTab={setActiveTab} id={id} setId={setId} />;
+      return <BasicInfo  id={id} setId={setId} />;
     case "work experience":
-      return <Experiances setActiveTab={setActiveTab} id={id}  />;
+      return <Experiances  id={id}  />;
     case "education":
-      return <Educations setActiveTab={setActiveTab} id={id}  />;
+      return <Educations  id={id}  />;
     case "skills":
-      return <Skills setActiveTab={setActiveTab} id={id}  />;
+      return <Skills  id={id}  />;
     case "projects":
-      return <Projects setActiveTab={setActiveTab} id={id}  />;
+      return <Projects  id={id}  />;
     case "others":
-      return <Others setActiveTab={setActiveTab} id={id}  />;
+      return <Others id={id}  />;
 
       case "view":
         return <Resume  id={id} />;

@@ -1,9 +1,20 @@
 import { useGlobalAppContext } from "@/context/context";
+import Loader from "@/utils/Loader";
 import { getSingleRecord, post } from "@/utils/http";
 import React, { useEffect, useState } from "react";
 
-const BasicInfo = ({ setActiveTab, id, setId }) => {
-  const { fetchResumedata, currentData } = useGlobalAppContext();
+const BasicInfo = ({ id, setId }) => {
+  const {
+    fetchResumedata,
+    currentData,
+    updateResumeRecord,
+    activeTab,
+    setActiveTab,
+    loader,
+    loaderFalse,
+    loaderTrue,
+  } = useGlobalAppContext();
+
   const [formData, setFormData] = useState({
     name: "",
     position: "",

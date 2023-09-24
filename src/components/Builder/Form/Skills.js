@@ -1,6 +1,11 @@
-import React, { useState } from "react";
+import { useGlobalAppContext } from "@/context/context";
+import { findIndex } from "@/utils/custom";
+import { put } from "@/utils/http";
+import React, { useEffect, useState } from "react";
 
-const Skills = ({setActiveTab,id}) => {
+const Skills = ({id}) => {
+  const { fetchResumedata, currentData,updateResumeRecord,activeTab, setActiveTab } = useGlobalAppContext();
+
   const [formData, setFormData] = useState({
     title: "",
     name: "",
@@ -8,7 +13,8 @@ const Skills = ({setActiveTab,id}) => {
     last_used: "",
     scale: "",
   });
-  const [selectedYear, setSelectedYear] = useState("");
+  const [mydata, setMydata] = useState(null);
+
 
 
 
@@ -37,11 +43,74 @@ const Skills = ({setActiveTab,id}) => {
     setSkills(updatedExperiences);
   };
 
+  
+  const fetchResumeData = async () => {
+    const res = await fetchResumedata(id);
+    setMydata(res);
+    if (res?.skill) {
+      setSkills(res.skill)
+     
+    }
+    if (currentData) {
+      // console.log(currentData);
+      // console.log(formData);
+    }
+  };
+
+  const updateRecord = async () => {
+    try {
+      // Replace '/yourCollectionName/${recordId}.json' with your desired API endpoint
+      console.log(mydata);
+      var data = {
+      ...mydata,  skill:skills
+      }
+      const response = await put(`/resume/${id}.json`, data);
+      console.log('Record updated successfully:', response);
+    } catch (error) {
+      console.error('Error updating record:', error);
+    }   
+  };
+
+
+
+  useEffect(() => {
+    if (id) {
+      fetchResumeData();
+    }
+  }, [id]);
+
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add your logic to save the form data here
     console.log(skills);
+    updateRecord()
   };
+
+  const [editIndex, setEditIndex] = useState(-1);
+
+  const handleEdit = (index) => {
+    setEditIndex(index);
+    const editdata = findIndex(skills, index);
+    setFormData(editdata);
+  };
+  const handleSaveEdit = () => {
+    if (editIndex !== -1) {
+      const updatedData = [...skills];
+      updatedData[editIndex] = formData;
+      setSkills(updatedData);
+      setEditIndex(-1);
+      setFormData({
+        title: "",
+        name: "",
+        total_years: "",
+        last_used: "",
+        scale: "",
+      });
+    }
+  };
+
 
   return (
     <div className="w-full max-w-screen-xl mx-auto">
@@ -209,3 +278,43 @@ const SkillForm = ({formData,handleChange}) => {
   </form>
 </div>
 }
+
+
+
+const SkillCard = ({
+  title,
+  name,
+  total_years,
+  last_used,
+  scale,
+  onEdit,
+  onDelete,
+}) => {
+  return (
+    <div className="bg-white shadow-lg rounded-lg overflow-hidden m-4 p-4">
+      <div className="mb-4">
+        <h2 className="text-xl font-semibold">{title}</h2>
+        <p className="text-gray-600">{name}</p>
+        <p className="text-gray-600">Total Years: {total_years}</p>
+        <p className="text-gray-600">Last Used: {last_used}</p>
+        <p className="text-gray-600">Scale: {scale}</p>
+      </div>
+      <div className="mt-auto">
+        <div className="flex justify-between">
+          <button
+            onClick={() => onEdit()}
+            className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105"
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => onDelete()}
+            className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 ml-2"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};

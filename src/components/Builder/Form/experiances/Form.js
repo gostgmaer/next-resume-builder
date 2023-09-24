@@ -1,23 +1,29 @@
 import { useGlobalAppContext } from "@/context/context";
+import Loader from "@/utils/Loader";
 import { get, getSingleRecord, put } from "@/utils/http";
 import React, { useEffect, useState } from "react";
+import ExperienceCard from "./Card";
 
-const Experiances = ({setActiveTab,id}) => {
-  const { fetchResumedata, currentData } = useGlobalAppContext();
-  const [formData, setFormData] = useState({
-    title: "",
-    name: "",
-    company: "",
-    experienceLetter: "",
-    location: "",
-    startDate: "",
-    endDate: "",
-  });
+const Experiances = ({ id }) => {
+  const {
+    fetchResumedata,
+    currentData,
+    updateResumeRecord,
+    activeTab,
+    setActiveTab,
+    loader,
+  } = useGlobalAppContext();
   const [mydata, setMydata] = useState(null);
 
-  const [workExperiences, setWorkExperiences] = useState([
-
-  ]);
+  const [workExperiences, setWorkExperiences] = useState([{
+    title: 'Software Engineer',
+    name: 'John Doe',
+    company: 'ABC Corp',
+    experienceLetter: 'https://example.com/experience-letter.pdf',
+    location: 'New York, NY',
+    startDate: 'January 2020',
+    endDate: 'Present',
+  }]);
   const [currentExperience, setCurrentExperience] = useState({
     title: "",
     name: "",
@@ -27,7 +33,6 @@ const Experiances = ({setActiveTab,id}) => {
     startDate: "",
     endDate: "",
   });
-  const [isOpen, setIsOpen] = useState(true); // State to track the open/closed state
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -58,31 +63,40 @@ const Experiances = ({setActiveTab,id}) => {
     try {
       // Replace '/yourCollectionName/${recordId}.json' with your desired API endpoint
       var expriances = {
-      ...mydata,  experiances:workExperiences
-      }
+        ...mydata,
+        experiances: workExperiences,
+      };
       const response = await put(`/resume/${id}.json`, expriances);
-      console.log('Record updated successfully:', response);
+
+      return response;
     } catch (error) {
-      console.error('Error updating record:', error);
-    }   
+      console.error("Error updating record:", error);
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add your logic to save the form data here
     console.log(workExperiences);
-    updateRecord()
-    fetchResumeData()
+    try {
+      updateRecord(); // Replace with your collection name
+      setActiveTab("education");
+    } catch (error) {
+      console.error("Error getting data:", error);
+    }
   };
-
 
   const fetchResumeData = async () => {
     const res = await fetchResumedata(id);
     setMydata(res);
-    if (currentData) {
-      console.log(currentData);
-      console.log(formData);
+    console.log(res);
+    if (res.experiances) {
+      setWorkExperiences(res.experiances);
     }
+    // if (currentData) {
+    //   console.log(currentData);
+    //   console.log(formData);
+    // }
   };
 
   useEffect(() => {
@@ -90,6 +104,10 @@ const Experiances = ({setActiveTab,id}) => {
       fetchResumeData();
     }
   }, [id]);
+
+  if (loader) {
+    <Loader />;
+  }
 
   return (
     <div className="w-full max-w-screen-xl mx-auto">
@@ -119,7 +137,7 @@ const Experiances = ({setActiveTab,id}) => {
                   onSubmit={handleSubmit}
                 >
                   <h2 className="text-2xl font-bold mb-4">Work Experience</h2>
-             
+
                   <div className="mb-4">
                     <div className="mb-6 flex  items-center gap-10">
                       <div className="w-full ">
@@ -240,7 +258,6 @@ const Experiances = ({setActiveTab,id}) => {
                     </label>
                     <textarea
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                     
                       placeholder="Descriptions...."
                       id="title"
                       name="title"
@@ -267,13 +284,11 @@ const Experiances = ({setActiveTab,id}) => {
           </button>
         </div>
         <div className="flex items-center justify-between">
-        <button
+          <button
             className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="button"
             onClick={() => {
-              setWorkExperiences([
-                
-              ]);
+              setWorkExperiences([]);
               setCurrentExperience({
                 title: "",
                 name: "",
@@ -293,9 +308,11 @@ const Experiances = ({setActiveTab,id}) => {
           >
             Save
           </button>
-       
         </div>
       </form>
+
+
+    
     </div>
   );
 };
@@ -304,7 +321,7 @@ export default Experiances;
 
 export async function getServerSideProps() {
   // Fetch data from an API
-  const response = await get('/resume.json');
+  const response = await get("/resume.json");
   const data = await response.json();
 
   // Pass the data as a prop to the page component

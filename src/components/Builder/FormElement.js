@@ -2,9 +2,10 @@
 import { builderHeader } from "@/assets/data";
 import React, { useState } from "react";
 import ShowElements from "./ShowElements";
+import { useGlobalAppContext } from "@/context/context";
 
 const HeaderElement = () => {
-  const [activeTab, setActiveTab] = useState("basic info");
+  const { fetchResumedata, currentData,updateResumeRecord,activeTab, setActiveTab } = useGlobalAppContext();
   const [isDivVisible, setIsDivVisible] = useState(false);
   const [id, setId] = useState('');
 
@@ -37,7 +38,7 @@ const HeaderElement = () => {
       </div>
 
       <div className="bg-white p-4 text-black rounded">
-       <ShowElements currentTab={activeTab} setActiveTab={setActiveTab} />
+       <ShowElements currentTab={activeTab} />
       </div>
     </div>
   );
