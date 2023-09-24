@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import BasicInfo from "./Form/BasicInfo";
 import Experiances from "./Form/Experiances";
 import Educations from "./Form/Educations";
@@ -9,23 +9,26 @@ import Others from "./Form/Others/Index";
 
 import Resume from "./view/ViewResume";
 
-const ShowElements = ({ currentTab }) => {
+const ShowElements = ({ currentTab,setActiveTab }) => {
+
+  const [id, setId] = useState('');
+
   switch (currentTab) {
     case "basic info":
-      return <BasicInfo />;
+      return <BasicInfo setActiveTab={setActiveTab} id={id} setId={setId} />;
     case "work experience":
-      return <Experiances />;
+      return <Experiances setActiveTab={setActiveTab} id={id}  />;
     case "education":
-      return <Educations />;
+      return <Educations setActiveTab={setActiveTab} id={id}  />;
     case "skills":
-      return <Skills />;
+      return <Skills setActiveTab={setActiveTab} id={id}  />;
     case "projects":
-      return <Projects />;
+      return <Projects setActiveTab={setActiveTab} id={id}  />;
     case "others":
-      return <Others />;
+      return <Others setActiveTab={setActiveTab} id={id}  />;
 
       case "view":
-        return <Resume />;
+        return <Resume  id={id} />;
 
     default:
       return null;

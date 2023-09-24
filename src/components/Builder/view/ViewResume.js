@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const Resume = () => {
+const Resume = ({id}) => {
   const [resumeData, setResumeData] = useState(null);
 
   useEffect(() => {

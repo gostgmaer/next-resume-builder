@@ -2,6 +2,7 @@ import Header from "@/components/header/Header";
 import "./globals.css";
 import { Roboto } from "next/font/google";
 import Footer from "@/components/footer/Footer";
+import { AppProvider } from "@/context/context";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -15,12 +16,14 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={roboto.className}>
-      <Header/>
-        <div className=" bg-slate-50 min-h-screen">{children}</div>
-        <Footer/>
-      </body>
-    </html>
+    <AppProvider>
+      <html lang="en">
+        <body className={roboto.className}>
+          <Header />
+          <div className=" bg-slate-50 min-h-screen">{children}</div>
+          <Footer />
+        </body>
+      </html>
+    </AppProvider>
   );
 }
