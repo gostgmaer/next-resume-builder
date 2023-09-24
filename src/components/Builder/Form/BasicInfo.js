@@ -226,3 +226,30 @@ const BasicInfo = ({ id, setId }) => {
 };
 
 export default BasicInfo;
+
+const BaiscInfoBlock = ({resumeData}) => {
+  return (
+    <section className="bg-white p-4 shadow-lg rounded-lg my-4">
+      <h1 className="text-3xl font-bold mb-2">{resumeData.basics.name}</h1>
+      <p className="text-xl text-indigo-600 mb-4">{resumeData.basics.label}</p>
+      <p className="mb-2">{resumeData.basics.email}</p>
+      <p className="mb-2">{resumeData.basics.phone}</p>
+      <p className="mb-2">
+        Website:{" "}
+        <a
+          href={resumeData.basics.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-indigo-600 hover:underline"
+        >
+          {resumeData.basics.url}
+        </a>
+      </p>
+      <p className="mb-2">
+        Location: {resumeData.basics.location.city},{" "}
+        {resumeData.basics.location.region},{" "}
+        {resumeData.basics.location.countryCode}
+      </p>
+    </section>
+  );
+};
