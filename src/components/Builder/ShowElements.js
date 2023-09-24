@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import BasicInfo from "./Form/BasicInfo";
-import Experiances from "./Form/Experiances";
+import Experiances from "./Form/experiances/Experiances";
 import Educations from "./Form/Educations";
 import Skills from "./Form/Skills";
 import Projects from "./Form/Projects";

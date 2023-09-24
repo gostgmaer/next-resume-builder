@@ -1,4 +1,5 @@
 import { useGlobalAppContext } from "@/context/context";
+import { findIndex } from "@/utils/custom";
 import { put } from "@/utils/http";
 import React, { useEffect, useState } from "react";
 
@@ -87,6 +88,28 @@ const Skills = ({id}) => {
     updateRecord()
   };
 
+  const [editIndex, setEditIndex] = useState(-1);
+
+  const handleEdit = (index) => {
+    setEditIndex(index);
+    const editdata = findIndex(skills, index);
+    setFormData(editdata);
+  };
+  const handleSaveEdit = () => {
+    if (editIndex !== -1) {
+      const updatedData = [...skills];
+      updatedData[editIndex] = formData;
+      setSkills(updatedData);
+      setEditIndex(-1);
+      setFormData({
+        title: "",
+        name: "",
+        total_years: "",
+        last_used: "",
+        scale: "",
+      });
+    }
+  };
 
 
   return (
@@ -255,3 +278,43 @@ const SkillForm = ({formData,handleChange}) => {
   </form>
 </div>
 }
+
+
+
+const SkillCard = ({
+  title,
+  name,
+  total_years,
+  last_used,
+  scale,
+  onEdit,
+  onDelete,
+}) => {
+  return (
+    <div className="bg-white shadow-lg rounded-lg overflow-hidden m-4 p-4">
+      <div className="mb-4">
+        <h2 className="text-xl font-semibold">{title}</h2>
+        <p className="text-gray-600">{name}</p>
+        <p className="text-gray-600">Total Years: {total_years}</p>
+        <p className="text-gray-600">Last Used: {last_used}</p>
+        <p className="text-gray-600">Scale: {scale}</p>
+      </div>
+      <div className="mt-auto">
+        <div className="flex justify-between">
+          <button
+            onClick={() => onEdit()}
+            className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105"
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => onDelete()}
+            className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 ml-2"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};

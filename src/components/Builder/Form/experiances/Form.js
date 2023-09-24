@@ -2,6 +2,7 @@ import { useGlobalAppContext } from "@/context/context";
 import Loader from "@/utils/Loader";
 import { get, getSingleRecord, put } from "@/utils/http";
 import React, { useEffect, useState } from "react";
+import ExperienceCard from "./Card";
 
 const Experiances = ({ id }) => {
   const {
@@ -14,7 +15,15 @@ const Experiances = ({ id }) => {
   } = useGlobalAppContext();
   const [mydata, setMydata] = useState(null);
 
-  const [workExperiences, setWorkExperiences] = useState([]);
+  const [workExperiences, setWorkExperiences] = useState([{
+    title: 'Software Engineer',
+    name: 'John Doe',
+    company: 'ABC Corp',
+    experienceLetter: 'https://example.com/experience-letter.pdf',
+    location: 'New York, NY',
+    startDate: 'January 2020',
+    endDate: 'Present',
+  }]);
   const [currentExperience, setCurrentExperience] = useState({
     title: "",
     name: "",
@@ -301,6 +310,9 @@ const Experiances = ({ id }) => {
           </button>
         </div>
       </form>
+
+
+    
     </div>
   );
 };
