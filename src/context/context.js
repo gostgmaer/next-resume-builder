@@ -21,6 +21,7 @@ const AppProvider = ({ children }) => {
     try {
       const data = await getSingleRecord("/resume", id); // Replace with your collection name
       setCurrentData(data);
+      console.log(data);
       return data;
     } catch (error) {
       console.error("Error getting data:", error);

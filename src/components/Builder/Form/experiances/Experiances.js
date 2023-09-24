@@ -100,7 +100,7 @@ const Experiances = ({ id }) => {
         experiances: workExperiences,
       };
       const response = await put(`/resume/${id}.json`, expriances);
-
+      setActiveTab("education");
       return response;
     } catch (error) {
       console.error("Error updating record:", error);
@@ -113,7 +113,7 @@ const Experiances = ({ id }) => {
     console.log(workExperiences);
     try {
       updateRecord(); // Replace with your collection name
-      setActiveTab("education");
+      
     } catch (error) {
       console.error("Error getting data:", error);
     }
