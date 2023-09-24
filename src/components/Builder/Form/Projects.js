@@ -177,7 +177,7 @@ const Projects = ({ id }) => {
                     type="button"
                     onClick={handleAdd}
                   >
-                    Add Skill
+                    Add Project
                   </button>
                 ) : (
                   <button
@@ -185,7 +185,7 @@ const Projects = ({ id }) => {
                     type="button"
                     onClick={handleSaveEdit}
                   >
-                    Update Skill
+                    Update Project
                   </button>
                 )}
               </div>
