@@ -1,6 +1,6 @@
 import { useGlobalAppContext } from "@/context/context";
 import { findIndex } from "@/utils/custom";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Projects = ({ id }) => {
   const {
@@ -19,7 +19,7 @@ const Projects = ({ id }) => {
     repositoryUrl: "",
     description: "",
   });
-
+  const [mydata, setMydata] = useState(null);
   const [projects, setProjects] = useState([]);
   // const [projetcs, setWorkExperiences] = useState();
 
@@ -46,11 +46,29 @@ const Projects = ({ id }) => {
     updatedExperiences.splice(index, 1);
     setProjects(updatedExperiences);
   };
+  const fetchResumeData = async () => {
+    const res = await fetchResumedata(id);
+    setMydata(res);
+    console.log(res);
+    if (res?.projetcts) {
+      setProjects(res.projects);
+    }
+    if (currentData) {
+      // console.log(currentData);
+      // console.log(formData);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add your logic to save the form data here
     console.log(projects);
+    var body = {
+      ...mydata,
+      projects: projects,
+    };
+    updateResumeRecord("others", body, id);
+  
   };
 
   const [editIndex, setEditIndex] = useState(-1);
@@ -76,6 +94,13 @@ const Projects = ({ id }) => {
       });
     }
   };
+
+
+  useEffect(() => {
+    if (id) {
+      fetchResumeData();
+    }
+  }, [id]);
   return (
     <div className="w-full max-w-screen-xl mx-auto">
       <h2 className="text-2xl font-bold mb-4">Projects</h2>
@@ -223,7 +248,8 @@ const Projects = ({ id }) => {
           </button>
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="submit"
+            type="button"
+            onClick={handleSubmit}
           >
             Save
           </button>

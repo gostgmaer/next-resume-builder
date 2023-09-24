@@ -67,6 +67,7 @@ const Skills = ({ id }) => {
         skill: skills,
       };
       const response = await put(`/resume/${id}.json`, data);
+      setActiveTab('projects')
       console.log("Record updated successfully:", response);
     } catch (error) {
       console.error("Error updating record:", error);
