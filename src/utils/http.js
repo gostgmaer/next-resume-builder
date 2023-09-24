@@ -16,6 +16,15 @@ export const get = async (url) => {
   }
 };
 
+export const getSingleRecord = async (endpoint,id) => {
+  try {
+    const response = await axiosInstance.get(endpoint+'/'+id+'.json');
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const post = async (url, data) => {
   try {
     const response = await axiosInstance.post(url, data);

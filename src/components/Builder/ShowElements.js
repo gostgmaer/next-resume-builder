@@ -11,7 +11,7 @@ import Resume from "./view/ViewResume";
 
 const ShowElements = ({ currentTab,setActiveTab }) => {
 
-  const [id, setId] = useState('');
+  const [id, setId] = useState(undefined);
 
   switch (currentTab) {
     case "basic info":

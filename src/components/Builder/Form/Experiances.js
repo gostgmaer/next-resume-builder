@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import { useGlobalAppContext } from "@/context/context";
+import { get, getSingleRecord, put } from "@/utils/http";
+import React, { useEffect, useState } from "react";
 
 const Experiances = ({setActiveTab,id}) => {
+  const { fetchResumedata, currentData } = useGlobalAppContext();
   const [formData, setFormData] = useState({
     title: "",
     name: "",
@@ -10,6 +13,7 @@ const Experiances = ({setActiveTab,id}) => {
     startDate: "",
     endDate: "",
   });
+  const [mydata, setMydata] = useState(null);
 
   const [workExperiences, setWorkExperiences] = useState([
 
@@ -50,11 +54,42 @@ const Experiances = ({setActiveTab,id}) => {
     setWorkExperiences(updatedExperiences);
   };
 
+  const updateRecord = async () => {
+    try {
+      // Replace '/yourCollectionName/${recordId}.json' with your desired API endpoint
+      var expriances = {
+      ...mydata,  experiances:workExperiences
+      }
+      const response = await put(`/resume/${id}.json`, expriances);
+      console.log('Record updated successfully:', response);
+    } catch (error) {
+      console.error('Error updating record:', error);
+    }   
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add your logic to save the form data here
     console.log(workExperiences);
+    updateRecord()
+    fetchResumeData()
   };
+
+
+  const fetchResumeData = async () => {
+    const res = await fetchResumedata(id);
+    setMydata(res);
+    if (currentData) {
+      console.log(currentData);
+      console.log(formData);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      fetchResumeData();
+    }
+  }, [id]);
 
   return (
     <div className="w-full max-w-screen-xl mx-auto">
@@ -266,3 +301,16 @@ const Experiances = ({setActiveTab,id}) => {
 };
 
 export default Experiances;
+
+export async function getServerSideProps() {
+  // Fetch data from an API
+  const response = await get('/resume.json');
+  const data = await response.json();
+
+  // Pass the data as a prop to the page component
+  return {
+    props: {
+      data,
+    },
+  };
+}
