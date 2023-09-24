@@ -1,14 +1,17 @@
-import React, { useState } from 'react'
+import { useGlobalAppContext } from "@/context/context";
+import { getSingleRecord, post } from "@/utils/http";
+import React, { useEffect, useState } from "react";
 
-const BasicInfo = () => {
+const BasicInfo = ({ setActiveTab, id, setId }) => {
+  const { fetchResumedata, currentData } = useGlobalAppContext();
   const [formData, setFormData] = useState({
-    name: '',
-    position: '',
-    email: '',
-    phone: '',
-    linkedin: '',
-    github: '',
-    website: '',
+    name: "",
+    position: "",
+    email: "",
+    phone: "",
+    linkedin: "",
+    github: "",
+    website: "",
   });
 
   const handleChange = (e) => {
@@ -16,36 +19,50 @@ const BasicInfo = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Add your logic to save the form data here
     console.log(formData);
+    try {
+      const data = await post("/resume.json", formData); // Replace with your collection name
+      setId(data.name);
+      setActiveTab("work experience");
+    } catch (error) {
+      console.error("Error getting data:", error);
+    }
   };
+
+  const fetchResumeData = async () => {
+    const res = await fetchResumedata(id);
+    console.log(res);
+    setFormData(res);
+    if (currentData) {
+      console.log(currentData);
+      console.log(formData);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      fetchResumeData();
+    }
+  }, [id]);
 
   return (
     <div className="w-full max-w-screen-xl mx-auto">
-      <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
+      <form
+        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        onSubmit={handleSubmit}
+      >
         <h2 className="text-2xl font-bold mb-4">Basic Information</h2>
         <div className="mb-4">
-        <div className="title mb-6  w-full">
-        <div className=" w-full">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="position">
-                Title
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                type="text"
-                placeholder="Title"
-                id="title"
-                name="title"
-                value={formData.position}
-                onChange={handleChange}
-              />
-            </div>
-        </div>
+          <div className="title mb-6  w-full"></div>
           <div className="mb-6 flex items-center gap-10">
             <div className=" w-full ">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="name"
+              >
                 Name
               </label>
               <input
@@ -59,7 +76,10 @@ const BasicInfo = () => {
               />
             </div>
             <div className=" w-full">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="position">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="position"
+              >
                 Position
               </label>
               <input
@@ -74,87 +94,111 @@ const BasicInfo = () => {
             </div>
           </div>
           <div className="contact flex item-center gap-10">
-          <div className="mb-6 w-full">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-              Email
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              type="email"
-              placeholder="Email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </div>
-       
-          <div className="mb-6 w-full ">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phone">
-              Phone
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              type="tel"
-              placeholder="Phone"
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-            />
-          </div>
+            <div className="mb-6 w-full">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="email"
+              >
+                Email
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="email"
+                placeholder="Email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="mb-6 w-full ">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="phone"
+              >
+                Phone
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="tel"
+                placeholder="Phone"
+                id="phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+              />
+            </div>
           </div>
           <div className="social-media flex item center gap-10">
-          <div className="mb-6 w-full">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="linkedin">
-              LinkedIn URL
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              type="text"
-              placeholder="LinkedIn URL"
-              id="linkedin"
-              name="linkedin"
-              value={formData.linkedin}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="mb-6 w-full">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="github">
-              GitHub Link
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              type="text"
-              placeholder="GitHub Link"
-              id="github"
-              name="github"
-              value={formData.github}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="mb-6 w-full">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="website">
-              Website Link
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              type="text"
-              placeholder="Website Link"
-              id="website"
-              name="website"
-              value={formData.website}
-              onChange={handleChange}
-            />
-          </div>
+            <div className="mb-6 w-full">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="linkedin"
+              >
+                LinkedIn URL
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="text"
+                placeholder="LinkedIn URL"
+                id="linkedin"
+                name="linkedin"
+                value={formData.linkedin}
+                onChange={handleChange}
+              />
             </div>
-         
+            <div className="mb-6 w-full">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="github"
+              >
+                GitHub Link
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="text"
+                placeholder="GitHub Link"
+                id="github"
+                name="github"
+                value={formData.github}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-6 w-full">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="website"
+              >
+                Website Link
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                type="text"
+                placeholder="Website Link"
+                id="website"
+                name="website"
+                value={formData.website}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
         </div>
         <div className="flex items-center justify-between">
-        <button
+          <button
             className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="button"
-            onClick={() => setFormData({ name: '', position: '', email: '', phone: '', linkedin: '', github: '', website: '' })}
+            onClick={() =>
+              setFormData({
+                name: "",
+                position: "",
+                email: "",
+                phone: "",
+                linkedin: "",
+                github: "",
+                website: "",
+              })
+            }
           >
             Clear
           </button>
@@ -164,11 +208,10 @@ const BasicInfo = () => {
           >
             Save
           </button>
-        
         </div>
       </form>
     </div>
   );
-}
+};
 
-export default BasicInfo
+export default BasicInfo;

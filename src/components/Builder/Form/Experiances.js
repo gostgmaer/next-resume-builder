@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import { useGlobalAppContext } from "@/context/context";
+import { get, getSingleRecord, put } from "@/utils/http";
+import React, { useEffect, useState } from "react";
 
-const Experiances = () => {
+const Experiances = ({setActiveTab,id}) => {
+  const { fetchResumedata, currentData } = useGlobalAppContext();
   const [formData, setFormData] = useState({
     title: "",
     name: "",
@@ -10,6 +13,7 @@ const Experiances = () => {
     startDate: "",
     endDate: "",
   });
+  const [mydata, setMydata] = useState(null);
 
   const [workExperiences, setWorkExperiences] = useState([
 
@@ -50,11 +54,42 @@ const Experiances = () => {
     setWorkExperiences(updatedExperiences);
   };
 
+  const updateRecord = async () => {
+    try {
+      // Replace '/yourCollectionName/${recordId}.json' with your desired API endpoint
+      var expriances = {
+      ...mydata,  experiances:workExperiences
+      }
+      const response = await put(`/resume/${id}.json`, expriances);
+      console.log('Record updated successfully:', response);
+    } catch (error) {
+      console.error('Error updating record:', error);
+    }   
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add your logic to save the form data here
     console.log(workExperiences);
+    updateRecord()
+    fetchResumeData()
   };
+
+
+  const fetchResumeData = async () => {
+    const res = await fetchResumedata(id);
+    setMydata(res);
+    if (currentData) {
+      console.log(currentData);
+      console.log(formData);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      fetchResumeData();
+    }
+  }, [id]);
 
   return (
     <div className="w-full max-w-screen-xl mx-auto">
@@ -84,23 +119,7 @@ const Experiances = () => {
                   onSubmit={handleSubmit}
                 >
                   <h2 className="text-2xl font-bold mb-4">Work Experience</h2>
-                  <div className="mb-6">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="title"
-                    >
-                      Title
-                    </label>
-                    <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      type="text"
-                      placeholder="Title"
-                      id="title"
-                      name="title"
-                      value={currentExperience.title}
-                      onChange={handleChange}
-                    />
-                  </div>
+             
                   <div className="mb-4">
                     <div className="mb-6 flex  items-center gap-10">
                       <div className="w-full ">
@@ -212,6 +231,23 @@ const Experiances = () => {
                       </div>
                     </div>
                   </div>
+                  <div className="mb-6">
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2"
+                      htmlFor="title"
+                    >
+                      Descriptions
+                    </label>
+                    <textarea
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                     
+                      placeholder="Descriptions...."
+                      id="title"
+                      name="title"
+                      value={currentExperience.title}
+                      onChange={handleChange}
+                    />
+                  </div>
                 </form>
               </div>
             </div>
@@ -231,13 +267,7 @@ const Experiances = () => {
           </button>
         </div>
         <div className="flex items-center justify-between">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="submit"
-          >
-            Save
-          </button>
-          <button
+        <button
             className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="button"
             onClick={() => {
@@ -257,6 +287,13 @@ const Experiances = () => {
           >
             Clear
           </button>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="submit"
+          >
+            Save
+          </button>
+       
         </div>
       </form>
     </div>
@@ -264,3 +301,16 @@ const Experiances = () => {
 };
 
 export default Experiances;
+
+export async function getServerSideProps() {
+  // Fetch data from an API
+  const response = await get('/resume.json');
+  const data = await response.json();
+
+  // Pass the data as a prop to the page component
+  return {
+    props: {
+      data,
+    },
+  };
+}

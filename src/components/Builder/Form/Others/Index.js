@@ -4,7 +4,7 @@ import Interest from './Interest'
 import Achivements from './Achivements'
 import Referances from './Referances'
 
-const Others = () => {
+const Others = ({setActiveTab,id}) => {
   return (
     <div>
       <Languages/>

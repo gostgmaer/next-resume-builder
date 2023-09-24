@@ -6,6 +6,7 @@ import ShowElements from "./ShowElements";
 const HeaderElement = () => {
   const [activeTab, setActiveTab] = useState("basic info");
   const [isDivVisible, setIsDivVisible] = useState(false);
+  const [id, setId] = useState('');
 
   const handleTabClick = (tabName) => {
     if (activeTab !== tabName) {
@@ -36,7 +37,7 @@ const HeaderElement = () => {
       </div>
 
       <div className="bg-white p-4 text-black rounded">
-       <ShowElements currentTab={activeTab} />
+       <ShowElements currentTab={activeTab} setActiveTab={setActiveTab} />
       </div>
     </div>
   );

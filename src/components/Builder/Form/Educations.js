@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const Educations = () => {
+const Educations = ({setActiveTab,id}) => {
   const [formData, setFormData] = useState({
     title: "",
     educationTitle: "",
@@ -74,22 +74,7 @@ const Educations = () => {
                 >
                   <div className="grid grid-cols-2 gap-4">
                     {/* Full-width field */}
-                    <div className="col-span-2 mb-4">
-                      <label
-                        className="block mb-2 text-gray-600"
-                        htmlFor="title"
-                      >
-                        Title
-                      </label>
-                      <input
-                        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-                        type="text"
-                        id="title"
-                        name="title"
-                        value={formData.title}
-                        onChange={handleChange}
-                      />
-                    </div>
+                  
 
                     {/* 50% width fields */}
                     <div className="mb-4">
@@ -192,13 +177,7 @@ const Educations = () => {
           </button>
         </div>
         <div className="flex items-center justify-between">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="submit"
-          >
-            Save
-          </button>
-          <button
+        <button
             className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="button"
             onClick={() => {
@@ -215,6 +194,13 @@ const Educations = () => {
           >
             Clear
           </button>
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="submit"
+          >
+            Save
+          </button>
+         
         </div>
       </form>
     </div>
