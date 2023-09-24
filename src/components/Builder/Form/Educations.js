@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import { useGlobalAppContext } from "@/context/context";
+import { put } from "@/utils/http";
+import React, { useEffect, useState } from "react";
 
-const Educations = ({setActiveTab,id}) => {
+const Educations = ({id}) => {
+  const { fetchResumedata, currentData,updateResumeRecord,activeTab, setActiveTab } = useGlobalAppContext();
   const [formData, setFormData] = useState({
     title: "",
     educationTitle: "",
@@ -10,10 +13,9 @@ const Educations = ({setActiveTab,id}) => {
     percentage: "",
   });
   const [education, setEducation] = useState([
-    
   ]);
+  const [mydata, setMydata] = useState(null);
 
-  // const [projetcs, setWorkExperiences] = useState();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,7 +32,7 @@ const Educations = ({setActiveTab,id}) => {
       endDate: "",
       percentage: "",
     });
-    console.log(education);
+    // console.log(education);
   };
 
   const handleRemove = (index) => {
@@ -39,10 +41,53 @@ const Educations = ({setActiveTab,id}) => {
     setEducation(updatedExperiences);
   };
 
+
+
+  const fetchResumeData = async () => {
+    const res = await fetchResumedata(id);
+    setMydata(res);
+    console.log(res);
+    if (res?.education) {
+      setEducation(res.education)
+      
+    }
+    if (currentData) {
+      // console.log(currentData);
+      // console.log(formData);
+    }
+  };
+
+  const updateRecord = async (nav,body) => {
+    try {
+      const response = await put(`/resume/${id}.json`, body);
+      setActiveTab(nav);
+      console.log('Record updated successfully:', response);
+      
+    } catch (error) {
+      console.error('Error updating record:', error);
+    }   
+  };
+
+
+
+  useEffect(() => {
+    if (id) {
+      fetchResumeData();
+    }
+  }, [id]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your logic to save the form data here
-    console.log(education);
+    // // Add your logic to save the form data here
+    // console.log(education);
+    // // var data = {
+    // //   education:education
+    // // }
+    var body = {
+      ...mydata,education:education
+      }
+      updateResumeRecord('skills',body,id)
+   
   };
 
   return (

@@ -2,7 +2,7 @@ import Header from "@/components/header/Header";
 import "./globals.css";
 import { Roboto } from "next/font/google";
 import Footer from "@/components/footer/Footer";
-import { AppProvider } from "@/context/context";
+import { AppProvider, useGlobalAppContext } from "@/context/context";
 
 const roboto = Roboto({
   subsets: ["latin"],

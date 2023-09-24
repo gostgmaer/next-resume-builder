@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import { useGlobalAppContext } from "@/context/context";
+import { put } from "@/utils/http";
+import React, { useEffect, useState } from "react";
 
-const Skills = ({setActiveTab,id}) => {
+const Skills = ({id}) => {
+  const { fetchResumedata, currentData,updateResumeRecord,activeTab, setActiveTab } = useGlobalAppContext();
+
   const [formData, setFormData] = useState({
     title: "",
     name: "",
@@ -8,7 +12,8 @@ const Skills = ({setActiveTab,id}) => {
     last_used: "",
     scale: "",
   });
-  const [selectedYear, setSelectedYear] = useState("");
+  const [mydata, setMydata] = useState(null);
+
 
 
 
@@ -37,11 +42,52 @@ const Skills = ({setActiveTab,id}) => {
     setSkills(updatedExperiences);
   };
 
+  
+  const fetchResumeData = async () => {
+    const res = await fetchResumedata(id);
+    setMydata(res);
+    if (res?.skill) {
+      setSkills(res.skill)
+     
+    }
+    if (currentData) {
+      // console.log(currentData);
+      // console.log(formData);
+    }
+  };
+
+  const updateRecord = async () => {
+    try {
+      // Replace '/yourCollectionName/${recordId}.json' with your desired API endpoint
+      console.log(mydata);
+      var data = {
+      ...mydata,  skill:skills
+      }
+      const response = await put(`/resume/${id}.json`, data);
+      console.log('Record updated successfully:', response);
+    } catch (error) {
+      console.error('Error updating record:', error);
+    }   
+  };
+
+
+
+  useEffect(() => {
+    if (id) {
+      fetchResumeData();
+    }
+  }, [id]);
+
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add your logic to save the form data here
     console.log(skills);
+    updateRecord()
   };
+
+
 
   return (
     <div className="w-full max-w-screen-xl mx-auto">

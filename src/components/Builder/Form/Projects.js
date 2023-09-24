@@ -1,6 +1,9 @@
+import { useGlobalAppContext } from "@/context/context";
 import React, { useState } from "react";
 
-const Projects = ({setActiveTab,id}) => {
+const Projects = ({id}) => {
+  const { fetchResumedata, currentData,updateResumeRecord,activeTab, setActiveTab } = useGlobalAppContext();
+
   const [formData, setFormData] = useState({
     title: "",
     projectTitle: "",
