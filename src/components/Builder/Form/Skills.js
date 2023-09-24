@@ -3,8 +3,14 @@ import { findIndex } from "@/utils/custom";
 import { put } from "@/utils/http";
 import React, { useEffect, useState } from "react";
 
-const Skills = ({id}) => {
-  const { fetchResumedata, currentData,updateResumeRecord,activeTab, setActiveTab } = useGlobalAppContext();
+const Skills = ({ id }) => {
+  const {
+    fetchResumedata,
+    currentData,
+    updateResumeRecord,
+    activeTab,
+    setActiveTab,
+  } = useGlobalAppContext();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -15,9 +21,6 @@ const Skills = ({id}) => {
   });
   const [mydata, setMydata] = useState(null);
 
-
-
-
   const [skills, setSkills] = useState([]);
 
   const handleChange = (e) => {
@@ -25,7 +28,7 @@ const Skills = ({id}) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleAddExperience = () => {
+  const handleAdd = () => {
     setSkills([...skills, formData]);
     setFormData({
       title: "",
@@ -37,19 +40,17 @@ const Skills = ({id}) => {
     console.log(skills);
   };
 
-  const handleRemoveExperience = (index) => {
+  const handleRemove = (index) => {
     const updatedExperiences = [...skills];
     updatedExperiences.splice(index, 1);
     setSkills(updatedExperiences);
   };
 
-  
   const fetchResumeData = async () => {
     const res = await fetchResumedata(id);
     setMydata(res);
     if (res?.skill) {
-      setSkills(res.skill)
-     
+      setSkills(res.skill);
     }
     if (currentData) {
       // console.log(currentData);
@@ -62,16 +63,15 @@ const Skills = ({id}) => {
       // Replace '/yourCollectionName/${recordId}.json' with your desired API endpoint
       console.log(mydata);
       var data = {
-      ...mydata,  skill:skills
-      }
+        ...mydata,
+        skill: skills,
+      };
       const response = await put(`/resume/${id}.json`, data);
-      console.log('Record updated successfully:', response);
+      console.log("Record updated successfully:", response);
     } catch (error) {
-      console.error('Error updating record:', error);
-    }   
+      console.error("Error updating record:", error);
+    }
   };
-
-
 
   useEffect(() => {
     if (id) {
@@ -79,13 +79,11 @@ const Skills = ({id}) => {
     }
   }, [id]);
 
-
-
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add your logic to save the form data here
     console.log(skills);
-    updateRecord()
+    updateRecord();
   };
 
   const [editIndex, setEditIndex] = useState(-1);
@@ -110,47 +108,133 @@ const Skills = ({id}) => {
       });
     }
   };
+  const currentYear = new Date().getFullYear();
 
-
+  const last20Years = Array.from(
+    { length: 20 },
+    (_, index) => currentYear - index
+  );
   return (
     <div className="w-full max-w-screen-xl mx-auto">
-      <form
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-        onSubmit={handleSubmit}
-      >
-        <h2 className="text-2xl font-bold mb-4">Skills</h2>
-        {skills.map((experience, index) => (
-          <div key={index} className="mb-6 border-b-2 pb-4">
-            <div className="flex justify-between items-center">
-              <h3 className="text-lg font-bold mb-2">Skill {index + 1}</h3>{" "}
-              <button
-                type="button"
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                onClick={() => handleRemoveExperience(index)}
-              >
-                Remove
-              </button>
-            </div>
-            <div className="mb-4">
-             <SkillForm formData={formData} handleChange={handleChange}/>
+      <h2 className="text-2xl font-bold mb-4">Skills</h2>
+      <div className="mb-6 border-b-2 pb-4">
+        <div className="mb-4">
+          <div className="w-full max-w-screen-xl mx-auto">
+            <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+              <div className="mb-4">
+                <div className="mb-6 flex  items-center gap-10">
+                  <div className="w-full ">
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2"
+                      htmlFor="name"
+                    >
+                      Name
+                    </label>
+                    <input
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      type="text"
+                      placeholder="Name"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="w-full ">
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2"
+                      htmlFor="total_years"
+                    >
+                      Total Experiance
+                    </label>
+                    <input
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      type="text"
+                      placeholder="Total Experiance"
+                      id="total_years"
+                      name="total_years"
+                      value={formData.total_years}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+
+                <div className="mb-6 flex items-center gap-10">
+                  <div className="w-1/2 ">
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2"
+                      htmlFor="last_used"
+                    >
+                      Last Used
+                    </label>
+                    <select
+                      className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+                      id="last_used"
+                      name="last_used"
+                      value={formData.last_used}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select a Year</option>
+                      {last20Years.map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="w-1/2 ">
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2"
+                      htmlFor="scale"
+                    >
+                      Expertise
+                    </label>
+                    <input
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      type="text"
+                      placeholder="Expertise"
+                      id="scale"
+                      name="scale"
+                      value={formData.scale}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="mb-6">
+                {editIndex === -1 ? (
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="button"
+                    onClick={handleAdd}
+                  >
+                    Add Skill
+                  </button>
+                ) : (
+                  <button
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="button"
+                    onClick={handleSaveEdit}
+                  >
+                    Update Skill
+                  </button>
+                )}
+              </div>
+            </form>
+            <div className="flex flex-wrap">
+              {skills.map((experience, index) => (
+                <SkillCard
+                  key={index}
+                  {...experience}
+                  onEdit={() => handleEdit(index)}
+                  onDelete={() => handleRemove(index)}
+                />
+              ))}
             </div>
           </div>
-        ))}
-        <div className="mb-6">
-          {/* <h3 className="text-lg font-bold mb-2">Add Skill</h3> */}
-          <div className="mb-6">
-            {/* Input fields for the currentExperience */}
-          </div>
-          <button
-            type="button"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={handleAddExperience}
-          >
-            Add Skill
-          </button>
         </div>
         <div className="flex items-center justify-between">
-         
           <button
             className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="button"
@@ -169,117 +253,18 @@ const Skills = ({id}) => {
           </button>
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="submit"
+            type="button"
+            onClick={handleSubmit}
           >
             Save
           </button>
         </div>
-      </form>
+      </div>
     </div>
   );
 };
 
 export default Skills;
-
-
-const SkillForm = ({formData,handleChange}) => {
-  const currentYear = new Date().getFullYear();
-
-  const last20Years = Array.from(
-    { length: 20 },
-    (_, index) => currentYear - index
-  );
-  return  <div className="w-full max-w-screen-xl mx-auto">
-  <form
-    className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
- 
-  >
-    <div className="mb-4">
-      <div className="mb-6 flex  items-center gap-10">
-        <div className="w-full ">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="name"
-          >
-            Name
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            type="text"
-            placeholder="Name"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="w-full ">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="total_years"
-          >
-            Total Experiance
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            type="text"
-            placeholder="Total Experiance"
-            id="total_years"
-            name="total_years"
-            value={formData.total_years}
-            onChange={handleChange}
-          />
-        </div>
-      </div>
-
-      <div className="mb-6 flex items-center gap-10">
-        <div className="w-1/2 ">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="last_used"
-          >
-            Last Used
-          </label>
-          <select
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-            id="last_used"
-            name="last_used"
-            value={formData.last_used}
-            onChange={handleChange}
-          >
-            <option value="">Select a Year</option>
-            {last20Years.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="w-1/2 ">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="scale"
-          >
-            Expertise
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            type="text"
-            placeholder="Expertise"
-            id="scale"
-            name="scale"
-            value={formData.scale}
-            onChange={handleChange}
-          />
-        </div>
-      </div>
-    </div>
-  </form>
-</div>
-}
-
-
 
 const SkillCard = ({
   title,
