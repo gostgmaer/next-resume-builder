@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import HeaderElement from "@/components/Builder/FormElement";
 import { useAuthContext } from "@/context/authContext";
 import { useRouter } from "next/navigation";
@@ -8,9 +8,9 @@ const Page = () => {
   // @ts-ignore
   const { user } = useAuthContext();
   const router = useRouter();
-  React.useEffect(() => {
-    if (user == null) router.push("/login");
-  }, [user]);
+  // React.useEffect(() => {
+  //   if (user == null) router.push("/login");
+  // }, [user]);
 
   return (
     <div>
