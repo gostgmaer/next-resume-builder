@@ -62,9 +62,12 @@ const Projects = ({ id }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add your logic to save the form data here
-    console.log(projects);
+  
+    const extra = {
+      updated_time: new Date(),
+    };
     var body = {
-      ...mydata,
+      ...mydata,...extra,
       projects: projects,
     };
     updateResumeRecord("others", body, id);

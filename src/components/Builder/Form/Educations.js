@@ -91,9 +91,11 @@ const Educations = ({ id }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    const extra = {
+      updated_time: new Date(),
+    };
     var body = {
-      ...mydata,
+      ...mydata,...extra,
       education: education,
     };
     updateResumeRecord("skills", body, id);
