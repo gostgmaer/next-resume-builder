@@ -7,9 +7,9 @@ const axiosInstance = axios.create({
   baseURL,
 });
 
-export const get = async (url) => {
+export const get = async (endpoint) => {
   try {
-    const response = await axiosInstance.get(url);
+    const response = await axiosInstance.get((endpoint+'.json'));
     return response.data;
   } catch (error) {
     throw error;

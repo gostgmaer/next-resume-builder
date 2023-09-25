@@ -3,6 +3,7 @@ import "./globals.css";
 import { Roboto } from "next/font/google";
 import Footer from "@/components/footer/Footer";
 import { AppProvider, useGlobalAppContext } from "@/context/context";
+import { AuthContextProvider } from "@/context/authContext";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -19,9 +20,11 @@ export default function RootLayout({ children }) {
     <AppProvider>
       <html lang="en">
         <body className={roboto.className}>
+        <AuthContextProvider>
           <Header />
           <div className=" bg-slate-50 min-h-screen">{children}</div>
           <Footer />
+          </AuthContextProvider>
         </body>
       </html>
     </AppProvider>

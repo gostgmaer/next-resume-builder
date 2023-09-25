@@ -1,9 +1,12 @@
+import { useAuthContext } from "@/context/authContext";
 import { useGlobalAppContext } from "@/context/context";
 import Loader from "@/utils/Loader";
-import { getSingleRecord, post } from "@/utils/http";
+import { get, getSingleRecord, post } from "@/utils/http";
 import React, { useEffect, useState } from "react";
 
 const BasicInfo = ({ id, setId }) => {
+  // @ts-ignore
+  const { user } = useAuthContext();
   const {
     fetchResumedata,
     currentData,
@@ -35,7 +38,11 @@ const BasicInfo = ({ id, setId }) => {
     // Add your logic to save the form data here
     console.log(formData);
     try {
-      const data = await post("/resume.json", formData); // Replace with your collection name
+      const data = await post("/resume.json", {
+        ...formData,
+        ...user.auth.currentUser,
+      }); // Replace with your collection name
+
       setId(data.name);
       setActiveTab("work experience");
     } catch (error) {
@@ -45,6 +52,8 @@ const BasicInfo = ({ id, setId }) => {
 
   const fetchResumeData = async () => {
     const res = await fetchResumedata(id);
+    const data = await get("resume");
+    console.log(data);
     console.log(res);
     setFormData(res);
     if (currentData) {
@@ -227,7 +236,7 @@ const BasicInfo = ({ id, setId }) => {
 
 export default BasicInfo;
 
-const BaiscInfoBlock = ({resumeData}) => {
+const BaiscInfoBlock = ({ resumeData }) => {
   return (
     <section className="bg-white p-4 shadow-lg rounded-lg my-4">
       <h1 className="text-3xl font-bold mb-2">{resumeData.basics.name}</h1>
