@@ -1,5 +1,5 @@
 // utils/axiosApi.js
-import axios from 'axios';
+import axios from "axios";
 
 const baseURL = process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL; // Replace with your Firebase URL
 
@@ -7,18 +7,20 @@ const axiosInstance = axios.create({
   baseURL,
 });
 
-export const get = async (endpoint) => {
+export const get = async (endpoint, queryParams) => {
   try {
-    const response = await axiosInstance.get((endpoint+'.json'));
+    const response = await axiosInstance.get(endpoint + ".json", {
+      params: queryParams,
+    });
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const getSingleRecord = async (endpoint,id) => {
+export const getSingleRecord = async (endpoint, id) => {
   try {
-    const response = await axiosInstance.get(endpoint+'/'+id+'.json');
+    const response = await axiosInstance.get(endpoint + "/" + id + ".json");
     return response.data;
   } catch (error) {
     throw error;

@@ -25,7 +25,7 @@ function Header() {
             <li className="text-lg">Home</li>
             <li className="text-lg">Features</li>
             <li className="text-lg">Pricing</li>
-            <li className="text-lg">Contact</li>
+            <Link href={'/resume-list'} className="text-lg">My Resume</Link>
           </ul>
           <button
             onClick={handleSignOut}

@@ -36,7 +36,10 @@ const BasicInfo = ({ id, setId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Add your logic to save the form data here
-    console.log(formData);
+    const userData = user.auth.currentUser
+    console.log({
+      userData,formData
+    });
     try {
       const data = await post("/resume.json", {
         ...formData,
