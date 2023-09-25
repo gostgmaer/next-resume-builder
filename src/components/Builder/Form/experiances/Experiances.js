@@ -1,6 +1,6 @@
 import { useGlobalAppContext } from "@/context/context";
 import Loader from "@/utils/Loader";
-import { get, getSingleRecord, put } from "@/utils/http";
+import { get, getSingleRecord, put, readSingleData } from "@/utils/http";
 import React, { useEffect, useState } from "react";
 import ExperienceCard from "./Card";
 import { findIndex } from "@/utils/custom";
@@ -128,9 +128,19 @@ const Experiances = ({ id }) => {
     }
   };
 
+  // const fetSingleResumeData = () => {
+  
+  //   try {
+  //    const res =  readSingleData("resume", id);
+  //    console.log(res);
+      
+  //   } catch (error) {}
+  // }
+
   useEffect(() => {
     if (id) {
       fetchResumeData();
+     // fetSingleResumeData()
     }
   }, [id]);
 

@@ -7,7 +7,7 @@ import { useGlobalAppContext } from "@/context/context";
 const HeaderElement = () => {
   const { fetchResumedata, currentData,updateResumeRecord,activeTab, setActiveTab } = useGlobalAppContext();
   const [isDivVisible, setIsDivVisible] = useState(false);
-  const [id, setId] = useState('');
+  const [id, setId] = useState(undefined);
 
   const handleTabClick = (tabName) => {
     if (activeTab !== tabName) {

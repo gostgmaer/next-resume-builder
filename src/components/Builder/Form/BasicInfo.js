@@ -1,15 +1,28 @@
 import { useAuthContext } from "@/context/authContext";
 import { useGlobalAppContext } from "@/context/context";
 import Loader from "@/utils/Loader";
-import { get, getSingleRecord, post } from "@/utils/http";
+import {
+  get,
+  getSingleRecord,
+  post,
+  postFire,
+  put,
+  writeUserData,
+} from "@/utils/http";
 import React, { useEffect, useState } from "react";
+import { getDatabase, ref, onValue, set } from "firebase/database";
+import { getAuth } from "firebase/auth";
+import { v4 as uuidv4 } from "uuid";
+import firebaseConfig from "@/config/firebase";
+
+const database = firebaseConfig();
 
 const BasicInfo = ({ id, setId }) => {
   // @ts-ignore
   const { user } = useAuthContext();
   const {
     fetchResumedata,
-    currentData,
+    // currentData,
     updateResumeRecord,
     activeTab,
     setActiveTab,
@@ -27,37 +40,63 @@ const BasicInfo = ({ id, setId }) => {
     github: "",
     website: "",
   });
+  const [currentData, setCurrentData] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    // Add your logic to save the form data here
-    const userData = user.auth.currentUser
-    console.log({
-      userData,formData
-    });
-    try {
-      const data = await post("/resume.json", {
-        ...formData,
-        ...user.auth.currentUser,
-      }); // Replace with your collection name
+  function CreateResume() {
+    const uid = user.auth.currentUser.uid;
+    const data = { uid, ...formData };
+    const id = uuidv4();
 
-      setId(data.name);
+
+    const db = getDatabase();
+    set(ref(db, 'resume'+"/" + id), { ...data })
+      .then((res) => {
+        setId(id);
+        setActiveTab("work experience");
+      })
+      .catch((error) => {
+        console.error("Write error:", error);
+        
+      });
+    
+  }
+  const updateRecord = async () => {
+    try {
+      // Replace '/yourCollectionName/${recordId}.json' with your desired API endpoint
+      console.log(currentData);
+      var data = {
+        ...currentData,
+        ...formData,
+      };
+      console.log(data);
+      const response = await put(`/resume/${id}.json`, data);
       setActiveTab("work experience");
+      console.log("Record updated successfully:", response);
     } catch (error) {
-      console.error("Error getting data:", error);
+      console.error("Error updating record:", error);
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    CreateResume();
+  };
+
+  const handleUpdate= async (e)=>{
+    e.preventDefault();
+    updateRecord()
+  }
+
   const fetchResumeData = async () => {
     const res = await fetchResumedata(id);
-    const data = await get("resume");
-    console.log(data);
-    console.log(res);
+    // const data = await get("resume");
+   // console.log(data);
+    setCurrentData(res)
     setFormData(res);
     if (currentData) {
       console.log(currentData);
@@ -75,7 +114,7 @@ const BasicInfo = ({ id, setId }) => {
     <div className="w-full max-w-screen-xl mx-auto">
       <form
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-        onSubmit={handleSubmit}
+       
       >
         <h2 className="text-2xl font-bold mb-4">Basic Information</h2>
         <div className="mb-4">
@@ -207,7 +246,9 @@ const BasicInfo = ({ id, setId }) => {
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-between">
+       
+      </form>
+      <div className="flex items-center justify-between">
           <button
             className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="button"
@@ -225,14 +266,24 @@ const BasicInfo = ({ id, setId }) => {
           >
             Clear
           </button>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="submit"
-          >
-            Save
-          </button>
+          {!id ? (
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="button"
+              onClick={handleSubmit}
+            >
+              Save
+            </button>
+          ) : (
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="button"
+              onClick={handleUpdate}
+            >
+              Update
+            </button>
+          )}
         </div>
-      </form>
     </div>
   );
 };
