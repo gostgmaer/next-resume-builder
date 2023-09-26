@@ -5,7 +5,7 @@ import { get, getSingleRecord, post } from "@/utils/http";
 import React, { useEffect, useState } from "react";
 import firebase from "firebase/database";
 
-const BasicInfo = ({ id, setId }) => {
+const BasicInfo = () => {
   // @ts-ignore
   const { user } = useAuthContext();
   const {
@@ -16,7 +16,11 @@ const BasicInfo = ({ id, setId }) => {
     setActiveTab,
     loader,
     loaderFalse,
-    loaderTrue,resume, setResume
+    loaderTrue,
+    resume,
+    setResume,
+    id,
+    setId,
   } = useGlobalAppContext();
 
   const [formData, setFormData] = useState({
@@ -32,23 +36,26 @@ const BasicInfo = ({ id, setId }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    setResume({ ...resume, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Add your logic to save the form data here
+    console.log(resume);
     const userData = user.auth.currentUser;
     const extra = {
       uid: user.auth.currentUser.uid,
       created_time: new Date(),
       updated_time: new Date(),
     };
-    try {
-      const data = await post("/resume.json", {
-        ...formData,
-        ...extra,
-      }); // Replace with your collection name
 
+    const basic = { ...resume.basics, ...formData };
+    resume.basics = basic;
+    //console.log(...resume.basics,...basic);
+    console.log(resume);
+    try {
+      const data = await post("/resume.json", basic); // Replace with your collection name
       setId(data.name);
       setActiveTab("work experience");
     } catch (error) {
@@ -61,6 +68,17 @@ const BasicInfo = ({ id, setId }) => {
     setFormData(res);
   };
 
+  const updateResume = (e) => {
+    e.preventDefault();
+    const extra = {
+      updated_time: new Date(),
+    };
+    var body = {
+      ...formData,...extra
+    };
+    updateResumeRecord("work experience", body, id);
+  };
+
   useEffect(() => {
     if (id) {
       fetchResumeData();
@@ -71,7 +89,7 @@ const BasicInfo = ({ id, setId }) => {
     <div className="w-full max-w-screen-xl mx-auto">
       <form
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-        onSubmit={handleSubmit}
+       
       >
         <h2 className="text-2xl font-bold mb-4">Basic Information</h2>
         <div className="mb-4">
@@ -221,12 +239,23 @@ const BasicInfo = ({ id, setId }) => {
           >
             Clear
           </button>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="submit"
-          >
-            Save
-          </button>
+          {id ? (
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="button"
+              onClick={updateResume}
+            >
+              Update
+            </button>
+          ) : (
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="button"
+              onClick={handleSubmit}
+            >
+              Save
+            </button>
+          )}
         </div>
       </form>
     </div>

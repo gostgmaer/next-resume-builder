@@ -6,12 +6,18 @@ const AppContext = React.createContext(null);
 const AppProvider = ({ children }) => {
   const [loader, setLoader] = useState(false);
   const [appLoader, setAppLoader] = useState(false);
-  const [id, setId] = useState("");
   const [currentData, setCurrentData] = useState(null);
   const [activeTab, setActiveTab] = useState("basic info");
+    const [id, setId] = useState(undefined);
   const [resume, setResume] = useState({
     basics: {
       name: "",
+      position: "",
+
+      linkedin: "",
+      github: "",
+      website: "",
+
       label: "",
       image: "",
       email: "john@gmail.com",
@@ -27,6 +33,15 @@ const AppProvider = ({ children }) => {
       },
       profiles: [],
     },
+
+    name: "",
+    position: "",
+    email: "",
+    phone: "",
+    linkedin: "",
+    github: "",
+    website: "",
+
     work: [],
     volunteer: [],
     education: [],
@@ -83,7 +98,9 @@ const AppProvider = ({ children }) => {
         fetchResumedata,
         currentData,
         activeTab,
-        setActiveTab,resume, setResume
+        setActiveTab,
+        resume,
+        setResume,
       }}
     >
       {children}
