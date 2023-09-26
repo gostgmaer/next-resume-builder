@@ -2,13 +2,14 @@ import { useGlobalAppContext } from "@/context/context";
 import { findIndex } from "@/utils/custom";
 import React, { useEffect, useState } from "react";
 
-const Projects = ({ id }) => {
+const Projects = () => {
   const {
     fetchResumedata,
     currentData,
     updateResumeRecord,
     activeTab,
-    setActiveTab,
+    setActiveTab,  id,
+    setId,
   } = useGlobalAppContext();
 
   const [formData, setFormData] = useState({

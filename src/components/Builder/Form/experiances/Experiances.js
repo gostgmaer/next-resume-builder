@@ -5,14 +5,15 @@ import React, { useEffect, useState } from "react";
 import ExperienceCard from "./Card";
 import { findIndex } from "@/utils/custom";
 
-const Experiances = ({ id }) => {
+const Experiances = () => {
   const {
     fetchResumedata,
     currentData,
     updateResumeRecord,
     activeTab,
     setActiveTab,
-    loader,
+    loader,  id,
+    setId,
   } = useGlobalAppContext();
 
   const [mydata, setMydata] = useState(null);
