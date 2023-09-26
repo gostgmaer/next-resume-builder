@@ -83,7 +83,7 @@ const AppProvider = ({ children }) => {
         fetchResumedata,
         currentData,
         activeTab,
-        setActiveTab,
+        setActiveTab,resume, setResume
       }}
     >
       {children}

@@ -14,7 +14,7 @@ const Page = () => {
   // var profileData = [];
   const fetchResumeData = async () => {
     const data = await get("resume", { uid: user?.uid });
-    console.log(Object.values(data));
+
     setList(
       Object.keys(data).map((id) => ({
         id,

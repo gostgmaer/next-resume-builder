@@ -16,7 +16,7 @@ const BasicInfo = ({ id, setId }) => {
     setActiveTab,
     loader,
     loaderFalse,
-    loaderTrue,
+    loaderTrue,resume, setResume
   } = useGlobalAppContext();
 
   const [formData, setFormData] = useState({
