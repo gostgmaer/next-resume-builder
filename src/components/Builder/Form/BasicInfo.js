@@ -3,6 +3,7 @@ import { useGlobalAppContext } from "@/context/context";
 import Loader from "@/utils/Loader";
 import { get, getSingleRecord, post } from "@/utils/http";
 import React, { useEffect, useState } from "react";
+import firebase from "firebase/database";
 
 const BasicInfo = ({ id, setId }) => {
   // @ts-ignore
@@ -15,7 +16,7 @@ const BasicInfo = ({ id, setId }) => {
     setActiveTab,
     loader,
     loaderFalse,
-    loaderTrue,
+    loaderTrue,resume, setResume
   } = useGlobalAppContext();
 
   const [formData, setFormData] = useState({
@@ -36,14 +37,16 @@ const BasicInfo = ({ id, setId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Add your logic to save the form data here
-    const userData = user.auth.currentUser
-    console.log({
-      userData,formData
-    });
+    const userData = user.auth.currentUser;
+    const extra = {
+      uid: user.auth.currentUser.uid,
+      created_time: new Date(),
+      updated_time: new Date(),
+    };
     try {
       const data = await post("/resume.json", {
         ...formData,
-        ...user.auth.currentUser,
+        ...extra,
       }); // Replace with your collection name
 
       setId(data.name);
@@ -55,14 +58,7 @@ const BasicInfo = ({ id, setId }) => {
 
   const fetchResumeData = async () => {
     const res = await fetchResumedata(id);
-    const data = await get("resume");
-    console.log(data);
-    console.log(res);
     setFormData(res);
-    if (currentData) {
-      console.log(currentData);
-      console.log(formData);
-    }
   };
 
   useEffect(() => {

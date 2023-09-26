@@ -9,6 +9,36 @@ const AppProvider = ({ children }) => {
   const [id, setId] = useState("");
   const [currentData, setCurrentData] = useState(null);
   const [activeTab, setActiveTab] = useState("basic info");
+  const [resume, setResume] = useState({
+    basics: {
+      name: "",
+      label: "",
+      image: "",
+      email: "john@gmail.com",
+      phone: "(912) 555-4321",
+      url: "https://johndoe.com",
+      summary: "A summary of John Doe…",
+      location: {
+        address: "2712 Broadway St",
+        postalCode: "CA 94115",
+        city: "San Francisco",
+        countryCode: "US",
+        region: "California",
+      },
+      profiles: [],
+    },
+    work: [],
+    volunteer: [],
+    education: [],
+    awards: [],
+    certificates: [],
+    publications: [],
+    skills: [],
+    languages: [],
+    interests: [],
+    references: [],
+    projects: [],
+  });
   const loaderFalse = () => {
     setLoader(false);
   };
@@ -29,7 +59,7 @@ const AppProvider = ({ children }) => {
     loaderFalse();
   };
 
-  const updateResumeRecord = async (nav, body,id) => {
+  const updateResumeRecord = async (nav, body, id) => {
     loaderTrue();
     try {
       const response = await put(`/resume/${id}.json`, body);
@@ -51,7 +81,9 @@ const AppProvider = ({ children }) => {
         id,
         setId,
         fetchResumedata,
-        currentData,activeTab, setActiveTab
+        currentData,
+        activeTab,
+        setActiveTab,resume, setResume
       }}
     >
       {children}

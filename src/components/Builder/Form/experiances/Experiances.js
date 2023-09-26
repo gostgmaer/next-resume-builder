@@ -95,8 +95,11 @@ const Experiances = ({ id }) => {
   const updateRecord = async () => {
     try {
       // Replace '/yourCollectionName/${recordId}.json' with your desired API endpoint
+      const extra = {
+        updated_time: new Date(),
+      };
       var expriances = {
-        ...mydata,
+        ...mydata,...extra,
         experiances: workExperiences,
       };
       const response = await put(`/resume/${id}.json`, expriances);
