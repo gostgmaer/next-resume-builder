@@ -1,8 +1,10 @@
 import { useGlobalAppContext } from "@/context/context";
+import moment from "moment";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
-const Profile = ({ profileData }) => {
+const ResumeItem = ({ user }) => {
   const {
     fetchResumedata,
     currentData,
@@ -15,8 +17,12 @@ const Profile = ({ profileData }) => {
 
   const router = useRouter();
   const EditID = () => {
-    setId(profileData.id);
+    setId(user.id);
     router.push("/resume-builder");
+  };
+  const viewResume = () => {
+    setId(user.id);
+    router.push("/resume");
   };
 
   // useEffect(() => {
@@ -26,76 +32,51 @@ const Profile = ({ profileData }) => {
   // }, [id]);
 
   return (
-    <div className="bg-gray-100 p-4 text-black rounded-lg shadow-lg">
-      <div className="bg-gray-100 p-4 text-black rounded-lg shadow-lg">
+    <div className="border p-4 flex flex-col bg-slate-50 rounded-lg md:flex-row justify-between items-center">
+      <div className="flex items-center">
+        <Image
+          height={200}
+          width={200}
+          src={user.image}
+          alt={`Profile of ${user.name}`}
+          className="w-40 h-40 rounded-full object-cover mr-4"
+        />
         <div>
-          <h1 className="text-2xl font-bold mb-2">{profileData.name}</h1>
-          <h2>{profileData.id}</h2>
-          <p className="mb-2">Email: {profileData.email}</p>
-          <p className="mb-2">Phone: {profileData.phone}</p>
-          <p className="mb-2">Position: {profileData.position}</p>
-          <p className="mb-2">Website: {profileData.website}</p>
-          <p className="mb-2">LinkedIn: {profileData.linkedin}</p>
-          <p className="mb-2">GitHub: {profileData.github}</p>
+          <h2 className="text-xl font-semibold">Name: {user.name}</h2>
+          <p className=" font-medium">Resume Id: {user.id}</p>
+          <p>Email: {user.email}</p>
+          <p>Phone: {user.phone}</p>
+          <p>Position: {user.position}</p>
 
-          <h2 className="text-lg font-semibold mt-4 mb-2">Experiences:</h2>
-          <ul className="list-disc pl-4">
-            {profileData?.experiances?.map((experience, index) => (
-              <li key={index} className="mb-2">
-                <strong>{experience.company}</strong>
-                <p className="mb-1">Title: {experience.title}</p>
-                <p className="mb-1">Location: {experience.location}</p>
-                <p className="mb-1">Start Date: {experience.startDate}</p>
-                <p className="mb-1">End Date: {experience.endDate}</p>
-                <p className="mb-1">
-                  Experience Letter:{" "}
-                  <a
-                    href={experience.experienceLetter}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline"
-                  >
-                    {experience.experienceLetter}
-                  </a>
-                </p>
-              </li>
-            ))}
-          </ul>
-
-          <h2 className="text-lg font-semibold mt-4 mb-2">Education:</h2>
-          <ul className="list-disc pl-4">
-            {profileData?.education?.map((edu, index) => (
-              <li key={index} className="mb-2">
-                <strong>{edu.educationTitle}</strong>
-                <p className="mb-1">School Name: {edu.schoolName}</p>
-                <p className="mb-1">Start Date: {edu.startDate}</p>
-                <p className="mb-1">End Date: {edu.endDate}</p>
-                <p className="mb-1">Percentage: {edu.percentage}</p>
-              </li>
-            ))}
-          </ul>
-
-          <h2 className="text-lg font-semibold mt-4 mb-2">Skills:</h2>
-          <ul className="list-disc pl-4">
-            {profileData?.skill?.map((skill, index) => (
-              <li key={index} className="mb-2">
-                <strong>{skill.name}</strong>
-                <p className="mb-1">Total Years: {skill.total_years}</p>
-                <p className="mb-1">Last Used: {skill.last_used}</p>
-                <p className="mb-1">Scale: {skill.scale}</p>
-              </li>
-            ))}
-          </ul>
+          <p>
+            Created Time:{" "}
+            {moment(user.created_time).format("Do MMM YYYY, h:mm a")}
+          </p>
+          <p>
+            Updated Time:{" "}
+            {moment(user.updated_time).format("Do MMM YYYY, h:mm a")}
+          </p>
         </div>
+      </div>
+      <div className="mt-2 md:mt-0 space-x-2">
         <button
-          className=" text-red-50 bg-slate-700 p-10 rounded"
+          className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
+          onClick={viewResume}
+        >
+          View
+        </button>
+        <button
+          className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
           onClick={EditID}
         >
           Edit
+        </button>
+        <button className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">
+          Delete
         </button>
       </div>
     </div>
   );
 };
 
-export default Profile;
+export default ResumeItem;

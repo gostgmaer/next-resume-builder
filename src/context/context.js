@@ -66,6 +66,7 @@ const AppProvider = ({ children }) => {
     try {
       const data = await getSingleRecord("/resume", id); // Replace with your collection name
       setCurrentData(data);
+      // setActiveTab(data.last_step)
       console.log(data);
       return data;
     } catch (error) {

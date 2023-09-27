@@ -4,6 +4,7 @@ import Loader from "@/utils/Loader";
 import { get, getSingleRecord, post } from "@/utils/http";
 import React, { useEffect, useState } from "react";
 import firebase from "firebase/database";
+import ImageUpload from "./comp/ImageUpload";
 
 const BasicInfo = () => {
   // @ts-ignore
@@ -30,13 +31,14 @@ const BasicInfo = () => {
     phone: "",
     linkedin: "",
     github: "",
-    website: "",
+    website: ""
   });
+  const [imagePreview, setImagePreview] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    setResume({ ...resume, [name]: value });
+   // setResume({ ...resume, [name]: value });
   };
 
   const handleSubmit = async (e) => {
@@ -48,10 +50,12 @@ const BasicInfo = () => {
       uid: user.auth.currentUser.uid,
       created_time: new Date(),
       updated_time: new Date(),
+      image:imagePreview,
+      last_step:activeTab
     };
 
-    const basic = { ...resume.basics, ...formData };
-    resume.basics = basic;
+    const basic = { ...extra, ...formData };
+   // resume.basics = basic;
     //console.log(...resume.basics,...basic);
     console.log(resume);
     try {
@@ -66,12 +70,15 @@ const BasicInfo = () => {
   const fetchResumeData = async () => {
     const res = await fetchResumedata(id);
     setFormData(res);
+    setImagePreview(res.image)
+
   };
 
   const updateResume = (e) => {
     e.preventDefault();
     const extra = {
       updated_time: new Date(),
+      image:imagePreview
     };
     var body = {
       ...formData,...extra
@@ -94,6 +101,18 @@ const BasicInfo = () => {
         <h2 className="text-2xl font-bold mb-4">Basic Information</h2>
         <div className="mb-4">
           <div className="title mb-6  w-full"></div>
+          <div className="mb-6 flex items-center gap-10">
+            <div className=" w-full ">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="name"
+              >
+                Name
+              </label>
+            <ImageUpload imagePreview={imagePreview} setImagePreview={setImagePreview} />
+            </div>
+           
+          </div>
           <div className="mb-6 flex items-center gap-10">
             <div className=" w-full ">
               <label
@@ -233,7 +252,7 @@ const BasicInfo = () => {
                 phone: "",
                 linkedin: "",
                 github: "",
-                website: "",
+                website: ""
               })
             }
           >

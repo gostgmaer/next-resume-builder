@@ -94,6 +94,7 @@ const Educations = () => {
     e.preventDefault();
     const extra = {
       updated_time: new Date(),
+      last_step:activeTab
     };
     var body = {
       ...mydata,...extra,

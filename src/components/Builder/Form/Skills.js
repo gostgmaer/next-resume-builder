@@ -65,6 +65,7 @@ const Skills = () => {
  
       const extra = {
         updated_time: new Date(),
+        last_step:activeTab
       };
       var data = {
         ...mydata,...extra,
@@ -227,7 +228,7 @@ const Skills = () => {
                 )}
               </div>
             </form>
-            <div className="flex flex-wrap">
+            <div className="flex flex-wrap justify-between gap-2">
               {skills.map((experience, index) => (
                 <SkillCard
                   key={index}
@@ -281,7 +282,7 @@ const SkillCard = ({
   onDelete,
 }) => {
   return (
-    <div className="bg-white shadow-lg rounded-lg overflow-hidden m-4 p-4">
+    <div className="bg-white w-1/5 shadow-lg rounded-lg overflow-hidden p-4">
       <div className="mb-4">
         <h2 className="text-xl font-semibold">{title}</h2>
         <p className="text-gray-600">{name}</p>
