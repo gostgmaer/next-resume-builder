@@ -30,3 +30,4 @@ export default firebaseConfig;
 export const firebase_app = getApps().length === 0 ? initializeApp(config) : getApps()[0];
 
 export const firebaseStorage = getStorage(app)
+export const firebaseDatabaseConn = getStorage(app)

@@ -1,3 +1,5 @@
+import Modal from "@/components/global/Modal";
+import { firebaseDatabaseConn } from "@/config/firebase";
 import { useGlobalAppContext } from "@/context/context";
 import moment from "moment";
 import Image from "next/image";
@@ -13,8 +15,11 @@ const ResumeItem = ({ user }) => {
     setActiveTab,
     id,
     setId,
+    isModalOpen,
+    openModal,
+    closeModal,
   } = useGlobalAppContext();
-
+  // const nodeRef = firebaseDatabaseConn.app(id);
   const router = useRouter();
   const EditID = () => {
     setId(user.id);
@@ -24,6 +29,14 @@ const ResumeItem = ({ user }) => {
     setId(user.id);
     router.push("/resume");
   };
+
+  const openDeleteModal = () => {
+    openModal();
+  };
+
+  const deleteResumeFunction = (params) => {
+    
+  }
 
   // useEffect(() => {
   //   if (profileData.id === id) {
@@ -71,10 +84,32 @@ const ResumeItem = ({ user }) => {
         >
           Edit
         </button>
-        <button className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">
+        <button
+          onClick={openDeleteModal}
+          className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+        >
           Delete
         </button>
       </div>
+      <Modal>
+        <div className=" w-full">
+          <h2 className=" w-full">Are you sure want to delete this resume?</h2>
+          <div className="flex mt-10 justify-center gap-2">
+            <button
+              className="bg-red-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+              onClick={EditID}
+            >
+              Yes
+            </button>
+            <button
+              onClick={closeModal}
+              className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+            >
+              No
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

@@ -46,6 +46,13 @@ const Resumeone = ({ data }) => {
             </p>
           </div>
           <div className="mt-8 md:mt-0">
+            <h2 className="text-xl font-semibold">Overview</h2>
+            <p>{data.overview}</p>
+          </div>
+        </div>
+        <div className="mt-8 md:mt-0 flex justify-between gap-5">
+          <div>
+            {" "}
             <h2 className="text-xl font-semibold">Education</h2>
             <ul className="mt-2 list-disc pl-4">
               {data.education.map((edu, index) => (
@@ -59,6 +66,8 @@ const Resumeone = ({ data }) => {
                 </li>
               ))}
             </ul>
+          </div>
+          <div>
             <h2 className="text-xl font-semibold mt-4">Skills</h2>
             <ul className="mt-2 list-disc pl-4">
               {data.skill.map((skill, index) => (
