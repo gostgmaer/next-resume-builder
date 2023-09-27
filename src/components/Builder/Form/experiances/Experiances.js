@@ -130,7 +130,7 @@ const Experiances = () => {
     console.log(res);
     if (res.experiances) {
       setWorkExperiences(res.experiances);
-      setActiveTab(res.last_step)
+      
     }
   };
 

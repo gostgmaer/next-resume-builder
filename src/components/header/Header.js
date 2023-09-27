@@ -5,12 +5,32 @@ import { firebase_app } from "@/config/firebase";
 // @ts-ignore
 import { signOut, getAuth } from "firebase/auth";
 import { useAuthContext } from "@/context/authContext";
+import { useGlobalAppContext } from "@/context/context";
+import { useRouter } from "next/navigation";
 
 const auth = getAuth(firebase_app);
 
 function Header() {
-  // @ts-ignore
+ 
+  const {
+    fetchResumedata,
+    currentData,
+    updateResumeRecord,
+    activeTab,
+    setActiveTab,
+    id,
+    setId,
+  } = useGlobalAppContext();
+   // @ts-ignore
   const { user } = useAuthContext();
+  const router = useRouter();
+
+  const handleNewResume = () => {
+    setId(undefined);
+    router.push("/resume-builder");
+  };
+
+
 
   const handleSignOut = async () => {
     try {
@@ -31,14 +51,12 @@ function Header() {
             <li className="text-lg"> <Link href={"/resume"} className="text-lg">
                 Resumes
               </Link></li>
-            <li className="text-lg">
-              <Link href={"/resume-builder"} className="text-lg">
-                Builder
-              </Link>
+            <li className="text-lg cursor-pointer" onClick={handleNewResume}> Builder
+             
             </li>
-            <Link href={"/resume-list"} className="text-lg">
+           <li> <Link href={"/resume-list"} className="text-lg">
               My Resume
-            </Link>
+            </Link></li>
           </ul>
           {user && (
             <button

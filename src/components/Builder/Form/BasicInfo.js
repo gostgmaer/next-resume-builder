@@ -31,7 +31,8 @@ const BasicInfo = () => {
     phone: "",
     linkedin: "",
     github: "",
-    website: ""
+    website: "",
+    overview:""
   });
   const [imagePreview, setImagePreview] = useState(null);
 
@@ -148,6 +149,9 @@ const BasicInfo = () => {
                 onChange={handleChange}
               />
             </div>
+            <div className="w-full">
+           
+            </div>
           </div>
           <div className="contact flex item-center gap-10">
             <div className="mb-6 w-full">
@@ -239,6 +243,23 @@ const BasicInfo = () => {
               />
             </div>
           </div>
+          <div className="social-media flex item center gap-10">
+                  <div className="mb-6 w-full">
+                    <label
+                      className="block mb-2 text-gray-600"
+                      htmlFor="overview"
+                    >
+                      OverView
+                    </label>
+                    <textarea
+                      className="w-full p-2 border border-gray-300 rounded-md focus:outline-none h-40 focus:ring focus:ring-blue-200"
+                      id="overview"
+                      name="overview"
+                      value={formData.overview}
+                      onChange={handleChange}
+                    ></textarea>
+                  </div>
+                </div>
         </div>
         <div className="flex items-center justify-between">
           <button
@@ -252,7 +273,8 @@ const BasicInfo = () => {
                 phone: "",
                 linkedin: "",
                 github: "",
-                website: ""
+                website: "",
+                overview:""
               })
             }
           >
