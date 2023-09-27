@@ -2,13 +2,14 @@ import { useGlobalAppContext } from "@/context/context";
 import { findIndex } from "@/utils/custom";
 import React, { useEffect, useState } from "react";
 
-const Projects = ({ id }) => {
+const Projects = () => {
   const {
     fetchResumedata,
     currentData,
     updateResumeRecord,
     activeTab,
-    setActiveTab,
+    setActiveTab,  id,
+    setId,
   } = useGlobalAppContext();
 
   const [formData, setFormData] = useState({
@@ -62,9 +63,13 @@ const Projects = ({ id }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add your logic to save the form data here
-    console.log(projects);
+  
+    const extra = {
+      updated_time: new Date(),
+      last_step:activeTab
+    };
     var body = {
-      ...mydata,
+      ...mydata,...extra,
       projects: projects,
     };
     updateResumeRecord("others", body, id);

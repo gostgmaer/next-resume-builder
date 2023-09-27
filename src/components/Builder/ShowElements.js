@@ -13,24 +13,24 @@ import { useGlobalAppContext } from "@/context/context";
 const ShowElements = ({ currentTab }) => {
   const { fetchResumedata, currentData,updateResumeRecord,activeTab, setActiveTab } = useGlobalAppContext();
 
-  const [id, setId] = useState(undefined);
+
 
   switch (currentTab) {
     case "basic info":
-      return <BasicInfo  id={id} setId={setId} />;
+      return <BasicInfo  />;
     case "work experience":
-      return <Experiances  id={id}  />;
+      return <Experiances   />;
     case "education":
-      return <Educations  id={id}  />;
+      return <Educations />;
     case "skills":
-      return <Skills  id={id}  />;
+      return <Skills   />;
     case "projects":
-      return <Projects  id={id}  />;
+      return <Projects   />;
     case "others":
-      return <Others id={id}  />;
+      return <Others  />;
 
       case "view":
-        return <Resume  id={id} />;
+        return <Resume   />;
 
     default:
       return null;

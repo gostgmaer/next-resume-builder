@@ -5,12 +5,33 @@ import { firebase_app } from "@/config/firebase";
 // @ts-ignore
 import { signOut, getAuth } from "firebase/auth";
 import { useAuthContext } from "@/context/authContext";
+import { useGlobalAppContext } from "@/context/context";
+import { useRouter } from "next/navigation";
 
 const auth = getAuth(firebase_app);
 
 function Header() {
-  // @ts-ignore
+ 
+  const {
+    fetchResumedata,
+    currentData,
+    updateResumeRecord,
+    activeTab,
+    setActiveTab,
+    id,
+    setId,
+  } = useGlobalAppContext();
+   // @ts-ignore
   const { user } = useAuthContext();
+  const router = useRouter();
+
+  const handleNewResume = () => {
+    setId(undefined);
+    router.push("/resume-builder");
+  };
+
+
+
   const handleSignOut = async () => {
     try {
       await auth.signOut();
@@ -27,16 +48,24 @@ function Header() {
         <nav className=" flex items-center gap-5">
           <ul className="flex space-x-6">
             <li className="text-lg">Home</li>
-            <li className="text-lg">Features</li>
-            <li className="text-lg">Pricing</li>
-            <Link href={'/resume-list'} className="text-lg">My Resume</Link>
+            <li className="text-lg"> <Link href={"/resume"} className="text-lg">
+                Resumes
+              </Link></li>
+            <li className="text-lg cursor-pointer" onClick={handleNewResume}> Builder
+             
+            </li>
+           <li> <Link href={"/resume-list"} className="text-lg">
+              My Resume
+            </Link></li>
           </ul>
-         {user &&  <button
-            onClick={handleSignOut}
-            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-red-500"
-          >
-            Sign Out
-          </button>}
+          {user && (
+            <button
+              onClick={handleSignOut}
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-red-500"
+            >
+              Sign Out
+            </button>
+          )}
         </nav>
       </div>
     </header>

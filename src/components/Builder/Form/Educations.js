@@ -3,13 +3,14 @@ import { findIndex } from "@/utils/custom";
 import { put } from "@/utils/http";
 import React, { useEffect, useState } from "react";
 
-const Educations = ({ id }) => {
+const Educations = () => {
   const {
     fetchResumedata,
     currentData,
     updateResumeRecord,
     activeTab,
-    setActiveTab,
+    setActiveTab,  id,
+    setId,
   } = useGlobalAppContext();
   const [formData, setFormData] = useState({
     title: "",
@@ -91,9 +92,12 @@ const Educations = ({ id }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    const extra = {
+      updated_time: new Date(),
+      last_step:activeTab
+    };
     var body = {
-      ...mydata,
+      ...mydata,...extra,
       education: education,
     };
     updateResumeRecord("skills", body, id);

@@ -6,9 +6,64 @@ const AppContext = React.createContext(null);
 const AppProvider = ({ children }) => {
   const [loader, setLoader] = useState(false);
   const [appLoader, setAppLoader] = useState(false);
-  const [id, setId] = useState("");
   const [currentData, setCurrentData] = useState(null);
   const [activeTab, setActiveTab] = useState("basic info");
+    const [id, setId] = useState(undefined);
+  const [resume, setResume] = useState({
+    basics: {
+      name: "",
+      position: "",
+
+      linkedin: "",
+      github: "",
+      website: "",
+
+      label: "",
+      image: "",
+      email: "john@gmail.com",
+      phone: "(912) 555-4321",
+      url: "https://johndoe.com",
+      summary: "A summary of John Doe…",
+      location: {
+        address: "2712 Broadway St",
+        postalCode: "CA 94115",
+        city: "San Francisco",
+        countryCode: "US",
+        region: "California",
+      },
+      profiles: [],
+    },
+
+    name: "",
+    position: "",
+    email: "",
+    phone: "",
+    linkedin: "",
+    github: "",
+    website: "",
+
+    work: [],
+    volunteer: [],
+    education: [],
+    awards: [],
+    certificates: [],
+    publications: [],
+    skills: [],
+    languages: [],
+    interests: [],
+    references: [],
+    projects: [],
+  });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   const loaderFalse = () => {
     setLoader(false);
   };
@@ -21,6 +76,7 @@ const AppProvider = ({ children }) => {
     try {
       const data = await getSingleRecord("/resume", id); // Replace with your collection name
       setCurrentData(data);
+      // setActiveTab(data.last_step)
       console.log(data);
       return data;
     } catch (error) {
@@ -29,7 +85,7 @@ const AppProvider = ({ children }) => {
     loaderFalse();
   };
 
-  const updateResumeRecord = async (nav, body,id) => {
+  const updateResumeRecord = async (nav, body, id) => {
     loaderTrue();
     try {
       const response = await put(`/resume/${id}.json`, body);
@@ -51,7 +107,11 @@ const AppProvider = ({ children }) => {
         id,
         setId,
         fetchResumedata,
-        currentData,activeTab, setActiveTab
+        currentData,
+        activeTab,
+        setActiveTab,
+        resume,
+        setResume,isModalOpen,openModal,closeModal
       }}
     >
       {children}

@@ -5,14 +5,15 @@ import React, { useEffect, useState } from "react";
 import ExperienceCard from "./Card";
 import { findIndex } from "@/utils/custom";
 
-const Experiances = ({ id }) => {
+const Experiances = () => {
   const {
     fetchResumedata,
     currentData,
     updateResumeRecord,
     activeTab,
     setActiveTab,
-    loader,
+    loader,  id,
+    setId,
   } = useGlobalAppContext();
 
   const [mydata, setMydata] = useState(null);
@@ -95,8 +96,12 @@ const Experiances = ({ id }) => {
   const updateRecord = async () => {
     try {
       // Replace '/yourCollectionName/${recordId}.json' with your desired API endpoint
+      const extra = {
+        updated_time: new Date(),
+        last_step:activeTab
+      };
       var expriances = {
-        ...mydata,
+        ...mydata,...extra,
         experiances: workExperiences,
       };
       const response = await put(`/resume/${id}.json`, expriances);
@@ -125,6 +130,7 @@ const Experiances = ({ id }) => {
     console.log(res);
     if (res.experiances) {
       setWorkExperiences(res.experiances);
+      
     }
   };
 

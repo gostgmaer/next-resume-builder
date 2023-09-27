@@ -10,14 +10,10 @@ import {
   writeUserData,
 } from "@/utils/http";
 import React, { useEffect, useState } from "react";
-import { getDatabase, ref, onValue, set } from "firebase/database";
-import { getAuth } from "firebase/auth";
-import { v4 as uuidv4 } from "uuid";
-import firebaseConfig from "@/config/firebase";
+import firebase from "firebase/database";
+import ImageUpload from "./comp/ImageUpload";
 
-const database = firebaseConfig();
-
-const BasicInfo = ({ id, setId }) => {
+const BasicInfo = () => {
   // @ts-ignore
   const { user } = useAuthContext();
   const {
@@ -29,6 +25,10 @@ const BasicInfo = ({ id, setId }) => {
     loader,
     loaderFalse,
     loaderTrue,
+    resume,
+    setResume,
+    id,
+    setId,
   } = useGlobalAppContext();
 
   const [formData, setFormData] = useState({
@@ -39,42 +39,36 @@ const BasicInfo = ({ id, setId }) => {
     linkedin: "",
     github: "",
     website: "",
+    overview:""
   });
-  const [currentData, setCurrentData] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+   // setResume({ ...resume, [name]: value });
   };
 
-  function CreateResume() {
-    const uid = user.auth.currentUser.uid;
-    const data = { uid, ...formData };
-    const id = uuidv4();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Add your logic to save the form data here
+    console.log(resume);
+    const userData = user.auth.currentUser;
+    const extra = {
+      uid: user.auth.currentUser.uid,
+      created_time: new Date(),
+      updated_time: new Date(),
+      image:imagePreview,
+      last_step:activeTab
+    };
 
-
-    const db = getDatabase();
-    set(ref(db, 'resume'+"/" + id), { ...data })
-      .then((res) => {
-        setId(id);
-        setActiveTab("work experience");
-      })
-      .catch((error) => {
-        console.error("Write error:", error);
-        
-      });
-    
-  }
-  const updateRecord = async () => {
+    const basic = { ...extra, ...formData };
+   // resume.basics = basic;
+    //console.log(...resume.basics,...basic);
+    console.log(resume);
     try {
-      // Replace '/yourCollectionName/${recordId}.json' with your desired API endpoint
-      console.log(currentData);
-      var data = {
-        ...currentData,
-        ...formData,
-      };
-      console.log(data);
-      const response = await put(`/resume/${id}.json`, data);
+      const data = await post("/resume.json", basic); // Replace with your collection name
+      setId(data.name);
       setActiveTab("work experience");
       console.log("Record updated successfully:", response);
     } catch (error) {
@@ -94,14 +88,21 @@ const BasicInfo = ({ id, setId }) => {
 
   const fetchResumeData = async () => {
     const res = await fetchResumedata(id);
-    // const data = await get("resume");
-   // console.log(data);
-    setCurrentData(res)
     setFormData(res);
-    if (currentData) {
-      console.log(currentData);
-      console.log(formData);
-    }
+    setImagePreview(res.image)
+
+  };
+
+  const updateResume = (e) => {
+    e.preventDefault();
+    const extra = {
+      updated_time: new Date(),
+      image:imagePreview
+    };
+    var body = {
+      ...formData,...extra
+    };
+    updateResumeRecord("work experience", body, id);
   };
 
   useEffect(() => {
@@ -119,6 +120,18 @@ const BasicInfo = ({ id, setId }) => {
         <h2 className="text-2xl font-bold mb-4">Basic Information</h2>
         <div className="mb-4">
           <div className="title mb-6  w-full"></div>
+          <div className="mb-6 flex items-center gap-10">
+            <div className=" w-full ">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="name"
+              >
+                Name
+              </label>
+            <ImageUpload imagePreview={imagePreview} setImagePreview={setImagePreview} />
+            </div>
+           
+          </div>
           <div className="mb-6 flex items-center gap-10">
             <div className=" w-full ">
               <label
@@ -154,6 +167,7 @@ const BasicInfo = ({ id, setId }) => {
                 onChange={handleChange}
               />
             </div>
+         
           </div>
           <div className="contact flex item-center gap-10">
             <div className="mb-6 w-full">
@@ -245,6 +259,23 @@ const BasicInfo = ({ id, setId }) => {
               />
             </div>
           </div>
+          <div className="social-media flex item center gap-10">
+                  <div className="mb-6 w-full">
+                    <label
+                      className="block mb-2 text-gray-600"
+                      htmlFor="overview"
+                    >
+                      OverView
+                    </label>
+                    <textarea
+                      className="w-full p-2 border border-gray-300 rounded-md focus:outline-none h-40 focus:ring focus:ring-blue-200"
+                      id="overview"
+                      name="overview"
+                      value={formData.overview}
+                      onChange={handleChange}
+                    ></textarea>
+                  </div>
+                </div>
         </div>
        
       </form>
@@ -261,26 +292,27 @@ const BasicInfo = ({ id, setId }) => {
                 linkedin: "",
                 github: "",
                 website: "",
+                overview:""
               })
             }
           >
             Clear
           </button>
-          {!id ? (
+          {id ? (
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="button"
+              onClick={updateResume}
+            >
+              Update
+            </button>
+          ) : (
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="button"
               onClick={handleSubmit}
             >
               Save
-            </button>
-          ) : (
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="button"
-              onClick={handleUpdate}
-            >
-              Update
             </button>
           )}
         </div>
