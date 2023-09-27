@@ -34,8 +34,8 @@ const ResumeItem = ({ user }) => {
     openModal();
   };
 
-  const deleteResumeFunction = (params) => {
-    
+  const deleteResumeFunction = () => {
+    console.log(id);
   }
 
   // useEffect(() => {
@@ -97,7 +97,7 @@ const ResumeItem = ({ user }) => {
           <div className="flex mt-10 justify-center gap-2">
             <button
               className="bg-red-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
-              onClick={EditID}
+              onClick={deleteResumeFunction}
             >
               Yes
             </button>
