@@ -4,6 +4,7 @@ import Loader from "@/utils/Loader";
 import { get, getSingleRecord, post } from "@/utils/http";
 import React, { useEffect, useState } from "react";
 import firebase from "firebase/database";
+import ImageUpload from "./comp/ImageUpload";
 
 const BasicInfo = () => {
   // @ts-ignore
@@ -31,12 +32,14 @@ const BasicInfo = () => {
     linkedin: "",
     github: "",
     website: "",
+    overview:""
   });
+  const [imagePreview, setImagePreview] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    setResume({ ...resume, [name]: value });
+   // setResume({ ...resume, [name]: value });
   };
 
   const handleSubmit = async (e) => {
@@ -48,10 +51,12 @@ const BasicInfo = () => {
       uid: user.auth.currentUser.uid,
       created_time: new Date(),
       updated_time: new Date(),
+      image:imagePreview,
+      last_step:activeTab
     };
 
-    const basic = { ...resume.basics, ...formData };
-    resume.basics = basic;
+    const basic = { ...extra, ...formData };
+   // resume.basics = basic;
     //console.log(...resume.basics,...basic);
     console.log(resume);
     try {
@@ -66,12 +71,15 @@ const BasicInfo = () => {
   const fetchResumeData = async () => {
     const res = await fetchResumedata(id);
     setFormData(res);
+    setImagePreview(res.image)
+
   };
 
   const updateResume = (e) => {
     e.preventDefault();
     const extra = {
       updated_time: new Date(),
+      image:imagePreview
     };
     var body = {
       ...formData,...extra
@@ -94,6 +102,18 @@ const BasicInfo = () => {
         <h2 className="text-2xl font-bold mb-4">Basic Information</h2>
         <div className="mb-4">
           <div className="title mb-6  w-full"></div>
+          <div className="mb-6 flex items-center gap-10">
+            <div className=" w-full ">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="name"
+              >
+                Name
+              </label>
+            <ImageUpload imagePreview={imagePreview} setImagePreview={setImagePreview} />
+            </div>
+           
+          </div>
           <div className="mb-6 flex items-center gap-10">
             <div className=" w-full ">
               <label
@@ -128,6 +148,9 @@ const BasicInfo = () => {
                 value={formData.position}
                 onChange={handleChange}
               />
+            </div>
+            <div className="w-full">
+           
             </div>
           </div>
           <div className="contact flex item-center gap-10">
@@ -220,6 +243,23 @@ const BasicInfo = () => {
               />
             </div>
           </div>
+          <div className="social-media flex item center gap-10">
+                  <div className="mb-6 w-full">
+                    <label
+                      className="block mb-2 text-gray-600"
+                      htmlFor="overview"
+                    >
+                      OverView
+                    </label>
+                    <textarea
+                      className="w-full p-2 border border-gray-300 rounded-md focus:outline-none h-40 focus:ring focus:ring-blue-200"
+                      id="overview"
+                      name="overview"
+                      value={formData.overview}
+                      onChange={handleChange}
+                    ></textarea>
+                  </div>
+                </div>
         </div>
         <div className="flex items-center justify-between">
           <button
@@ -234,6 +274,7 @@ const BasicInfo = () => {
                 linkedin: "",
                 github: "",
                 website: "",
+                overview:""
               })
             }
           >

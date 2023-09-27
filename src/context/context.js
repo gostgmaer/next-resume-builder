@@ -54,6 +54,16 @@ const AppProvider = ({ children }) => {
     references: [],
     projects: [],
   });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   const loaderFalse = () => {
     setLoader(false);
   };
@@ -66,6 +76,7 @@ const AppProvider = ({ children }) => {
     try {
       const data = await getSingleRecord("/resume", id); // Replace with your collection name
       setCurrentData(data);
+      // setActiveTab(data.last_step)
       console.log(data);
       return data;
     } catch (error) {
@@ -100,7 +111,7 @@ const AppProvider = ({ children }) => {
         activeTab,
         setActiveTab,
         resume,
-        setResume,
+        setResume,isModalOpen,openModal,closeModal
       }}
     >
       {children}

@@ -66,6 +66,7 @@ const Projects = () => {
   
     const extra = {
       updated_time: new Date(),
+      last_step:activeTab
     };
     var body = {
       ...mydata,...extra,

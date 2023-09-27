@@ -98,6 +98,7 @@ const Experiances = () => {
       // Replace '/yourCollectionName/${recordId}.json' with your desired API endpoint
       const extra = {
         updated_time: new Date(),
+        last_step:activeTab
       };
       var expriances = {
         ...mydata,...extra,
@@ -129,6 +130,7 @@ const Experiances = () => {
     console.log(res);
     if (res.experiances) {
       setWorkExperiences(res.experiances);
+      
     }
   };
 
