@@ -149,9 +149,7 @@ const BasicInfo = () => {
                 onChange={handleChange}
               />
             </div>
-            <div className="w-full">
-           
-            </div>
+         
           </div>
           <div className="contact flex item-center gap-10">
             <div className="mb-6 w-full">
