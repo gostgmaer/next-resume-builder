@@ -12,10 +12,9 @@ const Profile = () => {
   const { user, userId } = useAuthContext();
   const { loading } = useGlobalAppContext();
   const router = useRouter();
-
-  if (loading) {
-    return <Loader />;
-  }
+  useEffect(() => {
+    if (!userId) router.push("/auth/login");
+  }, [userId?.user_id]);
   return <Personal />;
 };
 

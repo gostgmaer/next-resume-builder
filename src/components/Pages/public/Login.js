@@ -95,6 +95,9 @@ const Login = () => {
             </button>
           </div>
         </form>
+      <p className=' text-end'>  <Link href={"/auth/forget-password"} className="text-blue-500 hover:underline">
+            Forget Password?
+          </Link></p>
         <div className="flex flex-col gap-2 mt-5">
           <h3>Login with </h3>
           <div className="mb-4 flex gap-2">
@@ -112,7 +115,7 @@ const Login = () => {
         </div>
         <p className="text-gray-700">
           Don t have an account?{" "}
-          <Link href={"/register"} className="text-blue-500 hover:underline">
+          <Link href={"/auth/register"} className="text-blue-500 hover:underline">
             Sign up here
           </Link>
         </p>
