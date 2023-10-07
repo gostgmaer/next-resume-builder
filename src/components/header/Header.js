@@ -22,7 +22,7 @@ function Header() {
     setId,
   } = useGlobalAppContext();
    // @ts-ignore
-  const { user } = useAuthContext();
+   const { authenticated,Logout,user,userId } = useAuthContext();
   const router = useRouter();
 
   const handleNewResume = () => {
@@ -32,13 +32,6 @@ function Header() {
 
 
 
-  const handleSignOut = async () => {
-    try {
-      await auth.signOut();
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
-  };
   return (
     <header className="bg-gradient-to-r from-blue-700 via-blue-500 to-blue-300 text-white py-4">
       <div className="container mx-auto flex justify-between items-center">
@@ -60,7 +53,7 @@ function Header() {
           </ul>
           {user && (
             <button
-              onClick={handleSignOut}
+              onClick={Logout}
               className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-red-500"
             >
               Sign Out

@@ -1,4 +1,5 @@
 "use client";
+import { get, patch } from "@/lib/http";
 import { getSingleRecord, put } from "@/utils/http";
 import React, { useContext, useState, useEffect } from "react";
 const AppContext = React.createContext(null);
@@ -8,7 +9,7 @@ const AppProvider = ({ children }) => {
   const [appLoader, setAppLoader] = useState(false);
   const [currentData, setCurrentData] = useState(null);
   const [activeTab, setActiveTab] = useState("basic info");
-    const [id, setId] = useState(undefined);
+  const [id, setId] = useState(undefined);
   const [resume, setResume] = useState({
     basics: {
       name: "",
@@ -74,10 +75,9 @@ const AppProvider = ({ children }) => {
   const fetchResumedata = async (id) => {
     loaderTrue();
     try {
-      const data = await getSingleRecord("/resume", id); // Replace with your collection name
-      setCurrentData(data);
-      // setActiveTab(data.last_step)
-      console.log(data);
+      const data = await get("/resume",{} ,id); // Replace with your collection name
+      setCurrentData(data.result);
+      console.log(data.result);
       return data;
     } catch (error) {
       console.error("Error getting data:", error);
@@ -88,7 +88,7 @@ const AppProvider = ({ children }) => {
   const updateResumeRecord = async (nav, body, id) => {
     loaderTrue();
     try {
-      const response = await put(`/resume/${id}.json`, body);
+      const response = await patch(`/resume`, body,id);
       setActiveTab(nav);
       console.log("Record updated successfully:", response);
     } catch (error) {
@@ -111,7 +111,10 @@ const AppProvider = ({ children }) => {
         activeTab,
         setActiveTab,
         resume,
-        setResume,isModalOpen,openModal,closeModal
+        setResume,
+        isModalOpen,
+        openModal,
+        closeModal,
       }}
     >
       {children}

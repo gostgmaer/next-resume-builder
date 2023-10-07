@@ -1,5 +1,5 @@
 "use client";
-import HeaderElement from "@/components/Builder/FormElement";
+import ResumeBlock from "@/components/Builder/FormElement";
 import { useAuthContext } from "@/context/authContext";
 import { useGlobalAppContext } from "@/context/context";
 import Loader from "@/utils/Loader";
@@ -11,9 +11,9 @@ const Page = () => {
   const { user } = useAuthContext();
   const { loader } = useGlobalAppContext();
   const router = useRouter();
-  React.useEffect(() => {
-    if (user == null) router.push("/login");
-  }, [user]);
+  // React.useEffect(() => {
+  //   if (user == null) router.push("/login");
+  // }, [user]);
 
   if (loader) {
     <Loader />;
@@ -22,7 +22,7 @@ const Page = () => {
   return (
     <div>
       <div className=" text-white min-h-screen flex  justify-center items-start">
-        <HeaderElement />
+        <ResumeBlock />
       </div>
     </div>
   );
