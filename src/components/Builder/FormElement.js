@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import ShowElements from "./ShowElements";
 import { useGlobalAppContext } from "@/context/context";
 
-const HeaderElement = () => {
+const ResumeBlock = () => {
   const { fetchResumedata, currentData,updateResumeRecord,activeTab, setActiveTab } = useGlobalAppContext();
   const [isDivVisible, setIsDivVisible] = useState(false);
   const [id, setId] = useState('');
@@ -44,4 +44,4 @@ const HeaderElement = () => {
   );
 };
 
-export default HeaderElement;
+export default ResumeBlock;

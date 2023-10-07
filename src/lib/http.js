@@ -2,6 +2,7 @@
 import axios from "axios";
 import { notifySuccess, notifyerror } from "./notify/notice";
 import { parseCookies, setCookie } from "nookies";
+import { useGlobalAppContext } from "@/context/context";
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL; // Replace with your Firebase URL
 
 const axiosInstance = axios.create({
@@ -12,13 +13,15 @@ const axiosInstance = axios.create({
 const cookies = parseCookies();
 const token = cookies["accessToken"];
 const session = cookies["session"];
-export const get = async (endpint, id, query, recordID) => {
+
+export const get = async (endpint,query,id) => {
+ 
   //   let recordID,
   let reqUrl = undefined;
-  if (recordID) {
+  if (id) {
     reqUrl = baseURL + endpint + `/${id}`;
   }
-  if (!recordID) {
+  if (!id) {
     reqUrl = baseURL + endpint;
   }
   const option = {
@@ -33,6 +36,7 @@ export const get = async (endpint, id, query, recordID) => {
   let response;
   let error;
   try {
+    console.log(reqUrl);
     response = await axios.request(option);
 
     if (!endpint.includes("session")) {
@@ -111,6 +115,31 @@ export const put = async (endpint, id, data) => {
   }
   return response?.data ? response?.data : error; // or set initial value
 };
+
+export const patch = async (endpint,data, id ) => {
+  const option = {
+    method: "put",
+    url: baseURL + endpint + `/${id}`,
+    headers: {
+      Authorization: token,
+      session_id: session,
+    },
+    params: {},
+    data: data,
+  };
+  let response;
+  let error;
+  try {
+    response = await axios.request(option);
+    notifySuccess(response.data.message, 2000);
+  } catch (e) {
+    error = e.response.data;
+    notifyerror(e.response.data.message, 2000);
+    throw new Error(JSON.stringify(e.response.data));
+  }
+  return response?.data ? response?.data : error; // or set initial value
+};
+
 
 export const del = async (endpint, id) => {
   const option = {

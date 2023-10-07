@@ -1,10 +1,12 @@
 import { useAuthContext } from "@/context/authContext";
 import { useGlobalAppContext } from "@/context/context";
 import Loader from "@/utils/Loader";
-import { get, getSingleRecord, post } from "@/utils/http";
 import React, { useEffect, useState } from "react";
 import firebase from "firebase/database";
 import ImageUpload from "./comp/ImageUpload";
+import { socialMediaData } from "@/assets/data";
+import { patch, put,post } from "@/lib/http";
+import { findIndex } from "@/utils/custom";
 
 const BasicInfo = () => {
   // @ts-ignore
@@ -31,36 +33,27 @@ const BasicInfo = () => {
     phone: "",
     linkedin: "",
     github: "",
-    website: "",
-    overview:""
+    url: "",
+    summary: "",
   });
   const [imagePreview, setImagePreview] = useState(null);
-
+  const [network, setNetwork] = useState([]);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-   // setResume({ ...resume, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add your logic to save the form data here
-    console.log(resume);
-    const userData = user.auth.currentUser;
     const extra = {
-      uid: user.auth.currentUser.uid,
-      created_time: new Date(),
-      updated_time: new Date(),
-      image:imagePreview,
-      last_step:activeTab
+      image: imagePreview,
+      last_step: activeTab,
+      profiles: network,
     };
 
     const basic = { ...extra, ...formData };
-   // resume.basics = basic;
-    //console.log(...resume.basics,...basic);
-    console.log(resume);
     try {
-      const data = await post("/resume.json", basic); // Replace with your collection name
+      const data = await post("/resume", basic); // Replace with your collection name
       setId(data.name);
       setActiveTab("work experience");
     } catch (error) {
@@ -71,18 +64,18 @@ const BasicInfo = () => {
   const fetchResumeData = async () => {
     const res = await fetchResumedata(id);
     setFormData(res);
-    setImagePreview(res.image)
-
+    setImagePreview(res.image);
   };
 
   const updateResume = (e) => {
     e.preventDefault();
     const extra = {
-      updated_time: new Date(),
-      image:imagePreview
+      image: imagePreview,
+      profiles: network,
     };
     var body = {
-      ...formData,...extra
+      ...formData,
+      ...extra,
     };
     updateResumeRecord("work experience", body, id);
   };
@@ -95,10 +88,7 @@ const BasicInfo = () => {
 
   return (
     <div className="w-full max-w-screen-xl mx-auto">
-      <form
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
-       
-      >
+      <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <h2 className="text-2xl font-bold mb-4">Basic Information</h2>
         <div className="mb-4">
           <div className="title mb-6  w-full"></div>
@@ -110,9 +100,11 @@ const BasicInfo = () => {
               >
                 Name
               </label>
-            <ImageUpload imagePreview={imagePreview} setImagePreview={setImagePreview} />
+              <ImageUpload
+                imagePreview={imagePreview}
+                setImagePreview={setImagePreview}
+              />
             </div>
-           
           </div>
           <div className="mb-6 flex items-center gap-10">
             <div className=" w-full ">
@@ -149,7 +141,6 @@ const BasicInfo = () => {
                 onChange={handleChange}
               />
             </div>
-         
           </div>
           <div className="contact flex item-center gap-10">
             <div className="mb-6 w-full">
@@ -188,76 +179,24 @@ const BasicInfo = () => {
               />
             </div>
           </div>
+
           <div className="social-media flex item center gap-10">
             <div className="mb-6 w-full">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="linkedin"
-              >
-                LinkedIn URL
+              <label className="block mb-2 text-gray-600" htmlFor="overview">
+                OverView
               </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                type="text"
-                placeholder="LinkedIn URL"
-                id="linkedin"
-                name="linkedin"
-                value={formData.linkedin}
+              <textarea
+                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none h-40 focus:ring focus:ring-blue-200"
+                id="overview"
+                name="overview"
+                value={formData.summary}
                 onChange={handleChange}
-              />
-            </div>
-            <div className="mb-6 w-full">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="github"
-              >
-                GitHub Link
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                type="text"
-                placeholder="GitHub Link"
-                id="github"
-                name="github"
-                value={formData.github}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="mb-6 w-full">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="website"
-              >
-                Website Link
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                type="text"
-                placeholder="Website Link"
-                id="website"
-                name="website"
-                value={formData.website}
-                onChange={handleChange}
-              />
+              ></textarea>
             </div>
           </div>
           <div className="social-media flex item center gap-10">
-                  <div className="mb-6 w-full">
-                    <label
-                      className="block mb-2 text-gray-600"
-                      htmlFor="overview"
-                    >
-                      OverView
-                    </label>
-                    <textarea
-                      className="w-full p-2 border border-gray-300 rounded-md focus:outline-none h-40 focus:ring focus:ring-blue-200"
-                      id="overview"
-                      name="overview"
-                      value={formData.overview}
-                      onChange={handleChange}
-                    ></textarea>
-                  </div>
-                </div>
+            <SocialProfiles network={network} setNetwork={setNetwork} />
+          </div>
         </div>
         <div className="flex items-center justify-between">
           <button
@@ -271,8 +210,8 @@ const BasicInfo = () => {
                 phone: "",
                 linkedin: "",
                 github: "",
-                website: "",
-                overview:""
+                url: "",
+                summary: "",
               })
             }
           >
@@ -327,5 +266,222 @@ const BaiscInfoBlock = ({ resumeData }) => {
         {resumeData.basics.location.countryCode}
       </p>
     </section>
+  );
+};
+
+const SocialProfiles = ({ network, setNetwork }) => {
+  const { fetchResumedata, currentData, activeTab, setActiveTab, id } =
+    useGlobalAppContext();
+
+  const [formData, setFormData] = useState({
+    network: "",
+    username: "",
+    url: "",
+  });
+  const [mydata, setMydata] = useState(null);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleAdd = () => {
+    setNetwork([...network, formData]);
+    setFormData({
+      network: "",
+      username: "",
+      url: "",
+    });
+  };
+
+  const handleRemove = (index) => {
+    const updateNetwork = [...network];
+    updateNetwork.splice(index, 1);
+    setNetwork(updateNetwork);
+  };
+
+  const fetchResumeData = async () => {
+    const res = await fetchResumedata(id);
+    setMydata(res);
+    if (res?.profiles) {
+      setNetwork(res.profiles);
+    }
+    if (currentData) {
+      // console.log(currentData);
+      // console.log(formData);
+    }
+  };
+
+  const updateRecord = async () => {
+    try {
+      // Replace '/yourCollectionName/${recordId}.json' with your desired API endpoint
+
+      const extra = {
+        updated_time: new Date(),
+        last_step: activeTab,
+      };
+      var data = {
+        profiles: network,
+      };
+      const response = await patch(`/resume`, data, id);
+      setActiveTab("projects");
+      console.log("Record updated successfully:", response);
+    } catch (error) {
+      console.error("Error updating record:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      fetchResumeData();
+    }
+  }, [id]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    updateRecord();
+  };
+
+  const [editIndex, setEditIndex] = useState(-1);
+
+  const handleEdit = (index) => {
+    setEditIndex(index);
+    const editdata = findIndex(network, index);
+    setFormData(editdata);
+  };
+  const handleSaveEdit = () => {
+    if (editIndex !== -1) {
+      const updatedData = [...network];
+      updatedData[editIndex] = formData;
+      setNetwork(updatedData);
+      setEditIndex(-1);
+      setFormData({
+        network: "",
+        username: "",
+        url: "",
+      });
+    }
+  };
+
+  return (
+    <div className="w-full max-w-screen-xl mx-auto">
+      <h2 className="text-2xl font-bold mb-4">Social media</h2>
+      <div className="mb-6 border-b-2 pb-4">
+        <div className="mb-4">
+          <div className="w-full max-w-screen-xl mx-auto">
+            <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+              <div className="mb-4">
+                <div className="mb-6 flex  items-center gap-10">
+                  <div className="w-full ">
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2"
+                      htmlFor="network"
+                    >
+                      Social media Name
+                    </label>
+                    <select
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="network"
+                      name="network"
+                      value={formData.network}
+                      onChange={handleChange}
+                    >
+                      <option value="" disabled>
+                        Select a Social Media Type
+                      </option>
+                      {socialMediaData.map((option) => (
+                        <option key={option.value} value={option.name}>
+                          {option.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="w-full ">
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2"
+                      htmlFor="url"
+                    >
+                      Profile Url
+                    </label>
+                    <input
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      type="text"
+                      placeholder=" url"
+                      id="url"
+                      name="url"
+                      value={formData.url}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="mb-6">
+                {editIndex === -1 ? (
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="button"
+                    onClick={handleAdd}
+                  >
+                    Add
+                  </button>
+                ) : (
+                  <button
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="button"
+                    onClick={handleSaveEdit}
+                  >
+                    Update
+                  </button>
+                )}
+              </div>
+            </div>
+            <div className="flex flex-wrap justify-between gap-2">
+              {network.map((experience, index) => (
+                <NetwordInfo
+                  key={index}
+                  {...experience}
+                  onEdit={() => handleEdit(index)}
+                  onDelete={() => handleRemove(index)}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center justify-between"></div>
+      </div>
+    </div>
+  );
+};
+
+const NetwordInfo = ({
+  network,
+  username,
+  url,
+  onEdit,
+  onDelete,
+}) => {
+  return (
+    <div className="bg-white w-1/5 shadow-lg rounded-lg overflow-hidden p-4">
+      <div className="mb-4">
+        <h2 className="text-xl font-semibold"><a href={url}>{network}</a></h2>
+       
+      </div>
+      <div className="mt-auto">
+        <div className="flex justify-between">
+          <button
+            onClick={() => onEdit()}
+            className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105"
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => onDelete()}
+            className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105 ml-2"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };

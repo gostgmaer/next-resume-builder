@@ -1,12 +1,84 @@
 import Modal from "@/components/global/Modal";
 import { firebaseDatabaseConn } from "@/config/firebase";
+import { useAuthContext } from "@/context/authContext";
 import { useGlobalAppContext } from "@/context/context";
+import { get } from "@/lib/http";
+import Loader from "@/utils/Loader";
 import moment from "moment";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-const ResumeItem = ({ user }) => {
+const UserResumes = () => {
+  const router = useRouter();
+  const { user, userId } = useAuthContext();
+  // Replace this with the actual data from your JSON
+  // @ts-ignore
+
+  const {
+    fetchResumedata,
+    currentData,
+    updateResumeRecord,
+    activeTab,
+    setActiveTab,
+    id,
+    setId,
+  } = useGlobalAppContext();
+  const [list, setList] = useState(undefined);
+
+  // var profileData = [];
+  const fetchResumeData = async () => {
+    const data = await get("/resume");
+
+    setList(data)
+   
+  };
+
+  useEffect(() => {
+    if (userId?.user_id) {
+      fetchResumeData();
+    }
+  }, [userId?.user_id]);
+
+  const handleNewResume = () => {
+    setId(undefined);
+    router.push("/resume-builder");
+  };
+
+  if (!list) {
+    return <Loader />;
+  }
+
+  // useEffect(() => {
+  //   if (!userId) {
+  //     router.push("/login");
+  //   }
+  // }, [userId]);
+
+  return (
+    <div className="container text-black mx-auto">
+      <div className="flex justify-between items-center py-5">
+        <h1 className="text-2xl font-semibold mb-4">Resume List</h1>
+
+        <button
+          className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
+          onClick={handleNewResume}
+        >
+          Create New Resume
+        </button>
+      </div>
+      <div className="space-y-2 bg-white p-2 rounded-lg">
+        {list.result?.map((resume, index) => (
+          <ResumeItem key={index} data={resume} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default UserResumes;
+
+const ResumeItem = ({ data }) => {
   const {
     fetchResumedata,
     currentData,
@@ -19,14 +91,14 @@ const ResumeItem = ({ user }) => {
     openModal,
     closeModal,
   } = useGlobalAppContext();
-  // const nodeRef = firebaseDatabaseConn.app(id);
+
   const router = useRouter();
   const EditID = () => {
-    setId(user.id);
+    setId(data.id);
     router.push("/resume-builder");
   };
   const viewResume = () => {
-    setId(user.id);
+    setId(data.id);
     router.push("/resume");
   };
 
@@ -35,14 +107,8 @@ const ResumeItem = ({ user }) => {
   };
 
   const deleteResumeFunction = () => {
-    console.log(id);
-  }
-
-  // useEffect(() => {
-  //   if (profileData.id === id) {
-  //     router.push("/resume-builder");
-  //   }
-  // }, [id]);
+    console.log(data);
+  };
 
   return (
     <div className="border p-4 flex flex-col bg-slate-50 rounded-lg md:flex-row justify-between items-center">
@@ -50,24 +116,24 @@ const ResumeItem = ({ user }) => {
         <Image
           height={200}
           width={200}
-          src={user.image}
-          alt={`Profile of ${user.name}`}
+          src={data.image}
+          alt={`Profile of ${data.name}`}
           className="w-40 h-40 rounded-full object-cover mr-4"
         />
         <div>
-          <h2 className="text-xl font-semibold">Name: {user.name}</h2>
-          <p className=" font-medium">Resume Id: {user.id}</p>
-          <p>Email: {user.email}</p>
-          <p>Phone: {user.phone}</p>
-          <p>Position: {user.position}</p>
+          <h2 className="text-xl font-semibold">Name: {data.name}</h2>
+          <p className=" font-medium">Resume Id: {data["_id"]}</p>
+          <p>Email: {data.email}</p>
+          <p>Phone: {data.phone}</p>
+          <p>Position: {data.position}</p>
 
           <p>
             Created Time:{" "}
-            {moment(user.created_time).format("Do MMM YYYY, h:mm a")}
+            {moment(data.created_time).format("Do MMM YYYY, h:mm a")}
           </p>
           <p>
             Updated Time:{" "}
-            {moment(user.updated_time).format("Do MMM YYYY, h:mm a")}
+            {moment(data.updated_time).format("Do MMM YYYY, h:mm a")}
           </p>
         </div>
       </div>
@@ -113,5 +179,3 @@ const ResumeItem = ({ user }) => {
     </div>
   );
 };
-
-export default ResumeItem;
