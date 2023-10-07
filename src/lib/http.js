@@ -92,33 +92,33 @@ export const post = async (endpint, data) => {
   return response?.data ? response?.data : error; // or set initial value
 };
 
-export const put = async (endpint, id, data) => {
-  const option = {
-    method: "put",
-    url: baseURL + endpint + `/${id}`,
-    headers: {
-      Authorization: token,
-      session_id: session,
-    },
-    params: {},
-    data: data,
-  };
-  let response;
-  let error;
-  try {
-    response = await axios.request(option);
-    notifySuccess(response.data.message, 2000);
-  } catch (e) {
-    error = e.response.data;
-    notifyerror(e.response.data.message, 2000);
-    throw new Error(JSON.stringify(e.response.data));
-  }
-  return response?.data ? response?.data : error; // or set initial value
-};
+// export const put = async (endpint, id, data) => {
+//   const option = {
+//     method: "put",
+//     url: baseURL + endpint + `/${id}`,
+//     headers: {
+//       Authorization: token,
+//       session_id: session,
+//     },
+//     params: {},
+//     data: data,
+//   };
+//   let response;
+//   let error;
+//   try {
+//     response = await axios.request(option);
+//     notifySuccess(response.data.message, 2000);
+//   } catch (e) {
+//     error = e.response.data;
+//     notifyerror(e.response.data.message, 2000);
+//     throw new Error(JSON.stringify(e.response.data));
+//   }
+//   return response?.data ? response?.data : error; // or set initial value
+// };
 
 export const patch = async (endpint,data, id ) => {
   const option = {
-    method: "put",
+    method: "patch",
     url: baseURL + endpint + `/${id}`,
     headers: {
       Authorization: token,

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import firebase from "firebase/database";
 import ImageUpload from "./comp/ImageUpload";
 import { socialMediaData } from "@/assets/data";
-import { patch, put,post } from "@/lib/http";
+import { patch, post } from "@/lib/http";
 import { findIndex } from "@/utils/custom";
 
 const BasicInfo = () => {
@@ -13,15 +13,9 @@ const BasicInfo = () => {
   const { user } = useAuthContext();
   const {
     fetchResumedata,
-    currentData,
     updateResumeRecord,
     activeTab,
     setActiveTab,
-    loader,
-    loaderFalse,
-    loaderTrue,
-    resume,
-    setResume,
     id,
     setId,
   } = useGlobalAppContext();
@@ -53,8 +47,8 @@ const BasicInfo = () => {
 
     const basic = { ...extra, ...formData };
     try {
-      const data = await post("/resume", basic); // Replace with your collection name
-      setId(data.name);
+      const data = await post("/resume/create", basic); // Replace with your collection name
+      setId(data.result.record_id);
       setActiveTab("work experience");
     } catch (error) {
       console.error("Error getting data:", error);
@@ -63,19 +57,23 @@ const BasicInfo = () => {
 
   const fetchResumeData = async () => {
     const res = await fetchResumedata(id);
-    setFormData(res);
-    setImagePreview(res.image);
+    setFormData(res.result);
+    setImagePreview(res.result.image);
+    setNetwork(res.result.profiles);
   };
 
+  console.log(id);
   const updateResume = (e) => {
     e.preventDefault();
     const extra = {
       image: imagePreview,
       profiles: network,
     };
+    const { name, position, email, phone, linkedin, github, url, summary } =
+      formData;
     var body = {
-      ...formData,
-      ...extra,
+     
+      ...extra,name, position, email, phone, linkedin, github, url, summary
     };
     updateResumeRecord("work experience", body, id);
   };
@@ -182,13 +180,13 @@ const BasicInfo = () => {
 
           <div className="social-media flex item center gap-10">
             <div className="mb-6 w-full">
-              <label className="block mb-2 text-gray-600" htmlFor="overview">
+              <label className="block mb-2 text-gray-600" htmlFor="summary">
                 OverView
               </label>
               <textarea
                 className="w-full p-2 border border-gray-300 rounded-md focus:outline-none h-40 focus:ring focus:ring-blue-200"
-                id="overview"
-                name="overview"
+                id="summary"
+                name="summary"
                 value={formData.summary}
                 onChange={handleChange}
               ></textarea>
@@ -453,18 +451,13 @@ const SocialProfiles = ({ network, setNetwork }) => {
   );
 };
 
-const NetwordInfo = ({
-  network,
-  username,
-  url,
-  onEdit,
-  onDelete,
-}) => {
+const NetwordInfo = ({ network, username, url, onEdit, onDelete }) => {
   return (
     <div className="bg-white w-1/5 shadow-lg rounded-lg overflow-hidden p-4">
       <div className="mb-4">
-        <h2 className="text-xl font-semibold"><a href={url}>{network}</a></h2>
-       
+        <h2 className="text-xl font-semibold">
+          <a href={url}>{network}</a>
+        </h2>
       </div>
       <div className="mt-auto">
         <div className="flex justify-between">

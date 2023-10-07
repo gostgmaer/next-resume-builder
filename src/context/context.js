@@ -1,6 +1,6 @@
 "use client";
+
 import { get, patch } from "@/lib/http";
-import { getSingleRecord, put } from "@/utils/http";
 import React, { useContext, useState, useEffect } from "react";
 const AppContext = React.createContext(null);
 
@@ -76,7 +76,7 @@ const AppProvider = ({ children }) => {
     loaderTrue();
     try {
       const data = await get("/resume",{} ,id); // Replace with your collection name
-      setCurrentData(data.result);
+      setCurrentData(data?.result.last_step);
       console.log(data.result);
       return data;
     } catch (error) {

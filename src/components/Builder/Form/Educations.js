@@ -9,19 +9,21 @@ const Educations = () => {
     currentData,
     updateResumeRecord,
     activeTab,
-    setActiveTab,  id,
+    setActiveTab,
+    id,
     setId,
   } = useGlobalAppContext();
   const [formData, setFormData] = useState({
-    title: "",
-    educationTitle: "",
-    schoolName: "",
+    institution: "",
+    url: "",
+    area: "",
+    studyType: "",
     startDate: "",
     endDate: "",
-    percentage: "",
+    score: "",
+    courses: "",
   });
   const [education, setEducation] = useState([]);
-  const [mydata, setMydata] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,22 +33,23 @@ const Educations = () => {
   const handleAdd = () => {
     setEducation([...education, formData]);
     setFormData({
-      title: "",
-      educationTitle: "",
-      schoolName: "",
+      institution: "",
+      url: "",
+      area: "",
+      studyType: "",
       startDate: "",
       endDate: "",
-      percentage: "",
+      score: "",
+      courses: "",
     });
     // console.log(education);
   };
 
   const fetchResumeData = async () => {
     const res = await fetchResumedata(id);
-    setMydata(res);
-    console.log(res);
-    if (res?.education) {
-      setEducation(res.education);
+
+    if (res.result?.education) {
+      setEducation(res.result?.education);
     }
     if (currentData) {
       // console.log(currentData);
@@ -74,12 +77,14 @@ const Educations = () => {
       setEducation(updatedData);
       setEditIndex(-1);
       setFormData({
-        title: "",
-        educationTitle: "",
-        schoolName: "",
+        institution: "",
+        url: "",
+        area: "",
+        studyType: "",
         startDate: "",
         endDate: "",
-        percentage: "",
+        score: "",
+        courses: "",
       });
     }
   };
@@ -92,15 +97,15 @@ const Educations = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const extra = {
-      updated_time: new Date(),
-      last_step:activeTab
-    };
-    var body = {
-      ...mydata,...extra,
+    const eduBody = {
+      last_step: activeTab,
       education: education,
     };
-    updateResumeRecord("skills", body, id);
+    // var body = {
+    //   ...mydata,...extra,
+    //   education: education,
+    // };
+    updateResumeRecord("skills", eduBody, id);
   };
 
   return (
@@ -112,34 +117,31 @@ const Educations = () => {
             <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="mb-4">
-                  <label
-                    className="block mb-2 text-gray-600"
-                    htmlFor="educationTitle"
-                  >
-                    Education Title
+                  <label className="block mb-2 text-gray-600" htmlFor="courses">
+                    Course
                   </label>
                   <input
                     className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
                     type="text"
-                    id="educationTitle"
-                    name="educationTitle"
-                    value={formData.educationTitle}
+                    id="courses"
+                    name="courses"
+                    value={formData.courses}
                     onChange={handleChange}
                   />
                 </div>
                 <div className="mb-4">
                   <label
                     className="block mb-2 text-gray-600"
-                    htmlFor="schoolName"
+                    htmlFor="institution"
                   >
                     College/School Name
                   </label>
                   <input
                     className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
                     type="text"
-                    id="schoolName"
-                    name="schoolName"
-                    value={formData.schoolName}
+                    id="institution"
+                    name="institution"
+                    value={formData.institution}
                     onChange={handleChange}
                   />
                 </div>
@@ -178,19 +180,16 @@ const Educations = () => {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="mb-4">
-                  <label
-                    className="block mb-2 text-gray-600"
-                    htmlFor="percentage"
-                  >
+                  <label className="block mb-2 text-gray-600" htmlFor="score">
                     Percentage
                   </label>
                   <input
                     className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
                     type="number"
-                    id="percentage"
+                    id="score"
                     placeholder="80"
-                    name="percentage"
-                    value={formData.percentage}
+                    name="score"
+                    value={formData.score}
                     onChange={handleChange}
                   />
                 </div>
@@ -235,12 +234,14 @@ const Educations = () => {
               onClick={() => {
                 setEducation([]);
                 setFormData({
-                  title: "",
-                  educationTitle: "",
-                  schoolName: "",
+                  institution: "",
+                  url: "",
+                  area: "",
+                  studyType: "",
                   startDate: "",
                   endDate: "",
-                  percentage: "",
+                  score: "",
+                  courses: "",
                 });
               }}
             >
@@ -263,25 +264,27 @@ const Educations = () => {
 export default Educations;
 
 const EducationCard = ({
-  title,
-  educationTitle,
-  schoolName,
+  institution,
+  url,
+  area,
+  studyType,
   startDate,
   endDate,
-  percentage,
+  score,
+  courses,
   onEdit,
   onDelete,
 }) => {
   return (
     <div className="bg-white shadow-lg rounded-lg overflow-hidden m-4 p-4">
       <div className="mb-4">
-        <h2 className="text-xl font-semibold">{title}</h2>
-        <p className="text-gray-600">{educationTitle}</p>
-        <p className="text-gray-600">{schoolName}</p>
+        <h2 className="text-xl font-semibold">{courses}</h2>
+       
+        <p className="text-gray-600">{institution}</p>
         <p className="text-gray-600">
           {startDate} - {endDate}
         </p>
-        <p className="text-gray-600">Percentage: {percentage}</p>
+        <p className="text-gray-600">Percentage: {score}</p>
       </div>
       <div className="mt-auto">
         <div className="flex justify-between">

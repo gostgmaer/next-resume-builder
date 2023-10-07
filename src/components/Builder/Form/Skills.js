@@ -20,7 +20,7 @@ const Skills = () => {
     last_used: "",
     scale: "",
   });
-  const [mydata, setMydata] = useState(null);
+
 
   const [skills, setSkills] = useState([]);
 
@@ -49,9 +49,9 @@ const Skills = () => {
 
   const fetchResumeData = async () => {
     const res = await fetchResumedata(id);
-    setMydata(res);
-    if (res?.skill) {
-      setSkills(res.skill);
+ 
+    if (res.result?.skills) {
+      setSkills(res.result?.skills);
     }
     if (currentData) {
       // console.log(currentData);
@@ -63,17 +63,16 @@ const Skills = () => {
     try {
       // Replace '/yourCollectionName/${recordId}.json' with your desired API endpoint
  
-      const extra = {
-        updated_time: new Date(),
-        last_step:activeTab
-      };
+      // const extra = {
+      //   last_step:activeTab
+      // };
       var data = {
-        ...mydata,...extra,
-        skill: skills,
+        last_step:activeTab,
+        skills: skills,
       };
-      const response = await put(`/resume/${id}.json`, data);
-      setActiveTab('projects')
-      console.log("Record updated successfully:", response);
+      updateResumeRecord("projects", data, id);
+      // setActiveTab('projects')
+     // console.log("Record updated successfully:", response);
     } catch (error) {
       console.error("Error updating record:", error);
     }

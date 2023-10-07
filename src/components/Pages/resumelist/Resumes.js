@@ -79,6 +79,7 @@ const UserResumes = () => {
 export default UserResumes;
 
 const ResumeItem = ({ data }) => {
+  console.log(data);
   const {
     fetchResumedata,
     currentData,
@@ -94,11 +95,11 @@ const ResumeItem = ({ data }) => {
 
   const router = useRouter();
   const EditID = () => {
-    setId(data.id);
+    setId(data._id);
     router.push("/resume-builder");
   };
   const viewResume = () => {
-    setId(data.id);
+    setId(data._id);
     router.push("/resume");
   };
 
