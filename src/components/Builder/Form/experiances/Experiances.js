@@ -4,6 +4,7 @@ import { get, getSingleRecord, put } from "@/utils/http";
 import React, { useEffect, useState } from "react";
 import ExperienceCard from "./Card";
 import { findIndex } from "@/utils/custom";
+import { patch } from "@/lib/http";
 
 const Experiances = () => {
   const {
@@ -12,31 +13,24 @@ const Experiances = () => {
     updateResumeRecord,
     activeTab,
     setActiveTab,
-    loader,  id,
+    loader,
+    id,
     setId,
   } = useGlobalAppContext();
 
-  const [mydata, setMydata] = useState(null);
 
-  const [workExperiences, setWorkExperiences] = useState([
-    {
-      title: "Software Engineer",
-      name: "John Doe",
-      company: "ABC Corp",
-      experienceLetter: "https://example.com/experience-letter.pdf",
-      location: "New York, NY",
-      startDate: "January 2020",
-      endDate: "Present",
-    },
-  ]);
+  const [expriance, setExpriance] = useState([]);
   const [currentExperience, setCurrentExperience] = useState({
-    title: "",
+    position: "",
     name: "",
     company: "",
     experienceLetter: "",
     location: "",
     startDate: "",
     endDate: "",
+    url: "",
+    summary: "",
+    highlights: [],
   });
 
   const handleChange = (e) => {
@@ -45,15 +39,18 @@ const Experiances = () => {
   };
 
   const handleAddExperience = () => {
-    setWorkExperiences([...workExperiences, currentExperience]);
+    setExpriance([...expriance, currentExperience]);
     setCurrentExperience({
-      title: "",
+      position: "",
       name: "",
       company: "",
       experienceLetter: "",
       location: "",
       startDate: "",
       endDate: "",
+      url: "",
+      summary: "",
+      highlights: [],
     });
   };
 
@@ -63,32 +60,35 @@ const Experiances = () => {
   // };
 
   const handleRemoveExperience = (index) => {
-    const updatedExperiences = [...workExperiences];
+    const updatedExperiences = [...expriance];
     updatedExperiences.splice(index, 1);
-    setWorkExperiences(updatedExperiences);
+    setExpriance(updatedExperiences);
   };
 
   const [editIndex, setEditIndex] = useState(-1);
 
   const handleEdit = (index) => {
     setEditIndex(index);
-    const editdata = findIndex(workExperiences, index);
+    const editdata = findIndex(expriance, index);
     setCurrentExperience(editdata);
   };
   const handleSaveEdit = () => {
     if (editIndex !== -1) {
-      const updatedData = [...workExperiences];
+      const updatedData = [...expriance];
       updatedData[editIndex] = currentExperience;
-      setWorkExperiences(updatedData);
+      setExpriance(updatedData);
       setEditIndex(-1);
       setCurrentExperience({
-        title: "",
+        position: "",
         name: "",
         company: "",
         experienceLetter: "",
         location: "",
         startDate: "",
         endDate: "",
+        url: "",
+        summary: "",
+        highlights: [],
       });
     }
   };
@@ -97,14 +97,14 @@ const Experiances = () => {
     try {
       // Replace '/yourCollectionName/${recordId}.json' with your desired API endpoint
       const extra = {
-        updated_time: new Date(),
-        last_step:activeTab
+        last_step: activeTab,
+        work: expriance,
       };
       var expriances = {
-        ...mydata,...extra,
-        experiances: workExperiences,
+        last_step: activeTab,
+        work: expriance,
       };
-      const response = await put(`/resume/${id}.json`, expriances);
+      const response = await patch(`/resume`, expriances, id);
       setActiveTab("education");
       return response;
     } catch (error) {
@@ -115,22 +115,19 @@ const Experiances = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add your logic to save the form data here
-    console.log(workExperiences);
+    console.log(expriance);
     try {
       updateRecord(); // Replace with your collection name
-      
     } catch (error) {
       console.error("Error getting data:", error);
     }
   };
 
   const fetchResumeData = async () => {
-    const res = await fetchResumedata(id);
-    setMydata(res);
-    console.log(res);
-    if (res.experiances) {
-      setWorkExperiences(res.experiances);
-      
+    const response = await fetchResumedata(id);
+   
+    if (response?.result?.work) {
+      setExpriance(response.result.work);
     }
   };
 
@@ -158,7 +155,7 @@ const Experiances = () => {
                       className="block text-gray-700 text-sm font-bold mb-2"
                       htmlFor="name"
                     >
-                      Name
+                      Position
                     </label>
                     <input
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -265,16 +262,16 @@ const Experiances = () => {
               <div className="mb-6">
                 <label
                   className="block text-gray-700 text-sm font-bold mb-2"
-                  htmlFor="title"
+                  htmlFor="summary"
                 >
                   Descriptions
                 </label>
                 <textarea
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   placeholder="Descriptions...."
-                  id="title"
-                  name="title"
-                  value={currentExperience.title}
+                  id="summary"
+                  name="summary"
+                  value={currentExperience.summary}
                   onChange={handleChange}
                 />
               </div>
@@ -299,7 +296,7 @@ const Experiances = () => {
               </div>
             </form>
             <div className="flex flex-wrap">
-              {workExperiences.map((experience, index) => (
+              {expriance.map((experience, index) => (
                 <ExperienceCard
                   key={index}
                   {...experience}
@@ -314,15 +311,18 @@ const Experiances = () => {
               className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="button"
               onClick={() => {
-                setWorkExperiences([]);
+                setExpriance([]);
                 setCurrentExperience({
-                  title: "",
+                  position: "",
                   name: "",
                   company: "",
                   experienceLetter: "",
                   location: "",
                   startDate: "",
                   endDate: "",
+                  url: "",
+                  summary: "",
+                  highlights: [],
                 });
               }}
             >

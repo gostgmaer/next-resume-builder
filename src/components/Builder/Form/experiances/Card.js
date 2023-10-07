@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const ExperienceCard = ({
-  title,
+  position,
   name,
   company,
   experienceLetter,
   location,
   startDate,
   endDate,
+  url,
+  summary,
+  highlights,
   onEdit,
   onDelete,
 }) => {
-
   return (
     <div className="bg-white shadow-lg rounded-lg overflow-hidden m-4 p-4">
       <div className="mb-4">

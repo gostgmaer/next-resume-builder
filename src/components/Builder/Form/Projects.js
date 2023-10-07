@@ -8,19 +8,22 @@ const Projects = () => {
     currentData,
     updateResumeRecord,
     activeTab,
-    setActiveTab,  id,
+    setActiveTab,
+    id,
     setId,
   } = useGlobalAppContext();
 
   const [formData, setFormData] = useState({
-    title: "",
-    projectTitle: "",
-    overview: "",
-    deployedUrl: "",
-    repositoryUrl: "",
+    name: "",
+    startDate: "",
+    endDate: "",
+    highlights: "",
+    url: "",
     description: "",
+    repository: "",
+    overview: "",
   });
-  const [mydata, setMydata] = useState(null);
+
   const [projects, setProjects] = useState([]);
   // const [projetcs, setWorkExperiences] = useState();
 
@@ -32,14 +35,15 @@ const Projects = () => {
   const handleAdd = () => {
     setProjects([...projects, formData]);
     setFormData({
-      title: "",
-      projectTitle: "",
-      overview: "",
-      deployedUrl: "",
-      repositoryUrl: "",
+      name: "",
+      startDate: "",
+      endDate: "",
+      highlights: "",
+      url: "",
       description: "",
+      repository: "",
+      overview: "",
     });
-    console.log(projects);
   };
 
   const handleRemove = (index) => {
@@ -49,10 +53,8 @@ const Projects = () => {
   };
   const fetchResumeData = async () => {
     const res = await fetchResumedata(id);
-    setMydata(res);
-    console.log(res);
-    if (res?.projetcts) {
-      setProjects(res.projects);
+    if (res.result?.projects) {
+      setProjects(res.result.projects);
     }
     if (currentData) {
       // console.log(currentData);
@@ -62,18 +64,12 @@ const Projects = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your logic to save the form data here
-  
-    const extra = {
-      updated_time: new Date(),
-      last_step:activeTab
-    };
+
     var body = {
-      ...mydata,...extra,
+      last_step: activeTab,
       projects: projects,
     };
     updateResumeRecord("others", body, id);
-  
   };
 
   const [editIndex, setEditIndex] = useState(-1);
@@ -90,16 +86,17 @@ const Projects = () => {
       setProjects(updatedData);
       setEditIndex(-1);
       setFormData({
-        title: "",
-        projectTitle: "",
-        overview: "",
-        deployedUrl: "",
-        repositoryUrl: "",
+        name: "",
+        startDate: "",
+        endDate: "",
+        highlights: "",
+        url: "",
         description: "",
+        repository: "",
+        overview: "",
       });
     }
   };
-
 
   useEffect(() => {
     if (id) {
@@ -118,16 +115,16 @@ const Projects = () => {
                   <div className="mb-4">
                     <label
                       className="block mb-2 text-gray-600"
-                      htmlFor="projectTitle"
+                      htmlFor="name"
                     >
                       Project Title
                     </label>
                     <input
                       className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
                       type="text"
-                      id="projectTitle"
-                      name="projectTitle"
-                      value={formData.projectTitle}
+                      id="name"
+                      name="name"
+                      value={formData.name}
                       onChange={handleChange}
                     />
                   </div>
@@ -152,32 +149,32 @@ const Projects = () => {
                   <div className="mb-4">
                     <label
                       className="block mb-2 text-gray-600"
-                      htmlFor="deployedUrl"
+                      htmlFor="url"
                     >
                       Deployed URL
                     </label>
                     <input
                       className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
                       type="text"
-                      id="deployedUrl"
-                      name="deployedUrl"
-                      value={formData.deployedUrl}
+                      id="url"
+                      name="url"
+                      value={formData.url}
                       onChange={handleChange}
                     />
                   </div>
                   <div className="mb-4">
                     <label
                       className="block mb-2 text-gray-600"
-                      htmlFor="repositoryUrl"
+                      htmlFor="repository"
                     >
                       Repository URL
                     </label>
                     <input
                       className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
                       type="text"
-                      id="repositoryUrl"
-                      name="repositoryUrl"
-                      value={formData.repositoryUrl}
+                      id="repository"
+                      name="repository"
+                      value={formData.repository}
                       onChange={handleChange}
                     />
                   </div>
@@ -240,12 +237,14 @@ const Projects = () => {
             onClick={() => {
               setProjects([]);
               setFormData({
-                title: "",
-                projectTitle: "",
-                overview: "",
-                deployedUrl: "",
-                repositoryUrl: "",
+                name: "",
+                startDate: "",
+                endDate: "",
+                highlights: "",
+                url: "",
                 description: "",
+                repository: "",
+                overview: "",
               });
             }}
           >
@@ -267,26 +266,28 @@ const Projects = () => {
 export default Projects;
 
 const ProjectCard = ({
-  title,
-  projectTitle,
-  overview,
-  deployedUrl,
-  repositoryUrl,
+  name,
+  startDate,
+  endDate,
+  highlights,
+  url,
   description,
+  repository,
+  overview,
   onEdit,
   onDelete,
 }) => {
   return (
     <div className="bg-white shadow-lg rounded-lg overflow-hidden m-4 p-4">
       <div className="mb-4">
-        <h2 className="text-xl font-semibold">{title}</h2>
-        <p className="text-gray-600">{projectTitle}</p>
+        <h2 className="text-xl font-semibold">{name}</h2>
+ 
         <p className="text-gray-600">{overview}</p>
         <p className="text-gray-600">
-          Deployed URL: <a href={deployedUrl}>{deployedUrl}</a>
+          Deployed URL: <a href={url}>{url}</a>
         </p>
         <p className="text-gray-600">
-          Repository URL: <a href={repositoryUrl}>{repositoryUrl}</a>
+          Repository URL: <a href={repository}>{repository}</a>
         </p>
         <p className="text-gray-600">{description}</p>
       </div>
