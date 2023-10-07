@@ -4,20 +4,17 @@ import { useAuthContext } from "@/context/authContext";
 import { useGlobalAppContext } from "@/context/context";
 import Loader from "@/utils/Loader";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 
 const Page = () => {
   // @ts-ignore
-  const { user } = useAuthContext();
+  const { user,userId } = useAuthContext();
   const { loader } = useGlobalAppContext();
   const router = useRouter();
-  // React.useEffect(() => {
-  //   if (user == null) router.push("/login");
-  // }, [user]);
-
-  if (loader) {
-    <Loader />;
-  }
+ 
+  useEffect(() => {
+    if (!userId) router.push("/auth/login");
+  }, [userId?.user_id]);
 
   return (
     <div>
