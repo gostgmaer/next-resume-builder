@@ -2,7 +2,7 @@
 import ImageUpload from "@/components/global/fields/ImageUpload";
 import { useAuthContext } from "@/context/authContext";
 import { useGlobalAppContext } from "@/context/context";
-import { get, put } from "@/lib/http";
+import { get, patch } from "@/lib/http";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
@@ -86,21 +86,13 @@ const UserProfile = ({ data, setClose, setProfileInfo }) => {
 
   const UpdateProfile = async (e) => {
     e.preventDefault();
-    console.log(formData, imagePreview);
+
     const recordData = {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      profilePicture: imagePreview,
-      contactNumber: formData.contactNumber,
-      address: {
-        street: formData.street,
-        city: formData.city,
-        state: formData.state,
-        postalCode: formData.postalCode,
-        country: formData.country,
-      },
+     ...formData, profilePicture: imagePreview
     };
-    const res = await put(`/user`, userId.user_id, recordData);
+
+    console.log(recordData);
+    const res = await patch(`/user`,recordData, userId.user_id );
     if (res) {
       setClose(true);
       const userInfoDaa = await get(`/user/profile`, null, userId.user_id);
