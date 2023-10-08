@@ -6,7 +6,6 @@ const AppContext = React.createContext(null);
 
 const AppProvider = ({ children }) => {
   const [loader, setLoader] = useState(false);
-  const [appLoader, setAppLoader] = useState(false);
   const [currentData, setCurrentData] = useState(null);
   const [activeTab, setActiveTab] = useState("basic info");
   const [id, setId] = useState(undefined);

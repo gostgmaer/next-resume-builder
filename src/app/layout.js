@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import { Suspense } from "react";
 import Loader from "@/utils/loader/Loader";
 
+
 const roboto = Roboto({
   subsets: ["latin"],
   weight: ["100", "400", "500", "700"],

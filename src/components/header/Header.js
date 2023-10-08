@@ -1,20 +1,11 @@
 "use client";
 import Link from "next/link";
 import React from "react";
-import { firebase_app } from "@/config/firebase";
-// @ts-ignore
-import { signOut, getAuth } from "firebase/auth";
-import { useAuthContext } from "@/context/authContext";
-import { useGlobalAppContext } from "@/context/context";
-import { useRouter } from "next/navigation";
 
-const auth = getAuth(firebase_app);
+import { useAuthContext } from "@/context/authContext";
 
 function Header() {
-  const { setId } = useGlobalAppContext();
-  // @ts-ignore
   const { Logout, user, userId } = useAuthContext();
-  const router = useRouter();
 
   return (
     <header className="bg-gradient-to-r from-blue-700 via-blue-500 to-blue-300 text-white py-3">

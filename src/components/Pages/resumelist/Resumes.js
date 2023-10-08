@@ -46,11 +46,7 @@ const UserResumes = () => {
     router.push("/resume-builder");
   };
 
-  // useEffect(() => {
-  //   if (!userId) {
-  //     router.push("/login");
-  //   }
-  // }, [userId]);
+
 
   return (
     <div className="container text-black mx-auto">

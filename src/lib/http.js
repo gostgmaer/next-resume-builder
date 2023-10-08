@@ -1,8 +1,7 @@
 // utils/axiosApi.js
 import axios from "axios";
 import { notifySuccess, notifyerror } from "./notify/notice";
-import { parseCookies, setCookie } from "nookies";
-import { useGlobalAppContext } from "@/context/context";
+import { parseCookies } from "nookies";
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL; // Replace with your Firebase URL
 
 const axiosInstance = axios.create({
@@ -10,13 +9,12 @@ const axiosInstance = axios.create({
 });
 // axios.defaults.withCredentials=true
 
+
+export const get = async (endpint,query,id) => {
+  
 const cookies = parseCookies();
 const token = cookies["accessToken"];
 const session = cookies["session"];
-
-export const get = async (endpint,query,id) => {
- 
-  //   let recordID,
   let reqUrl = undefined;
   if (id) {
     reqUrl = baseURL + endpint + `/${id}`;
@@ -53,16 +51,12 @@ export const get = async (endpint,query,id) => {
   return response?.data ? response?.data : error; // or set initial value
 };
 
-export const getSingleRecord = async (endpoint, id) => {
-  try {
-    const response = await axiosInstance.get(endpoint + "/" + id + ".json");
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
 
 export const post = async (endpint, data) => {
+  
+const cookies = parseCookies();
+const token = cookies["accessToken"];
+const session = cookies["session"];
   const option = {
     method: "post",
     url: baseURL + endpint,
@@ -117,6 +111,10 @@ export const post = async (endpint, data) => {
 // };
 
 export const patch = async (endpint,data, id ) => {
+  
+const cookies = parseCookies();
+const token = cookies["accessToken"];
+const session = cookies["session"];
   const option = {
     method: "patch",
     url: baseURL + endpint + `/${id}`,
@@ -142,6 +140,11 @@ export const patch = async (endpint,data, id ) => {
 
 
 export const del = async (endpint, id) => {
+  
+const cookies = parseCookies();
+const token = cookies["accessToken"];
+const session = cookies["session"];
+
   const option = {
     method: "delete",
     url: baseURL + endpint + `/${id}`,

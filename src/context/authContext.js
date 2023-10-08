@@ -6,15 +6,13 @@ import jwt_decode from "jwt-decode";
 import { useRouter } from "next/navigation";
 import { post } from "@/lib/http";
 
-export const AuthContext = React.createContext({});
-
-export const useAuthContext = () => React.useContext(AuthContext);
+export const AuthContext = React.createContext(null);
 
 export const AuthContextProvider = ({ children }) => {
   const { loader, loaderFalse, loaderTrue } = useGlobalAppContext();
   const [user, setUser] = React.useState(undefined);
   const [userId, setUserId] = useState(null);
-  const [authenticated, setAuthenticated] = useState(undefined);
+
   const router = useRouter();
 
   const handleLoginAuth = async (body) => {
@@ -43,16 +41,17 @@ export const AuthContextProvider = ({ children }) => {
       loaderTrue();
       const res = await post("/user/signout");
       if (res.statusCode == "200") {
-        setAuthenticated(undefined);
         sessionStorage.removeItem("user");
         deleteCookie("accessToken");
+        deleteCookie("session");
         window.sessionStorage.clear();
         window.localStorage.clear();
         setUser(undefined);
         setUserId(undefined);
-      }
+        router.push("/auth/login");
 
-      loaderFalse();
+        loaderFalse();
+      }
     } catch (error) {
       loaderFalse();
     }
@@ -83,10 +82,10 @@ export const AuthContextProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider
-      value={{ user, handleLoginAuth, authenticated, Logout, userId }}
-    >
+    <AuthContext.Provider value={{ user, handleLoginAuth, Logout, userId }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+export const useAuthContext = () => React.useContext(AuthContext);

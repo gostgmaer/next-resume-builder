@@ -9,11 +9,8 @@ import { useGlobalAppContext } from "@/context/context";
 import Loader from "@/utils/loader/Loader";
 const Login = () => {
   const { handleLoginAuth, user, userId } = useAuthContext();
-  const { loader, loaderFalse,
-    loaderTrue } = useGlobalAppContext();
+  const { loader, loaderFalse, loaderTrue } = useGlobalAppContext();
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
   const [formData, setFormData] = useState({
     email: "",
@@ -27,7 +24,7 @@ const Login = () => {
   };
 
   const handleLogin = async (e) => {
-    loaderTrue()
+    loaderTrue();
     e.preventDefault();
     const body = {
       email: formData.email,
@@ -35,15 +32,13 @@ const Login = () => {
     };
 
     try {
-     const res =  await handleLoginAuth(body);
-     if (res) {
-      loaderFalse()
-     }
+      const res = await handleLoginAuth(body);
+      if (res) {
+        loaderFalse();
+      }
     } catch (error) {
-      loaderFalse()
+      loaderFalse();
     }
-
-
   };
 
   const handleGoogleLogin = async () => {};
@@ -56,7 +51,6 @@ const Login = () => {
     if (userId) {
       router.push("/profile");
     }
- 
   }, [userId?.user_id]);
 
   return (
