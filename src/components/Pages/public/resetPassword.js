@@ -1,15 +1,17 @@
 "use client";
-
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { post } from "@/lib/http";
 import { notifyerror } from "@/lib/notify/notice";
+import PasswordField from "@/components/global/fields/PasswordField";
+import { useAuthContext } from "@/context/authContext";
 const ResetPassword = () => {
+  const { handleLoginAuth, user, userId } = useAuthContext();
+  const router = useRouter();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const param = useSearchParams();
-  const route = useRouter();
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
@@ -31,7 +33,7 @@ const ResetPassword = () => {
             { password: password }
           );
           if (reset.status == "OK") {
-            route.push("/auth/login");
+            router.push("/auth/login");
           }
         } catch (error) {
           console.log(error);
@@ -41,6 +43,13 @@ const ResetPassword = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (userId) {
+      router.push("/profile");
+    }
+  }, [userId]);
+
 
   return (
     <div>
@@ -53,28 +62,20 @@ const ResetPassword = () => {
             {/* Password Input */}
             <div className="rounded-md shadow-sm">
               <div>
-                <input
-                  aria-label="Password"
-                  name="password"
-                  type="password"
-                  required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                  placeholder="New Password"
+                <PasswordField
                   value={password}
-                  onChange={handlePasswordChange}
+                  handleChange={handlePasswordChange}
+                  placeholder={"New Password"}
+                  name={"password"}
                 />
               </div>
               {/* Confirm Password Input */}
               <div className="mt-4">
-                <input
-                  aria-label="Confirm Password"
-                  name="confirmPassword"
-                  type="password"
-                  required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                  placeholder="Confirm Password"
+                <PasswordField
                   value={confirmPassword}
-                  onChange={handleConfirmPasswordChange}
+                  handleChange={handleConfirmPasswordChange}
+                  placeholder={"Confirm Password"}
+                  name={"confirmPassword"}
                 />
               </div>
             </div>

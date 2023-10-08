@@ -41,17 +41,19 @@ const Login = () => {
     }
   };
 
-  const handleGoogleLogin = async () => {};
+  const handleGoogleLogin = async () => {
 
-  const responseFacebook = (response) => {
-    console.log(response);
+  };
+
+  const responseFacebook = async (response) => {
+  
   };
 
   useEffect(() => {
     if (userId) {
       router.push("/profile");
     }
-  }, [userId?.user_id]);
+  }, [userId]);
 
   return (
     <div className="min-h-screen flex items-center justify-center">

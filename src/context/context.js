@@ -1,6 +1,6 @@
 "use client";
 
-import { get, patch } from "@/lib/http";
+import { get, getsingle, patch } from "@/lib/http";
 import React, { useContext, useState, useEffect } from "react";
 const AppContext = React.createContext(null);
 
@@ -9,7 +9,7 @@ const AppProvider = ({ children }) => {
   const [currentData, setCurrentData] = useState(null);
   const [activeTab, setActiveTab] = useState("basic info");
   const [id, setId] = useState(undefined);
- 
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => {
@@ -30,8 +30,8 @@ const AppProvider = ({ children }) => {
   const fetchResumedata = async (id) => {
     loaderTrue();
     try {
-      const data = await get("/resume",{} ,id); // Replace with your collection name
-      setCurrentData(data?.result.last_step);
+      const data = await getsingle("/resume", {}, id); // Replace with your collection name
+      setCurrentData(data);
       console.log(data.result);
       return data;
     } catch (error) {
@@ -43,7 +43,7 @@ const AppProvider = ({ children }) => {
   const updateResumeRecord = async (nav, body, id) => {
     loaderTrue();
     try {
-      const response = await patch(`/resume`, body,id);
+      const response = await patch(`/resume`, body, id);
       setActiveTab(nav);
       console.log("Record updated successfully:", response);
     } catch (error) {

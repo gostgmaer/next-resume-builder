@@ -3,8 +3,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { post } from "@/lib/http";
+import { useAuthContext } from "@/context/authContext";
 
 const ForgetPassword = () => {
+  const { handleLoginAuth, user, userId } = useAuthContext();
+
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
@@ -27,6 +30,12 @@ const ForgetPassword = () => {
       return res;
     } catch (error) {}
   };
+
+  useEffect(() => {
+    if (userId) {
+      router.push("/profile");
+    }
+  }, [userId]);
 
   return (
     <div className="min-h-screen flex items-center justify-center">

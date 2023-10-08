@@ -36,17 +36,15 @@ const UserResumes = () => {
   };
 
   useEffect(() => {
-    if (userId?.user_id) {
+    if (userId) {
       fetchResumeData();
     }
-  }, [userId?.user_id]);
+  }, [userId]);
 
   const handleNewResume = () => {
     setId(undefined);
     router.push("/resume-builder");
   };
-
-
 
   return (
     <div className="container text-black mx-auto">
@@ -66,7 +64,7 @@ const UserResumes = () => {
         </div>
       ) : (
         <div className="space-y-2 bg-white p-2 rounded-lg">
-          {list.result.map((resume, index) => (
+          {list?.result?.map((resume, index) => (
             <ResumeItem key={index} data={resume} />
           ))}
         </div>
@@ -79,18 +77,7 @@ export default UserResumes;
 
 const ResumeItem = ({ data }) => {
   console.log(data);
-  const {
-    fetchResumedata,
-    currentData,
-    updateResumeRecord,
-    activeTab,
-    setActiveTab,
-    id,
-    setId,
-    isModalOpen,
-    openModal,
-    closeModal,
-  } = useGlobalAppContext();
+  const { setId, openModal, closeModal } = useGlobalAppContext();
 
   const router = useRouter();
   const EditID = () => {
@@ -111,15 +98,17 @@ const ResumeItem = ({ data }) => {
   };
 
   return (
-    <div className="border p-4 flex flex-col bg-slate-50 rounded-lg md:flex-row justify-between items-center">
+    <div className="border p-4 flex flex-col bg-slate-50 rounded-lg md:flex-row justify-between items-start">
       <div className="flex items-center">
-        <Image
-          height={200}
-          width={200}
-          src={data.image}
-          alt={`Profile of ${data.name}`}
-          className="w-40 h-40 rounded-full object-cover mr-4"
-        />
+        {data.image && (
+          <Image
+            height={200}
+            width={200}
+            src={data.image}
+            alt={`Profile of ${data.name}`}
+            className="w-40 h-40 rounded-full object-cover mr-4"
+          />
+        )}
         <div>
           <h2 className="text-xl font-semibold">Name: {data.name}</h2>
           <p className=" font-medium">Resume Id: {data["_id"]}</p>
@@ -132,27 +121,27 @@ const ResumeItem = ({ data }) => {
             {moment(data.created_time).format("Do MMM YYYY, h:mm a")}
           </p>
           <p>
-            Updated Time:{" "}
+            Last Updated:{" "}
             {moment(data.updated_time).format("Do MMM YYYY, h:mm a")}
           </p>
         </div>
       </div>
-      <div className="mt-2 md:mt-0 space-x-2">
+      <div className="mt-2 md:mt-0  flex items-start flex-col gap-2">
         <button
-          className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
+          className="bg-blue-500 text-white px-2 w-24 py-1 rounded hover:bg-blue-600"
           onClick={viewResume}
         >
           View
         </button>
         <button
-          className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
+          className="bg-yellow-500 text-white px-2 w-24 py-1 rounded hover:bg-yellow-600"
           onClick={EditID}
         >
           Edit
         </button>
         <button
           onClick={openDeleteModal}
-          className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+          className="bg-red-500 text-white px-2 w-24 py-1 rounded hover:bg-red-600"
         >
           Delete
         </button>

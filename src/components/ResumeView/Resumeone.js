@@ -3,17 +3,19 @@ import React from "react";
 
 const Resumeone = ({ data }) => {
   return (
-    <div>
+    <div className="min-w-3/4">
       <div className="bg-white text-black p-8 shadow-md rounded-lg">
         <div className="flex flex-col md:flex-row items-center md:items-start">
           <div className="md:mr-8">
-            <Image
-              width={100}
-              height={100}
-              src={data?.image}
-              alt={data?.name}
-              className="w-32 h-32 md:w-40 md:h-40 rounded-full mx-auto md:mx-0"
-            />
+            {data.image && (
+              <Image
+                width={100}
+                height={100}
+                src={data?.image}
+                alt={data?.name}
+                className="w-32 h-32 md:w-40 md:h-40 rounded-full mx-auto md:mx-0"
+              />
+            )}
             <h1 className="text-3xl font-semibold text-center md:text-left mt-4">
               {data.name}
             </h1>
@@ -52,7 +54,6 @@ const Resumeone = ({ data }) => {
         </div>
         <div className="mt-8 md:mt-0 flex justify-between gap-5">
           <div>
-            {" "}
             <h2 className="text-xl font-semibold">Education</h2>
             <ul className="mt-2 list-disc pl-4">
               {data.education.map((edu, index) => (
@@ -70,7 +71,7 @@ const Resumeone = ({ data }) => {
           <div>
             <h2 className="text-xl font-semibold mt-4">Skills</h2>
             <ul className="mt-2 list-disc pl-4">
-              {data.skill.map((skill, index) => (
+              {data.skills.map((skill, index) => (
                 <li key={index}>
                   <p className="font-semibold">{skill.name}</p>
                   <p>Years of Experience: {skill.total_years}</p>
@@ -83,7 +84,7 @@ const Resumeone = ({ data }) => {
         <div className="mt-8">
           <h2 className="text-xl font-semibold">Work Experience</h2>
           <ul className="mt-2">
-            {data.experiances.map((exp, index) => (
+            {data.work.map((exp, index) => (
               <li key={index} className="mb-4">
                 <p className="font-semibold">{exp.title}</p>
                 <p>{exp.company}</p>

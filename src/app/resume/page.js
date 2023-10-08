@@ -11,24 +11,29 @@ const Page = () => {
   const { user, userId } = useAuthContext();
   const { loader, id, fetchResumedata, currentData } = useGlobalAppContext();
   const router = useRouter();
+  
+  const fetchResumeData = async () => {
+    const res = await fetchResumedata(id);
+  };
 
   useEffect(() => {
     if (!userId) router.push("/auth/login");
   }, [userId, router]);
 
   useEffect(() => {
-    fetchResumeData();
+    if (id) {
+      fetchResumeData();
+    } else {
+      router.push("/resume-list");
+    }
   }, [id]);
-  
-  const fetchResumeData = async () => {
-    const res = await fetchResumedata(id);
-  };
+
 
   return (
     <div>
       <div className=" text-white min-h-screen flex  justify-center items-start">
         {currentData ? (
-          <Resumeone data={currentData} />
+          <Resumeone data={currentData.result} />
         ) : (
           <div>No Data has been found</div>
         )}

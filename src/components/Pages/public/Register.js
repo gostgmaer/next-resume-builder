@@ -1,10 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";   
 import PasswordField from "@/components/global/fields/PasswordField";
 import { post } from "@/lib/http";
+import { useAuthContext } from "@/context/authContext";
 const Signup = () => {
+  const { handleLoginAuth, user, userId } = useAuthContext();
+
   const router = useRouter();
   const [formData, setFormData] = useState({
     firstName: "",
@@ -50,6 +53,16 @@ const Signup = () => {
   const responseFacebook = (response) => {
     console.log(response);
   };
+
+
+  useEffect(() => {
+    if (userId) {
+      router.push("/profile");
+    }
+  }, [userId]);
+
+
+
   return (
     <div className="min-h-screen flex items-center justify-center">
    

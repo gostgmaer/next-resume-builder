@@ -9,12 +9,10 @@ const axiosInstance = axios.create({
 });
 // axios.defaults.withCredentials=true
 
-
-export const get = async (endpint,query,id) => {
-  
-const cookies = parseCookies();
-const token = cookies["accessToken"];
-const session = cookies["session"];
+export const get = async (endpint, query, id) => {
+  const cookies = parseCookies();
+  const token = cookies["accessToken"];
+  const session = cookies["session"];
   let reqUrl = undefined;
   if (id) {
     reqUrl = baseURL + endpint + `/${id}`;
@@ -34,7 +32,6 @@ const session = cookies["session"];
   let response;
   let error;
   try {
-
     response = await axios.request(option);
 
     if (!endpint.includes("session")) {
@@ -51,12 +48,43 @@ const session = cookies["session"];
   return response?.data ? response?.data : error; // or set initial value
 };
 
+export const getsingle = async (endpint, query, id) => {
+  const cookies = parseCookies();
+  const token = cookies["accessToken"];
+  const session = cookies["session"];
+
+  const option = {
+    method: "get",
+    url: baseURL + endpint + `/${id}`,
+    headers: {
+      Authorization: token,
+      session_id: session,
+    },
+    params: query,
+  };
+  let response;
+  let error;
+  try {
+    response = await axios.request(option);
+
+    if (!endpint.includes("session")) {
+      notifySuccess(response.data.message, 2000);
+    }
+  } catch (e) {
+    error = e.response.data;
+    if (!endpint.includes("session")) {
+      notifyerror(e.response.data.message, 2000);
+    }
+
+    throw new Error(JSON.stringify(e.response.data));
+  }
+  return response?.data ? response?.data : error; // or set initial value
+};
 
 export const post = async (endpint, data) => {
-  
-const cookies = parseCookies();
-const token = cookies["accessToken"];
-const session = cookies["session"];
+  const cookies = parseCookies();
+  const token = cookies["accessToken"];
+  const session = cookies["session"];
   const option = {
     method: "post",
     url: baseURL + endpint,
@@ -110,11 +138,10 @@ const session = cookies["session"];
 //   return response?.data ? response?.data : error; // or set initial value
 // };
 
-export const patch = async (endpint,data, id ) => {
-  
-const cookies = parseCookies();
-const token = cookies["accessToken"];
-const session = cookies["session"];
+export const patch = async (endpint, data, id) => {
+  const cookies = parseCookies();
+  const token = cookies["accessToken"];
+  const session = cookies["session"];
   const option = {
     method: "patch",
     url: baseURL + endpint + `/${id}`,
@@ -138,12 +165,10 @@ const session = cookies["session"];
   return response?.data ? response?.data : error; // or set initial value
 };
 
-
 export const del = async (endpint, id) => {
-  
-const cookies = parseCookies();
-const token = cookies["accessToken"];
-const session = cookies["session"];
+  const cookies = parseCookies();
+  const token = cookies["accessToken"];
+  const session = cookies["session"];
 
   const option = {
     method: "delete",
