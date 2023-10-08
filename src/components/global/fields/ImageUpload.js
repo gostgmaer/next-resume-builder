@@ -44,6 +44,7 @@ const ImageUpload = ({ imagePreview, setImagePreview }) => {
         });
       }
     );
+    loaderFalse();
    
   };
   const onFileChange = (e) => {
