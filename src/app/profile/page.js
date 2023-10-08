@@ -15,7 +15,7 @@ export default function Profile ({data}) {
   
   useEffect(() => {
     if (!userId) router.push("/auth/login");
-  }, [userId?.user_id]);
+  }, [userId,router]);
 
   return <Personal />;
 };
