@@ -30,9 +30,6 @@ const UserResumes = () => {
   const fetchResumeData = async () => {
     const data = await get("/resume");
     setList(data);
-    if (data) {
-      console.log(list);
-    }
   };
 
   useEffect(() => {
@@ -76,7 +73,6 @@ const UserResumes = () => {
 export default UserResumes;
 
 const ResumeItem = ({ data }) => {
-  console.log(data);
   const { setId, openModal, closeModal } = useGlobalAppContext();
 
   const router = useRouter();
@@ -93,9 +89,7 @@ const ResumeItem = ({ data }) => {
     openModal();
   };
 
-  const deleteResumeFunction = () => {
-    console.log(data);
-  };
+  const deleteResumeFunction = () => {};
 
   return (
     <div className="border p-4 flex flex-col bg-slate-50 rounded-lg md:flex-row justify-between items-start">

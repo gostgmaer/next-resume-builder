@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
     <AppProvider>
       <AuthContextProvider>
         <html lang="en">
-          <body className={`${roboto.className}`}>
+          <body className={`${roboto.className}`} suppressHydrationWarning={true}>
             <Suspense fallback={<Loader />}>
               <main>
                 <Header />

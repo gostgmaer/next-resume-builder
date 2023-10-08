@@ -61,7 +61,6 @@ const BasicInfo = () => {
     setNetwork(res.result.profiles);
   };
 
-  console.log(id);
   const updateResume = (e) => {
     e.preventDefault();
     const extra = {

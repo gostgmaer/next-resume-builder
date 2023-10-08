@@ -32,7 +32,7 @@ const AppProvider = ({ children }) => {
     try {
       const data = await getsingle("/resume", {}, id); // Replace with your collection name
       setCurrentData(data);
-      console.log(data.result);
+      // setActiveTab(data.result.last_step)
       return data;
     } catch (error) {
       console.error("Error getting data:", error);
