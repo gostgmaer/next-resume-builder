@@ -1,5 +1,5 @@
 import { useGlobalAppContext } from "@/context/context";
-import Loader from "@/utils/Loader";
+
 import { get, getSingleRecord, put } from "@/utils/http";
 import React, { useEffect, useState } from "react";
 import ExperienceCard from "./Card";
@@ -137,9 +137,7 @@ const Experiances = () => {
     }
   }, [id]);
 
-  if (loader) {
-    <Loader />;
-  }
+ 
 
   return (
     <div className="w-full max-w-screen-xl mx-auto">
@@ -344,15 +342,3 @@ const Experiances = () => {
 
 export default Experiances;
 
-export async function getServerSideProps() {
-  // Fetch data from an API
-  const response = await get("/resume.json");
-  const data = await response.json();
-
-  // Pass the data as a prop to the page component
-  return {
-    props: {
-      data,
-    },
-  };
-}

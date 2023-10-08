@@ -1,26 +1,28 @@
 "use client";
 import ImageUpload from "@/components/global/fields/ImageUpload";
+import SelectField from "@/components/global/fields/SelectField";
 import { useAuthContext } from "@/context/authContext";
 import { useGlobalAppContext } from "@/context/context";
 import { get, patch } from "@/lib/http";
+import { countries } from "countries-list";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 
 const Personal = () => {
   const { user, userId } = useAuthContext();
-  const {loaderFalse, loaderTrue} = useGlobalAppContext()
+  const { loaderFalse, loaderTrue } = useGlobalAppContext();
   const [profileInfo, setProfileInfo] = useState(undefined);
   const [close, setClose] = useState(true);
 
   const getProfile = async () => {
     try {
-      loaderTrue()
+      loaderTrue();
       if (userId?.user_id) {
         const res = await get(`/user/profile`, null, userId.user_id);
         setProfileInfo(res);
       }
-      loaderFalse()
+      loaderFalse();
     } catch (error) {
       console.log(error);
     }
@@ -63,42 +65,69 @@ export default Personal;
 
 const UserProfile = ({ data, setClose, setProfileInfo }) => {
   const { user, userId } = useAuthContext();
+  const { loader, loaderTrue, loaderFalse } = useGlobalAppContext();
   const [formData, setFormData] = useState({
     firstName: data?.firstName,
     lastName: data.lastName,
     profilePicture: data?.profilePicture,
     contactNumber: data?.contactNumber,
-    address: {
-      street: data?.address?.street,
-      city: data?.address?.city,
-      state: data?.address?.state,
-      postalCode: data?.address?.postalCode,
-      country: data?.address?.country,
-    },
+  });
+  const [address, setAddress] = useState({
+    street: data?.address?.street,
+    city: data?.address?.city,
+    state: data?.address?.state,
+    postalCode: data?.address?.postalCode,
+    country: data?.address?.country,
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    // setResume({ ...resume, [name]: value });
+  };
+  const handleChangeAddress = (e) => {
+    const { name, value } = e.target;
+    setAddress({ ...address, [name]: value });
   };
   const [imagePreview, setimagePreview] = useState(data?.profilePicture);
 
   const UpdateProfile = async (e) => {
+    loaderTrue();
     e.preventDefault();
 
     const recordData = {
-     ...formData, profilePicture: imagePreview
+      ...formData,
+      address: address,
+      profilePicture: imagePreview,
     };
 
-    console.log(recordData);
-    const res = await patch(`/user`,recordData, userId.user_id );
-    if (res) {
-      setClose(true);
-      const userInfoDaa = await get(`/user/profile`, null, userId.user_id);
-      setProfileInfo(userInfoDaa);
+    try {
+      const res = await patch(`/user`, recordData, userId.user_id);
+      console.log(loader);
+      if (res) {
+        setClose(true);
+        const userInfoDaa = await get(`/user/profile`, null, userId.user_id);
+        setProfileInfo(userInfoDaa);
+        loaderFalse();
+      } else {
+        loaderFalse();
+      }
+    } catch (error) {
+      loaderFalse();
     }
   };
+
+  var countryArray = [];
+  Object.keys(countries).forEach((code) => {
+    const country = countries[code];
+    const obj = {
+      ...country,
+      countryCode: code,
+      value: code,
+      label: country.name,
+    };
+    countryArray.push(obj);
+  });
+
   return (
     <form className="bg-gray-50 p-4 rounded-lg shadow-md">
       <div className=" flex justify-between items-center">
@@ -186,8 +215,8 @@ const UserProfile = ({ data, setClose, setProfileInfo }) => {
             name="street"
             id="street"
             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-500"
-            value={formData.address.street}
-            onChange={handleChange}
+            value={address.street}
+            onChange={handleChangeAddress}
           />
         </div>
 
@@ -203,8 +232,8 @@ const UserProfile = ({ data, setClose, setProfileInfo }) => {
             name="city"
             id="city"
             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-500"
-            value={formData.address.city}
-            onChange={handleChange}
+            value={address.city}
+            onChange={handleChangeAddress}
           />
         </div>
 
@@ -220,8 +249,8 @@ const UserProfile = ({ data, setClose, setProfileInfo }) => {
             name="state"
             id="state"
             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-500"
-            value={formData.address.state}
-            onChange={handleChange}
+            value={address.state}
+            onChange={handleChangeAddress}
           />
         </div>
 
@@ -237,33 +266,28 @@ const UserProfile = ({ data, setClose, setProfileInfo }) => {
             name="postalCode"
             id="postalCode"
             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-500"
-            value={formData.address.postalCode}
-            onChange={handleChange}
+            value={address.postalCode}
+            onChange={handleChangeAddress}
           />
         </div>
 
-        <div>
-          <label
-            htmlFor="country"
-            className="block text-gray-600 font-semibold mb-2"
-          >
-            Country:
-          </label>
-          <input
-            type="text"
-            name="country"
-            id="country"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-500"
-            value={formData.address.country}
-            onChange={handleChange}
+        {
+          <SelectField
+            options={countryArray}
+            value={address.country}
+            onChange={handleChangeAddress}
+            id={"country"}
+            label={"Country"}
+            placeholder={undefined}
           />
-        </div>
+        }
       </div>
       <div className="col-span-1 mt-4 flex justify-end">
         <button
           type="button"
           onClick={UpdateProfile}
-          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
+          disabled={loader}
+          className="bg-blue-500 text-white py-2 disabled:bg-blue-200 disabled:pointer-events-none px-4 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
         >
           Save Details
         </button>
@@ -378,21 +402,3 @@ const UserprofileDetails = ({ userData, setClose }) => {
   );
 };
 
-export async function getServerSideProps(props) {
-  console.log(props);
-  // try {
-  // //  const data = await get(`/profile/${user.user.user_id}`, null, {}); // Fetch your data here
-  //   return {
-  //     props: {
-  //       data,
-  //     },
-  //   };
-  // } catch (error) {
-  //   console.error('Error fetching data:', error);
-  //   return {
-  //     props: {
-  //       data: null,
-  //     },
-  //   };
-  // }
-}

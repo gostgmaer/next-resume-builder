@@ -8,7 +8,7 @@ import moment from "moment";
 import ResumeItem from "@/components/Pages/resumelist/Resumes";
 import Link from "next/link";
 import { useGlobalAppContext } from "@/context/context";
-import Loader from "@/utils/Loader";
+
 import UserResumes from "@/components/Pages/resumelist/Resumes";
 const Page = () => {
   const { user, userId } = useAuthContext();

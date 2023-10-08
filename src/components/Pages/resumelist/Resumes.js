@@ -3,7 +3,7 @@ import { firebaseDatabaseConn } from "@/config/firebase";
 import { useAuthContext } from "@/context/authContext";
 import { useGlobalAppContext } from "@/context/context";
 import { get } from "@/lib/http";
-import Loader from "@/utils/Loader";
+
 import moment from "moment";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -44,9 +44,6 @@ const UserResumes = () => {
     router.push("/resume-builder");
   };
 
-  if (!list) {
-    return <Loader />;
-  }
 
   // useEffect(() => {
   //   if (!userId) {

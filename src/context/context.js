@@ -10,51 +10,7 @@ const AppProvider = ({ children }) => {
   const [currentData, setCurrentData] = useState(null);
   const [activeTab, setActiveTab] = useState("basic info");
   const [id, setId] = useState(undefined);
-  const [resume, setResume] = useState({
-    basics: {
-      name: "",
-      position: "",
-
-      linkedin: "",
-      github: "",
-      website: "",
-
-      label: "",
-      image: "",
-      email: "john@gmail.com",
-      phone: "(912) 555-4321",
-      url: "https://johndoe.com",
-      summary: "A summary of John Doe…",
-      location: {
-        address: "2712 Broadway St",
-        postalCode: "CA 94115",
-        city: "San Francisco",
-        countryCode: "US",
-        region: "California",
-      },
-      profiles: [],
-    },
-
-    name: "",
-    position: "",
-    email: "",
-    phone: "",
-    linkedin: "",
-    github: "",
-    website: "",
-
-    work: [],
-    volunteer: [],
-    education: [],
-    awards: [],
-    certificates: [],
-    publications: [],
-    skills: [],
-    languages: [],
-    interests: [],
-    references: [],
-    projects: [],
-  });
+ 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => {
@@ -110,8 +66,6 @@ const AppProvider = ({ children }) => {
         currentData,
         activeTab,
         setActiveTab,
-        resume,
-        setResume,
         isModalOpen,
         openModal,
         closeModal,

@@ -1,15 +1,19 @@
-"use client"
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation'
-import signIn from '@/config/firebase/auth/signin';
-import { useAuthContext } from '@/context/authContext';
-import Link from 'next/link';
-import PasswordField from '@/components/global/fields/PasswordField';
+"use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import signIn from "@/config/firebase/auth/signin";
+import { useAuthContext } from "@/context/authContext";
+import Link from "next/link";
+import PasswordField from "@/components/global/fields/PasswordField";
+import { useGlobalAppContext } from "@/context/context";
+import Loader from "@/utils/loader/Loader";
 const Login = () => {
-  const {handleLoginAuth,user,userId} = useAuthContext()
+  const { handleLoginAuth, user, userId } = useAuthContext();
+  const { loader, loaderFalse,
+    loaderTrue } = useGlobalAppContext();
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const [formData, setFormData] = useState({
     email: "",
@@ -23,17 +27,23 @@ const Login = () => {
   };
 
   const handleLogin = async (e) => {
+    loaderTrue()
     e.preventDefault();
     const body = {
       email: formData.email,
-      password: formData.password
+      password: formData.password,
     };
 
-   try {
-     await handleLoginAuth(body);
-   
-   } catch (error) {
-   }
+    try {
+     const res =  await handleLoginAuth(body);
+     if (res) {
+      loaderFalse()
+     }
+    } catch (error) {
+      loaderFalse()
+    }
+
+
   };
 
   const handleGoogleLogin = async () => {};
@@ -42,11 +52,11 @@ const Login = () => {
     console.log(response);
   };
 
-  
   useEffect(() => {
     if (userId) {
-      router.push('/profile')
+      router.push("/profile");
     }
+ 
   }, [userId?.user_id]);
 
   return (
@@ -89,15 +99,22 @@ const Login = () => {
           <div className="mb-4 mt-10">
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white font-semibold py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+              disabled={loader}
+              className="w-full bg-blue-500 disabled:bg-blue-200  text-white font-semibold py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
             >
               Login
             </button>
           </div>
         </form>
-      <p className=' text-end'>  <Link href={"/auth/forget-password"} className="text-blue-500 hover:underline">
+        <p className=" text-end">
+          {" "}
+          <Link
+            href={"/auth/forget-password"}
+            className="text-blue-500 hover:underline"
+          >
             Forget Password?
-          </Link></p>
+          </Link>
+        </p>
         <div className="flex flex-col gap-2 mt-5">
           <h3>Login with </h3>
           <div className="mb-4 flex gap-2">
@@ -107,19 +124,25 @@ const Login = () => {
             >
               Google
             </button>
-            <button onClick={responseFacebook} className="w-full bg-blue-800 text-white font-semibold py-2 rounded-md hover:bg-blue-900 focus:outline-none focus:bg-blue-900">
-             
+            <button
+              onClick={responseFacebook}
+              className="w-full bg-blue-800 text-white font-semibold py-2 rounded-md hover:bg-blue-900 focus:outline-none focus:bg-blue-900"
+            >
               Facebook
             </button>
           </div>
         </div>
         <p className="text-gray-700">
           Don t have an account?{" "}
-          <Link href={"/auth/register"} className="text-blue-500 hover:underline">
+          <Link
+            href={"/auth/register"}
+            className="text-blue-500 hover:underline"
+          >
             Sign up here
           </Link>
         </p>
       </div>
+      {/* {loader && <Loader/>} */}
     </div>
   );
 };
