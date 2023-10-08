@@ -7,13 +7,12 @@ import React, { useEffect } from "react";
 
 const Page = () => {
   // @ts-ignore
-  const { user,userId } = useAuthContext();
-  const { loader } = useGlobalAppContext();
+  const { user, userId } = useAuthContext();
   const router = useRouter();
- 
+
   useEffect(() => {
     if (!userId) router.push("/auth/login");
-  }, [userId?.user_id]);
+  }, [userId, router]);
 
   return (
     <div>

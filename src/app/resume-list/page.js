@@ -1,18 +1,17 @@
 "use client";
-import Profile from "@/components/Pages/resumelist/Resumes";
-import { useAuthContext } from "@/context/authContext";
-import { get } from "@/utils/http";
+
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import moment from "moment";
-import ResumeItem from "@/components/Pages/resumelist/Resumes";
-import Link from "next/link";
-import { useGlobalAppContext } from "@/context/context";
 
 import UserResumes from "@/components/Pages/resumelist/Resumes";
+import { useAuthContext } from "@/context/authContext";
 const Page = () => {
-  const { user, userId } = useAuthContext();
+  const { userId } = useAuthContext();
   const router = useRouter();
+
+  useEffect(() => {
+    if (!userId) router.push("/auth/login");
+  }, [userId, router]);
 
   return (
     <div className=" py-10">
