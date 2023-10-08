@@ -1,6 +1,5 @@
 import { useAuthContext } from "@/context/authContext";
 import { useGlobalAppContext } from "@/context/context";
-import Loader from "@/utils/Loader";
 import React, { useEffect, useState } from "react";
 import firebase from "firebase/database";
 import ImageUpload from "./comp/ImageUpload";

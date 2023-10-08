@@ -3,7 +3,7 @@ import HeaderElement from "@/components/Builder/FormElement";
 import Resumeone from "@/components/ResumeView/Resumeone";
 import { useAuthContext } from "@/context/authContext";
 import { useGlobalAppContext } from "@/context/context";
-import Loader from "@/utils/Loader";
+
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
@@ -23,10 +23,6 @@ const Page = () => {
   const fetchResumeData = async () => {
     const res = await fetchResumedata(id);
   };
-
-  if (loader) {
-    <Loader />;
-  }
 
   return (
     <div>

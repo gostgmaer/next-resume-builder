@@ -3,7 +3,7 @@ import { firebaseDatabaseConn } from "@/config/firebase";
 import { useAuthContext } from "@/context/authContext";
 import { useGlobalAppContext } from "@/context/context";
 import { get } from "@/lib/http";
-import Loader from "@/utils/Loader";
+
 import moment from "moment";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -29,8 +29,10 @@ const UserResumes = () => {
   // var profileData = [];
   const fetchResumeData = async () => {
     const data = await get("/resume");
-
     setList(data);
+    if (data) {
+      console.log(list);
+    }
   };
 
   useEffect(() => {
@@ -43,10 +45,6 @@ const UserResumes = () => {
     setId(undefined);
     router.push("/resume-builder");
   };
-
-  if (!list) {
-    return <Loader />;
-  }
 
   // useEffect(() => {
   //   if (!userId) {
@@ -66,15 +64,15 @@ const UserResumes = () => {
           Create New Resume
         </button>
       </div>
-      {list?.result.length != 0 ? (
-        <div className="space-y-2 bg-white p-2 rounded-lg">
-          {list.result?.map((resume, index) => (
-            <ResumeItem key={index} data={resume} />
-          ))}
-        </div>
-      ) : (
+      {!list?.result ? (
         <div className="space-y-2 bg-white text-center p-5 py-20 text-black text-lg rounded-lg">
           <h2>No resume is Found please create a resume</h2>
+        </div>
+      ) : (
+        <div className="space-y-2 bg-white p-2 rounded-lg">
+          {list.result.map((resume, index) => (
+            <ResumeItem key={index} data={resume} />
+          ))}
         </div>
       )}
     </div>

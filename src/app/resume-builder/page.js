@@ -2,7 +2,6 @@
 import ResumeBlock from "@/components/Builder/FormElement";
 import { useAuthContext } from "@/context/authContext";
 import { useGlobalAppContext } from "@/context/context";
-import Loader from "@/utils/Loader";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
