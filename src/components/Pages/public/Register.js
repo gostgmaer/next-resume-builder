@@ -36,7 +36,9 @@ const Signup = () => {
 
    try {
     const res = await post("/user/register", body);
-    router.push('/login')
+    if (res) {
+      router.push('/auth/login')
+    }
    } catch (error) {
     setError(error)
     console.log(error);
