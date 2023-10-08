@@ -1,6 +1,5 @@
 import { useGlobalAppContext } from "@/context/context";
 
-import { get, getSingleRecord, put } from "@/utils/http";
 import React, { useEffect, useState } from "react";
 import ExperienceCard from "./Card";
 import { findIndex } from "@/utils/custom";
