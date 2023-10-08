@@ -36,7 +36,7 @@ export const get = async (endpint,query,id) => {
   let response;
   let error;
   try {
-    console.log(reqUrl);
+
     response = await axios.request(option);
 
     if (!endpint.includes("session")) {
