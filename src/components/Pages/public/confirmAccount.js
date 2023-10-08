@@ -4,14 +4,16 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { post } from "@/lib/http";
 import { notifyerror } from "@/lib/notify/notice";
 import Link from "next/link";
+import { useAuthContext } from "@/context/authContext";
 const ConfirmAccount = () => {
+  const { handleLoginAuth, user, userId } = useAuthContext();
+  const router = useRouter();
   const [userData, setUserData] = useState(undefined);
   const [error, setError] = useState(undefined);
   const param = useSearchParams();
-  const route = useRouter();
+
 
   const confirmAccountAction = async (e) => {
-
     if (!param.getAll("token")[0]) {
       notifyerror("No Account Confirmation token found", 2000);
     } else {
@@ -22,13 +24,19 @@ const ConfirmAccount = () => {
         setUserData(confirm);
       } catch (error) {
         console.log(error.message);
-        setError(error.message)
+        setError(error.message);
       }
     }
   };
 
   useEffect(() => {
-    confirmAccountAction()
+    if (userId) {
+      router.push("/profile");
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    confirmAccountAction();
   }, []);
 
   return (
@@ -38,9 +46,12 @@ const ConfirmAccount = () => {
           {userData && (
             <div>
               <h2 className="text-2xl font-semibold mb-2 text-center">
-              Account has been Confirmed
+                Account has been Confirmed
               </h2>
-              <p className="text-lg font-medium mb-2 text-center">  Welcome {userData.result.username}</p>
+              <p className="text-lg font-medium mb-2 text-center">
+                {" "}
+                Welcome {userData.result.username}
+              </p>
               <div className="mt-6">
                 <Link
                   href={"/auth/login"}
@@ -50,12 +61,16 @@ const ConfirmAccount = () => {
                 </Link>
               </div>
             </div>
-          ) } { error && (
+          )}{" "}
+          {error && (
             <div>
               <h2 className="text-2xl font-semibold mb-4 text-center w-max">
                 Account information not Confirmed
               </h2>
-              <p className="text-lg font-medium mb-2 text-center"> {JSON.parse(error).message}</p>
+              <p className="text-lg font-medium mb-2 text-center">
+                {" "}
+                {JSON.parse(error).message}
+              </p>
               <div className="mt-6"></div>
             </div>
           )}
