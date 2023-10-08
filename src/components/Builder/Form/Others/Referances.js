@@ -1,12 +1,22 @@
+import { useGlobalAppContext } from "@/context/context";
 import { findIndex } from "@/utils/custom";
 import React, { useState } from "react";
 
-const Referances = () => {
+const Referances = ({references, setReferences}) => {
+   const {
+    fetchResumedata,
+    currentData,
+    updateResumeRecord,
+    activeTab,
+    setActiveTab,
+    id,
+    setId,
+  } = useGlobalAppContext();
   const [formData, setFormData] = useState({
     name: "",
     reference: "",
   });
-  const [selectedYear, setSelectedYear] = useState("");
+
 
   // Calculate the last 20 years
   const currentYear = new Date().getFullYear();
@@ -17,7 +27,7 @@ const Referances = () => {
   );
 
   // Handle year input changes
-  const [references, setReferences] = useState([]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,10 +49,17 @@ const Referances = () => {
     setReferences(updatedExperiences);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add your logic to save the form data here
-    console.log(references);
+    try {
+      var data = {
+        last_step: activeTab,
+        references: references,
+      };
+      updateResumeRecord("others", data, id);
+    } catch (error) {
+      console.error("Error updating record:", error.message);
+    }
   };
 
   const [editIndex, setEditIndex] = useState(-1);
@@ -159,7 +176,7 @@ const Referances = () => {
         </button>
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          type="submit"
+          type="button" onClick={handleSubmit}
         >
           Save
         </button>

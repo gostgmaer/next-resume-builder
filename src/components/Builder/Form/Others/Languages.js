@@ -1,12 +1,24 @@
+import { useGlobalAppContext } from "@/context/context";
 import { findIndex } from "@/utils/custom";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const Languages = () => {
+const UserLanguages = ({Languages, setLanguages}) => {
+  const {
+    fetchResumedata,
+    currentData,
+    updateResumeRecord,
+    activeTab,
+    setActiveTab,
+    id,
+    setId,
+  } = useGlobalAppContext();
+
   const [formData, setFormData] = useState({
     language: "",
     fluency: "",
     scale: "",
   });
+
   const [selectedYear, setSelectedYear] = useState("");
 
   // Calculate the last 20 years
@@ -17,8 +29,8 @@ const Languages = () => {
     (_, index) => currentYear - index
   );
 
+
   // Handle year input changes
-  const [Languages, setLanguages] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -41,11 +53,19 @@ const Languages = () => {
     setLanguages(updatedExperiences);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add your logic to save the form data here
-    console.log(Languages);
+    try {
+      var data = {
+        last_step: activeTab,
+        languages: Languages,
+      };
+      updateResumeRecord("others", data, id);
+    } catch (error) {
+      console.error("Error updating record:", error.message);
+    }
   };
+
   const [editIndex, setEditIndex] = useState(-1);
 
   const handleEdit = (index) => {
@@ -53,6 +73,7 @@ const Languages = () => {
     const editdata = findIndex(Languages, index);
     setFormData(editdata);
   };
+
   const handleSaveEdit = () => {
     if (editIndex !== -1) {
       const updatedData = [...Languages];
@@ -66,6 +87,9 @@ const Languages = () => {
       });
     }
   };
+
+
+
   return (
     <div className="w-full max-w-screen-xl mx-auto">
       <h2 className="text-2xl font-bold mb-4">Languages</h2>
@@ -173,7 +197,6 @@ const Languages = () => {
             className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="button"
             onClick={() => {
-              setLanguages([]);
               setFormData({
                 language: "",
                 fluency: "",
@@ -185,7 +208,8 @@ const Languages = () => {
           </button>
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="submit"
+            type="button"
+            onClick={handleSubmit}
           >
             Save
           </button>
@@ -194,7 +218,7 @@ const Languages = () => {
     </div>
   );
 };
-export default Languages;
+export default UserLanguages;
 
 const LanguageCard = ({ language, fluency, scale, onEdit, onDelete }) => {
   return (

@@ -25,12 +25,13 @@ const Personal = () => {
       loaderFalse();
     } catch (error) {
       console.log(error);
+      loaderFalse();
     }
   };
 
   useEffect(() => {
     getProfile();
-  }, [userId?.user_id]);
+  }, [userId]);
 
   return (
     <div className="container mx-auto py-8 text-black">
@@ -102,7 +103,7 @@ const UserProfile = ({ data, setClose, setProfileInfo }) => {
 
     try {
       const res = await patch(`/user`, recordData, userId.user_id);
-      console.log(loader);
+     
       if (res) {
         setClose(true);
         const userInfoDaa = await get(`/user/profile`, null, userId.user_id);
