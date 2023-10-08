@@ -11,55 +11,60 @@ import { useRouter } from "next/navigation";
 const auth = getAuth(firebase_app);
 
 function Header() {
- 
-  const {
-    fetchResumedata,
-    currentData,
-    updateResumeRecord,
-    activeTab,
-    setActiveTab,
-    id,
-    setId,
-  } = useGlobalAppContext();
-   // @ts-ignore
-   const { authenticated,Logout,user,userId } = useAuthContext();
+  const { setId } = useGlobalAppContext();
+  // @ts-ignore
+  const { Logout, user, userId } = useAuthContext();
   const router = useRouter();
 
-  const handleNewResume = () => {
-    setId(undefined);
-    router.push("/resume-builder");
-  };
-
-
-
   return (
-    <header className="bg-gradient-to-r from-blue-700 via-blue-500 to-blue-300 text-white py-4">
+    <header className="bg-gradient-to-r from-blue-700 via-blue-500 to-blue-300 text-white py-3">
       <div className="container mx-auto flex justify-between items-center">
         <Link href={"/"} className="text-3xl font-semibold">
           Resume Builder
         </Link>
-        <nav className=" flex items-center gap-5">
-          <ul className="flex space-x-6">
-            <li className="text-lg">Home</li>
-            <li className="text-lg"> <Link href={"/resume"} className="text-lg">
-                Resumes
-              </Link></li>
-            <li className="text-lg cursor-pointer" onClick={handleNewResume}> Builder
-             
-            </li>
-           <li> <Link href={"/resume-list"} className="text-lg">
-              My Resume
-            </Link></li>
-          </ul>
-          {user && (
-            <button
-              onClick={Logout}
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md focus:outline-none focus:ring focus:border-red-500"
+        {userId ? (
+          <nav className=" flex items-center gap-5">
+            <Link
+              href="/resume-builder"
+              className="text-white hover:text-gray-200"
             >
-              Sign Out
-            </button>
-          )}
-        </nav>
+              Builder
+            </Link>
+            <Link
+              href="/resume-list"
+              className="text-white hover:text-gray-200"
+            >
+              My Resumes
+            </Link>
+            <Link href="/profile" className="text-white hover:text-gray-200">
+              My Profile
+            </Link>
+            {userId && (
+              <button
+                onClick={Logout}
+                className="bg-red-500 hover:bg-red-400 text-white hover:text-gray-800 rounded-full py-2 px-6 transition duration-300"
+              >
+                Sign Out
+              </button>
+            )}
+          </nav>
+        ) : (
+          <nav className=" flex items-center gap-5">
+            <Link
+              href={"/auth/login"}
+              className="text-white hover:text-gray-200"
+            >
+              Sign In
+            </Link>
+
+            <Link
+              href={"/auth/register"}
+              className="bg-white text-blue-500 hover:bg-blue-400 hover:text-gray-800 rounded-full py-2 px-6 transition duration-300"
+            >
+              Sign Up
+            </Link>
+          </nav>
+        )}
       </div>
     </header>
   );
