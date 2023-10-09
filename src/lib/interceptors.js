@@ -1,40 +1,38 @@
-// components/GlobalErrorHandler.js
-import Modal from "@/components/global/Modal";
-import React, { Component } from "react";
+// utils/axios.js
 
-class GlobalErrorHandler extends Component {
-  state = {
-    hasError: false,
-  };
+import Loader from "@/utils/loader/Loader";
+import Spinner from "@/utils/loader/Spinner";
+import axios from "axios";
+import { useState } from "react";
 
-  componentDidCatch(error, errorInfo) {
-    // Check if the error is due to a 401 or 403 response
-    if (
-      errorInfo.componentStack.includes("HTTPError: 401") ||
-      errorInfo.componentStack.includes("HTTPError: 403")
-    ) {
-      // Show the modal
-      this.setState({ hasError: true });
+const instance = axios.create();
 
-      // Redirect to the login page after a delay
-      setTimeout(() => {
-        window.location.href = "/auth/login"; // Change '/login' to your actual login page route
-      }, 10000); // Adjust the delay as needed
+export const useAxios = () => {
+  const [loading, setLoading] = useState(false);
+
+  instance.interceptors.request.use(
+    function (config) {
+      setLoading(true);
+      return config;
+    },
+    function (error) {
+      setLoading(false);
+      return Promise.reject(error);
     }
-  }
+  );
 
-  render() {
-    if (this.state.hasError) {
-      // Render your modal here
-      return (
-        <Modal>
-          <h1>Not Authorised</h1>
-        </Modal>
-      );
+  instance.interceptors.response.use(
+    function (response) {
+      setLoading(false);
+      return response;
+    },
+    function (error) {
+      setLoading(false);
+      return Promise.reject(error);
     }
+  );
 
-    return this.props.children;
-  }
-}
+  return loading ? [instance, <Spinner key={1} />] : [instance, null];
+};
 
-export default GlobalErrorHandler;
+export default instance;

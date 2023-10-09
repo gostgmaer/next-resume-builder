@@ -4,7 +4,7 @@ import React from "react";
 import styles from "./loader.module.css";
 import { useGlobalAppContext } from "@/context/context";
 
-const Loader = () => {
+const Spinner = () => {
 
 
   return (
@@ -21,4 +21,4 @@ const Loader = () => {
   );
 };
 
-export default Loader;
+export default Spinner;

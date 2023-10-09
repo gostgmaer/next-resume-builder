@@ -1,13 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";   
+import Link from "next/link";
 import PasswordField from "@/components/global/fields/PasswordField";
 import { post } from "@/lib/http";
 import { useAuthContext } from "@/context/authContext";
+import { useAxios } from "@/lib/interceptors";
 const Signup = () => {
   const { handleLoginAuth, user, userId } = useAuthContext();
-
+  const [axios, spinner] = useAxios();
   const router = useRouter();
   const [formData, setFormData] = useState({
     firstName: "",
@@ -37,15 +38,15 @@ const Signup = () => {
       username: formData.username,
     };
 
-   try {
-    const res = await post("/user/register", body);
-    if (res) {
-      router.push('/auth/login')
+    try {
+      const res = await post("/user/register", body);
+      if (res) {
+        router.push("/auth/login");
+      }
+    } catch (error) {
+      setError(error);
+      console.log(error);
     }
-   } catch (error) {
-    setError(error)
-    console.log(error);
-   }
   };
 
   const handleGoogleLogin = async () => {};
@@ -54,20 +55,15 @@ const Signup = () => {
     console.log(response);
   };
 
-
   useEffect(() => {
     if (userId) {
       router.push("/profile");
     }
   }, [userId]);
 
-
-
   return (
     <div className="min-h-screen flex items-center justify-center">
-   
       <div className="bg-white p-8 rounded-lg shadow-md w-100 text-black">
-      
         <h2 className="text-2xl font-semibold mb-4">Sign Up</h2>
         <form onSubmit={handleRegistration} className="text-black">
           <div className="mb-4 flex gap-5">
@@ -212,6 +208,7 @@ const Signup = () => {
           </Link>
         </p>
       </div>
+      {spinner}
     </div>
   );
 };

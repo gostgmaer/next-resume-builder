@@ -3,8 +3,8 @@ import React from "react";
 
 const Resumeone = ({ data }) => {
   return (
-    <div className="min-w-3/4">
-      <div className="bg-white text-black p-8 shadow-md rounded-lg">
+    <div className="min-w-[8.3in] max-w-[8.3in]  my-5">
+      <div className="bg-white text-black min-h-[11.7in] max-h-[11.7in] p-7 shadow-lg rounded">
         <div className="flex flex-col md:flex-row items-center md:items-start">
           <div className="md:mr-8">
             {data.image && (

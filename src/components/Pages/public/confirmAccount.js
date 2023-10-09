@@ -5,9 +5,11 @@ import { post } from "@/lib/http";
 import { notifyerror } from "@/lib/notify/notice";
 import Link from "next/link";
 import { useAuthContext } from "@/context/authContext";
+import { useAxios } from "@/lib/interceptors";
 const ConfirmAccount = () => {
   const { handleLoginAuth, user, userId } = useAuthContext();
   const router = useRouter();
+  const [axios, spinner] = useAxios();
   const [userData, setUserData] = useState(undefined);
   const [error, setError] = useState(undefined);
   const param = useSearchParams();
@@ -76,6 +78,7 @@ const ConfirmAccount = () => {
           )}
         </div>
       </div>
+      {spinner}
     </div>
   );
 };

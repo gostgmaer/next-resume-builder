@@ -1,15 +1,18 @@
 // utils/axiosApi.js
+// import axios from "axios";
+
 import axios from "axios";
+import instance from '../lib/interceptors'
 import { notifySuccess, notifyerror } from "./notify/notice";
 import { parseCookies } from "nookies";
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL; // Replace with your Firebase URL
 
-const axiosInstance = axios.create({
-  baseURL,
-});
+
 // axios.defaults.withCredentials=true
 
+
 export const get = async (endpint, query, id) => {
+ 
   const cookies = parseCookies();
   const token = cookies["accessToken"];
   const session = cookies["session"];
@@ -32,7 +35,7 @@ export const get = async (endpint, query, id) => {
   let response;
   let error;
   try {
-    response = await axios.request(option);
+    response = await instance.request(option);
 
     if (!endpint.includes("session")) {
       notifySuccess(response.data.message, 2000);
@@ -49,6 +52,39 @@ export const get = async (endpint, query, id) => {
 };
 
 export const getsingle = async (endpint, query, id) => {
+  const cookies = parseCookies();
+  const token = cookies["accessToken"];
+  const session = cookies["session"];
+
+  const option = {
+    method: "get",
+    url: baseURL + endpint + `/${id}`,
+    headers: {
+      Authorization: token,
+      session_id: session,
+    },
+    params: query,
+  };
+  let response;
+  let error;
+  try {
+    response = await instance.request(option);
+
+    if (!endpint.includes("session")) {
+      notifySuccess(response.data.message, 2000);
+    }
+  } catch (e) {
+    error = e.response.data;
+    if (!endpint.includes("session")) {
+      notifyerror(e.response.data.message, 2000);
+    }
+
+    throw new Error(JSON.stringify(e.response.data));
+  }
+  return response?.data ? response?.data : error; // or set initial value
+};
+
+export const getServerSingle = async (endpint, query, id) => {
   const cookies = parseCookies();
   const token = cookies["accessToken"];
   const session = cookies["session"];
@@ -98,7 +134,7 @@ export const post = async (endpint, data) => {
   let response;
   let error;
   try {
-    response = await axios.request(option);
+    response = await instance.request(option);
     if (!endpint.includes("session")) {
       notifySuccess(response.data.message, 2000);
     }
@@ -155,7 +191,7 @@ export const patch = async (endpint, data, id) => {
   let response;
   let error;
   try {
-    response = await axios.request(option);
+    response = await instance.request(option);
     notifySuccess(response.data.message, 2000);
   } catch (e) {
     error = e.response.data;
@@ -183,7 +219,7 @@ export const del = async (endpint, id) => {
   let response;
   let error;
   try {
-    response = await axios.request(option);
+    response = await instance.request(option);
     notifySuccess(response.data.message, 2000);
   } catch (e) {
     error = e.response.data;
