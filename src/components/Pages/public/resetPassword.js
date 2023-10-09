@@ -31,7 +31,7 @@ const ResetPassword = () => {
       if (password === confirmPassword) {
         try {
           const reset = await post(
-            `/user/reset-password/${param.getAll("token")[0]}`,
+            `/user/auth/reset-password/${param.getAll("token")[0]}`,
             { password: password }
           );
           if (reset.status == "OK") {
