@@ -21,7 +21,7 @@ const ConfirmAccount = () => {
     } else {
       try {
         const confirm = await post(
-          `/user/confirm-account/${param.getAll("token")[0]}`
+          `/user/auth/confirm-account/${param.getAll("token")[0]}`
         );
         setUserData(confirm);
       } catch (error) {
