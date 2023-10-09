@@ -6,6 +6,7 @@ import { get } from "@/lib/http";
 
 import moment from "moment";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -80,9 +81,9 @@ const ResumeItem = ({ data }) => {
     setId(data._id);
     router.push("/resume-builder");
   };
-  const viewResume = () => {
+  const viewResume = (id) => {
     setId(data._id);
-    router.push("/resume");
+    router.push(`/resume/${id}`);
   };
 
   const openDeleteModal = () => {
@@ -121,12 +122,12 @@ const ResumeItem = ({ data }) => {
         </div>
       </div>
       <div className="mt-2 md:mt-0  flex items-start flex-col gap-2">
-        <button
-          className="bg-blue-500 text-white px-2 w-24 py-1 rounded hover:bg-blue-600"
-          onClick={viewResume}
+        <Link
+          href={`/resume/${data["_id"]}`}
+          className="bg-blue-500 text-white px-2 text-center w-24 py-1 rounded hover:bg-blue-600"
         >
           View
-        </button>
+        </Link>
         <button
           className="bg-yellow-500 text-white px-2 w-24 py-1 rounded hover:bg-yellow-600"
           onClick={EditID}

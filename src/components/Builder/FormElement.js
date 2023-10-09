@@ -43,7 +43,7 @@ const ResumeBlock = () => {
         })}
       </div>
 
-      <div className="bg-white p-4 text-black rounded">
+      <div className="bg-white flex justify-center p-4 text-black rounded">
         <ShowElements currentTab={activeTab} />
       </div>
     </div>

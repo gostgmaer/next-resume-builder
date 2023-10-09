@@ -7,9 +7,11 @@ import Link from "next/link";
 import PasswordField from "@/components/global/fields/PasswordField";
 import { useGlobalAppContext } from "@/context/context";
 import Loader from "@/utils/loader/Loader";
+import { useAxios } from "@/lib/interceptors";
 const Login = () => {
   const { handleLoginAuth, user, userId } = useAuthContext();
   const { loader, loaderFalse, loaderTrue } = useGlobalAppContext();
+  const [axios, spinner] = useAxios();
   const router = useRouter();
 
   const [formData, setFormData] = useState({
@@ -24,7 +26,7 @@ const Login = () => {
   };
 
   const handleLogin = async (e) => {
-    loaderTrue();
+  
     e.preventDefault();
     const body = {
       email: formData.email,
@@ -34,11 +36,12 @@ const Login = () => {
     try {
       const res = await handleLoginAuth(body);
       if (res) {
-        loaderFalse();
+       
       }
     } catch (error) {
-      loaderFalse();
+     
     }
+
   };
 
   const handleGoogleLogin = async () => {
@@ -138,7 +141,7 @@ const Login = () => {
           </Link>
         </p>
       </div>
-      {/* {loader && <Loader/>} */}
+      {spinner}
     </div>
   );
 };

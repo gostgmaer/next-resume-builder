@@ -4,10 +4,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { post } from "@/lib/http";
 import { useAuthContext } from "@/context/authContext";
+import { useAxios } from "@/lib/interceptors";
 
 const ForgetPassword = () => {
   const { handleLoginAuth, user, userId } = useAuthContext();
-
+  const [axios, spinner] = useAxios();
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
@@ -80,6 +81,7 @@ const ForgetPassword = () => {
           </Link>
         </p>
       </div>
+      {spinner}
     </div>
   );
 };

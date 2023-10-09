@@ -1,43 +1,24 @@
+// @ts-nocheck
 "use client";
-import Resumeone from "@/components/ResumeView/Resumeone";
-import { useAuthContext } from "@/context/authContext";
-import { useGlobalAppContext } from "@/context/context";
-
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
+import UserResumes from "@/components/Pages/resumelist/Resumes";
+import { useAuthContext } from "@/context/authContext";
+import { useAxios } from "@/lib/interceptors";
 const Page = () => {
-  // @ts-ignore
-  const { user, userId } = useAuthContext();
-  const { loader, id, fetchResumedata, currentData } = useGlobalAppContext();
+  const { userId } = useAuthContext();
+  const [axios, spinner] = useAxios();
   const router = useRouter();
-  
-  const fetchResumeData = async () => {
-    const res = await fetchResumedata(id);
-  };
 
   useEffect(() => {
     if (!userId) router.push("/auth/login");
   }, [userId, router]);
 
-  useEffect(() => {
-    if (id) {
-      fetchResumeData();
-    } else {
-      router.push("/resume-list");
-    }
-  }, [id]);
-
-
   return (
-    <div>
-      <div className=" text-white min-h-screen flex  justify-center items-start">
-        {currentData ? (
-          <Resumeone data={currentData.result} />
-        ) : (
-          <div>No Data has been found</div>
-        )}
-      </div>
+    <div className=" py-10">
+      <UserResumes />
+      {spinner}
     </div>
   );
 };

@@ -9,7 +9,6 @@ import { usePathname } from "next/navigation";
 import { Suspense } from "react";
 import Loader from "@/utils/loader/Loader";
 
-
 const roboto = Roboto({
   subsets: ["latin"],
   weight: ["100", "400", "500", "700"],
@@ -25,7 +24,10 @@ export default function RootLayout({ children }) {
     <AppProvider>
       <AuthContextProvider>
         <html lang="en">
-          <body className={`${roboto.className}`} suppressHydrationWarning={true}>
+          <body
+            className={`${roboto.className}`}
+            suppressHydrationWarning={true}
+          >
             <Suspense fallback={<Loader />}>
               <main>
                 <Header />
@@ -34,7 +36,7 @@ export default function RootLayout({ children }) {
                 </div>
                 <Footer />
               </main>
-
+              {/* <Loader /> */}
               <ToastContainer />
             </Suspense>
           </body>

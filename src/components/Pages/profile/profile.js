@@ -3,7 +3,7 @@ import ImageUpload from "@/components/global/fields/ImageUpload";
 import SelectField from "@/components/global/fields/SelectField";
 import { useAuthContext } from "@/context/authContext";
 import { useGlobalAppContext } from "@/context/context";
-import { get, patch } from "@/lib/http";
+import { get, getsingle, patch } from "@/lib/http";
 import { countries } from "countries-list";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -16,22 +16,21 @@ const Personal = () => {
   const [close, setClose] = useState(true);
 
   const getProfile = async () => {
+    loaderTrue();
     try {
-      loaderTrue();
       if (userId?.user_id) {
         const res = await get(`/user/profile`, null, userId.user_id);
         setProfileInfo(res);
       }
-      loaderFalse();
     } catch (error) {
       console.log(error);
-      loaderFalse();
     }
+    loaderFalse();
   };
 
   useEffect(() => {
     getProfile();
-  }, [userId]);
+  }, []);
 
   return (
     <div className="container mx-auto py-8 text-black">
@@ -51,7 +50,7 @@ const Personal = () => {
       {profileInfo && (
         <UserprofileDetails userData={profileInfo.result} setClose={setClose} />
       )}
-      {!close && profileInfo && (
+      {!close && (
         <UserProfile
           data={profileInfo.result}
           setClose={setClose}
@@ -80,7 +79,7 @@ const UserProfile = ({ data, setClose, setProfileInfo }) => {
     postalCode: data?.address?.postalCode,
     country: data?.address?.country,
   });
-
+  const [imagePreview, setimagePreview] = useState(data?.profilePicture);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -89,7 +88,6 @@ const UserProfile = ({ data, setClose, setProfileInfo }) => {
     const { name, value } = e.target;
     setAddress({ ...address, [name]: value });
   };
-  const [imagePreview, setimagePreview] = useState(data?.profilePicture);
 
   const UpdateProfile = async (e) => {
     loaderTrue();
@@ -103,18 +101,19 @@ const UserProfile = ({ data, setClose, setProfileInfo }) => {
 
     try {
       const res = await patch(`/user`, recordData, userId.user_id);
-     
+
       if (res) {
         setClose(true);
-        const userInfoDaa = await get(`/user/profile`, null, userId.user_id);
+        const userInfoDaa = await getsingle(
+          `/user/profile`,
+          null,
+          userId.user_id
+        );
         setProfileInfo(userInfoDaa);
-        loaderFalse();
       } else {
-        loaderFalse();
       }
-    } catch (error) {
-      loaderFalse();
-    }
+    } catch (error) {}
+    loaderFalse();
   };
 
   var countryArray = [];
@@ -287,7 +286,7 @@ const UserProfile = ({ data, setClose, setProfileInfo }) => {
         <button
           type="button"
           onClick={UpdateProfile}
-          disabled={loader}
+          // disabled={loader}
           className="bg-blue-500 text-white py-2 disabled:bg-blue-200 disabled:pointer-events-none px-4 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
         >
           Save Details
@@ -338,7 +337,10 @@ const UserprofileDetails = ({ userData, setClose }) => {
 
         {userData?.address?.city && (
           <div className="col-span-2">
-            <label className="text-gray-700 font-bold mb-2" htmlFor="address">
+            <label
+              className="text-gray-700 font-bold text-lg mb-4 pb-4"
+              htmlFor="address"
+            >
               Address:
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -402,4 +404,3 @@ const UserprofileDetails = ({ userData, setClose }) => {
     </div>
   );
 };
-
