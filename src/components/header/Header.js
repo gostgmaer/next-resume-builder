@@ -10,9 +10,9 @@ function Header() {
   const { Logout, user, userId } = useAuthContext();
   const { setId, openModal, closeModal } = useGlobalAppContext();
   const handleSignout = async (params) => {
-    const response = await Logout()
-    closeModal()
-  }
+    const response = await Logout();
+    closeModal();
+  };
 
   return (
     <header className="bg-gradient-to-r from-blue-700 via-blue-500 to-blue-300 text-white py-3">
@@ -62,7 +62,7 @@ function Header() {
         )}
       </div>
       <Modal>
-        <div className=" w-full">
+        <div className=" w-full z-50">
           <h2 className=" w-full">Are you sure want to Sign Out?</h2>
           <div className="flex mt-10 justify-center gap-2">
             <button
