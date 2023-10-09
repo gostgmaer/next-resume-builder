@@ -19,7 +19,6 @@ const ResumeBlock = () => {
     if (activeTab !== tabName) {
       setActiveTab(tabName);
       setIsDivVisible(!isDivVisible);
-      console.log(tabName);
     }
   };
 

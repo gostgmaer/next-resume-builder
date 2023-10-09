@@ -70,8 +70,15 @@ const BasicInfo = () => {
     const { name, position, email, phone, linkedin, github, url, summary } =
       formData;
     var body = {
-     
-      ...extra,name, position, email, phone, linkedin, github, url, summary
+      ...extra,
+      name,
+      position,
+      email,
+      phone,
+      linkedin,
+      github,
+      url,
+      summary,
     };
     updateResumeRecord("work experience", body, id);
   };
@@ -238,33 +245,6 @@ const BasicInfo = () => {
 
 export default BasicInfo;
 
-const BaiscInfoBlock = ({ resumeData }) => {
-  return (
-    <section className="bg-white p-4 shadow-lg rounded-lg my-4">
-      <h1 className="text-3xl font-bold mb-2">{resumeData.basics.name}</h1>
-      <p className="text-xl text-indigo-600 mb-4">{resumeData.basics.label}</p>
-      <p className="mb-2">{resumeData.basics.email}</p>
-      <p className="mb-2">{resumeData.basics.phone}</p>
-      <p className="mb-2">
-        Website:{" "}
-        <a
-          href={resumeData.basics.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-indigo-600 hover:underline"
-        >
-          {resumeData.basics.url}
-        </a>
-      </p>
-      <p className="mb-2">
-        Location: {resumeData.basics.location.city},{" "}
-        {resumeData.basics.location.region},{" "}
-        {resumeData.basics.location.countryCode}
-      </p>
-    </section>
-  );
-};
-
 const SocialProfiles = ({ network, setNetwork }) => {
   const { fetchResumedata, currentData, activeTab, setActiveTab, id } =
     useGlobalAppContext();
@@ -274,7 +254,9 @@ const SocialProfiles = ({ network, setNetwork }) => {
     username: "",
     url: "",
   });
-  const [mydata, setMydata] = useState(null);
+  
+  const [editIndex, setEditIndex] = useState(-1);
+ 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -298,7 +280,6 @@ const SocialProfiles = ({ network, setNetwork }) => {
 
   const fetchResumeData = async () => {
     const res = await fetchResumedata(id);
-    setMydata(res);
     if (res?.profiles) {
       setNetwork(res.profiles);
     }
@@ -327,18 +308,8 @@ const SocialProfiles = ({ network, setNetwork }) => {
     }
   };
 
-  useEffect(() => {
-    if (id) {
-      fetchResumeData();
-    }
-  }, [id]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    updateRecord();
-  };
 
-  const [editIndex, setEditIndex] = useState(-1);
 
   const handleEdit = (index) => {
     setEditIndex(index);
