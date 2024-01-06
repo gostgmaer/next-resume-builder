@@ -10,9 +10,9 @@ function Header() {
   const { Logout, user, userId } = useAuthContext();
   const { setId, openModal, closeModal } = useGlobalAppContext();
   const handleSignout = async (params) => {
-    const response = await Logout()
-    closeModal()
-  }
+    const response = await Logout();
+    closeModal();
+  };
 
   return (
     <header className="bg-gradient-to-r from-blue-700 via-blue-500 to-blue-300 text-white py-3">
@@ -46,14 +46,14 @@ function Header() {
         ) : (
           <nav className=" flex items-center gap-5">
             <Link
-              href={"/auth/login"}
+              href={"/auth/signin"}
               className="text-white hover:text-gray-200"
             >
               Sign In
             </Link>
 
             <Link
-              href={"/auth/register"}
+              href={"/auth/signup"}
               className="bg-white text-blue-500 hover:bg-blue-400 hover:text-gray-800 rounded-full py-2 px-6 transition duration-300"
             >
               Sign Up
@@ -62,7 +62,7 @@ function Header() {
         )}
       </div>
       <Modal>
-        <div className=" w-full">
+        <div className=" w-full z-50">
           <h2 className=" w-full">Are you sure want to Sign Out?</h2>
           <div className="flex mt-10 justify-center gap-2">
             <button

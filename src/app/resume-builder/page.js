@@ -15,9 +15,9 @@ const Page = () => {
   const [axios, spinner] = useAxios();
   const router = useRouter();
 
-  useEffect(() => {
-    if (!userId) router.push("/auth/login");
-  }, [userId, router]);
+  // useEffect(() => {
+  //   if (!userId) router.push("/auth/login");
+  // }, [userId, router]);
 
   return (
     <div>

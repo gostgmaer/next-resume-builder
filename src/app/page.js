@@ -6,10 +6,10 @@ import Testimonials from "@/components/Pages/HomePage/Testimonials";
 export default function Home() {
 
   return (
-    <main className=" bg-black">
+    <div className=" bg-black">
       <HeroSection />
       <Features />
       <Testimonials />
-    </main>
+    </div>
   );
 }
