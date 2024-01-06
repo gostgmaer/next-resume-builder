@@ -5,6 +5,7 @@ import axios from "axios";
 import instance from '../lib/interceptors'
 import { notifySuccess, notifyerror } from "./notify/notice";
 import { parseCookies } from "nookies";
+import { getTokenFromCookies } from "@/helper/function";
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL; // Replace with your Firebase URL
 
 
@@ -14,7 +15,7 @@ const baseURL = process.env.NEXT_PUBLIC_BASE_URL; // Replace with your Firebase 
 export const get = async (endpint, query, id) => {
  
   const cookies = parseCookies();
-  const token = cookies["accessToken"];
+  const token = getTokenFromCookies()
   const session = cookies["session"];
   let reqUrl = undefined;
   if (id) {
@@ -53,7 +54,7 @@ export const get = async (endpint, query, id) => {
 
 export const getsingle = async (endpint, query, id) => {
   const cookies = parseCookies();
-  const token = cookies["accessToken"];
+  const token = getTokenFromCookies()
   const session = cookies["session"];
 
   const option = {
@@ -86,7 +87,7 @@ export const getsingle = async (endpint, query, id) => {
 
 export const getServerSingle = async (endpint, query, id) => {
   const cookies = parseCookies();
-  const token = cookies["accessToken"];
+  const token = getTokenFromCookies()
   const session = cookies["session"];
 
   const option = {
@@ -119,7 +120,7 @@ export const getServerSingle = async (endpint, query, id) => {
 
 export const post = async (endpint, data) => {
   const cookies = parseCookies();
-  const token = cookies["accessToken"];
+  const token = getTokenFromCookies()
   const session = cookies["session"];
   const option = {
     method: "post",
@@ -176,7 +177,7 @@ export const post = async (endpint, data) => {
 
 export const patch = async (endpint, data, id) => {
   const cookies = parseCookies();
-  const token = cookies["accessToken"];
+  const token = getTokenFromCookies()
   const session = cookies["session"];
   const option = {
     method: "patch",
@@ -203,7 +204,7 @@ export const patch = async (endpint, data, id) => {
 
 export const del = async (endpint, id) => {
   const cookies = parseCookies();
-  const token = cookies["accessToken"];
+  const token = getTokenFromCookies()
   const session = cookies["session"];
 
   const option = {

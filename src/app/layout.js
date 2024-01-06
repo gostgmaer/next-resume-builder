@@ -8,6 +8,8 @@ import { ToastContainer } from "react-toastify";
 import { usePathname } from "next/navigation";
 import { Suspense } from "react";
 import Loader from "@/utils/loader/Loader";
+import { SessionProvider } from "next-auth/react";
+import NextAuthProvider from "@/context/sessionContext";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -21,27 +23,32 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <AppProvider>
-      <AuthContextProvider>
-        <html lang="en">
-          <body
-            className={`${roboto.className}`}
-            suppressHydrationWarning={true}
-          >
-            <Suspense fallback={<Loader />}>
-              <main>
-                <Header />
-                <div className=" bg-slate-50 min-h-[calc(100vh-1.25rem)]">
-                  {children}
-                </div>
-                <Footer />
-              </main>
-              {/* <Loader /> */}
-              <ToastContainer />
-            </Suspense>
-          </body>
-        </html>
-      </AuthContextProvider>
-    </AppProvider>
+
+    <html lang="en">
+      <body
+        className={`${roboto.className}`}
+        suppressHydrationWarning={true}
+      >
+
+        <Suspense fallback={<Loader />}>
+          <NextAuthProvider>
+            <AppProvider>
+              <AuthContextProvider>
+                <main>
+                  <Header />
+                  <div className=" bg-slate-50 min-h-[calc(100vh-1.25rem)]">
+                    {children}
+                  </div>
+                  <Footer />
+                </main></AuthContextProvider></AppProvider>
+          </NextAuthProvider>
+          <ToastContainer />
+        </Suspense>
+
+      </body>
+
+    </html>
+
+
   );
 }

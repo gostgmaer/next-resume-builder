@@ -6,6 +6,7 @@ import ImageUpload from "./comp/ImageUpload";
 import { socialMediaData } from "@/assets/data";
 import { patch, post } from "@/lib/http";
 import { findIndex } from "@/utils/custom";
+import { appId, resumeContainer } from "@/config/setting";
 
 const BasicInfo = () => {
   // @ts-ignore
@@ -29,6 +30,9 @@ const BasicInfo = () => {
     url: "",
     summary: "",
   });
+
+
+  
   const [imagePreview, setImagePreview] = useState(null);
   const [network, setNetwork] = useState([]);
   const handleChange = (e) => {
@@ -46,7 +50,7 @@ const BasicInfo = () => {
 
     const basic = { ...extra, ...formData };
     try {
-      const data = await post("/resume/create", basic); // Replace with your collection name
+      const data = await post(`/record/${appId}/container/${resumeContainer}`, basic); // Replace with your collection name
       setId(data.result.record_id);
       setActiveTab("work experience");
     } catch (error) {

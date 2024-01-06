@@ -1,5 +1,6 @@
 "use client";
 
+import { appId, resumeContainer } from "@/config/setting";
 import { get, getsingle, patch } from "@/lib/http";
 import React, { useContext, useState, useEffect } from "react";
 const AppContext = React.createContext(null);
@@ -30,7 +31,7 @@ const AppProvider = ({ children }) => {
   const fetchResumedata = async (id) => {
     loaderTrue();
     try {
-      const data = await getsingle("/resume", {}, id); // Replace with your collection name
+      const data = await getsingle(`/record/${appId}/container/${resumeContainer}`, {}, id); // Replace with your collection name
       setCurrentData(data);
       // setActiveTab(data.result.last_step)
       return data;
@@ -43,7 +44,7 @@ const AppProvider = ({ children }) => {
   const updateResumeRecord = async (nav, body, id) => {
     loaderTrue();
     try {
-      const response = await patch(`/resume`, body, id);
+      const response = await patch(`/record/${appId}/container/${resumeContainer}`, body, id);
       setActiveTab(nav);
       console.log("Record updated successfully:", response);
     } catch (error) {
