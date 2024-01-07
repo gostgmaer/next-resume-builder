@@ -45,7 +45,7 @@ const Page = () => {
   }
   return (
     <div>
-      <div className=" text-black min-h-screen flex  justify-center items-start">
+      <div className=" text-black min-h-screen flex justify-center items-start">
         {currentData && <Resumeone data={currentData.result} />}
       </div>
   

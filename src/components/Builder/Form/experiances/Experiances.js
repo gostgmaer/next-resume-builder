@@ -7,7 +7,7 @@ import { patch } from "@/lib/http";
 
 const Experiances = () => {
   const {
-    fetchResumedata,
+    fetchSingleresume,
     currentData,
     updateResumeRecord,
     activeTab,
@@ -103,8 +103,8 @@ const Experiances = () => {
         last_step: activeTab,
         work: expriance,
       };
-      const response = await patch(`/resume`, expriances, id);
-      setActiveTab("education");
+      const response = await  updateResumeRecord("education", expriances, id);
+      // setActiveTab("education");
       return response;
     } catch (error) {
       console.error("Error updating record:", error);
@@ -123,7 +123,7 @@ const Experiances = () => {
   };
 
   const fetchResumeData = async () => {
-    const response = await fetchResumedata(id);
+    const response = await fetchSingleresume(id);
    
     if (response?.result?.work) {
       setExpriance(response.result.work);

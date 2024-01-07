@@ -10,12 +10,11 @@ import { getStorage } from "firebase/storage";
 const config = {
   apiKey: "AIzaSyB5K2i-ry0abSisdBPu88PrAYlfvU9fsAE",
   authDomain: "react-resume-builder-497bb.firebaseapp.com",
-  databaseURL:
-    "https://react-resume-builder-497bb-default-rtdb.asia-southeast1.firebasedatabase.app",
+  databaseURL: "https://react-resume-builder-497bb-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "react-resume-builder-497bb",
   storageBucket: "react-resume-builder-497bb.appspot.com",
   messagingSenderId: "544706229003",
-  appId: "1:544706229003:web:6cdb8d4b6c70cf7e36a80e",
+  appId: "1:544706229003:web:6cdb8d4b6c70cf7e36a80e"
 };
 
 const app = initializeApp(config);

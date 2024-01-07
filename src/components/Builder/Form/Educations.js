@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 
 const Educations = () => {
   const {
-    fetchResumedata,
+    fetchSingleresume,
     currentData,
     updateResumeRecord,
     activeTab,
@@ -45,7 +45,7 @@ const Educations = () => {
   };
 
   const fetchResumeData = async () => {
-    const res = await fetchResumedata(id);
+    const res = await fetchSingleresume(id);
 
     if (res.result?.education) {
       setEducation(res.result?.education);
