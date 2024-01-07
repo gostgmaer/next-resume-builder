@@ -23,7 +23,7 @@ const RegisterForm = () => {
     try {
       const res = await post("/authentication/user/register", values);
       if (res) {
-        router.push("/auth/login");
+        router.push("/auth/signin");
       }
     } catch (error) {
       setError(error);

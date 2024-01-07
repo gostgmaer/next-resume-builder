@@ -10,8 +10,11 @@ const AppProvider = ({ children }) => {
   const [currentData, setCurrentData] = useState(null);
   const [activeTab, setActiveTab] = useState("basic info");
   const [id, setId] = useState(undefined);
+  const [list, setList] = useState(undefined);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -28,8 +31,8 @@ const AppProvider = ({ children }) => {
     setLoader(true);
   };
 
-  const fetchResumedata = async (id) => {
-    loaderTrue();
+  const fetchSingleresume = async (id) => {
+
     try {
       const data = await getsingle(`/record/${appId}/container/${resumeContainer}`, {}, id); // Replace with your collection name
       setCurrentData(data);
@@ -37,12 +40,13 @@ const AppProvider = ({ children }) => {
       return data;
     } catch (error) {
       console.error("Error getting data:", error);
+      return error
     }
-    loaderFalse();
+
   };
 
   const updateResumeRecord = async (nav, body, id) => {
-    loaderTrue();
+
     try {
       const response = await patch(`/record/${appId}/container/${resumeContainer}`, body, id);
       setActiveTab(nav);
@@ -50,7 +54,15 @@ const AppProvider = ({ children }) => {
     } catch (error) {
       console.error("Error updating record:", error);
     }
-    loaderFalse();
+
+  };
+
+  const fetchResumeData = async () => {
+    const query = {
+      page: page, limit: limit
+    }
+    const data = await get(`/record/${appId}/container/${resumeContainer}`, query);
+    setList(data);
   };
 
   return (
@@ -62,13 +74,13 @@ const AppProvider = ({ children }) => {
         updateResumeRecord,
         id,
         setId,
-        fetchResumedata,
-        currentData,
+        fetchSingleresume,
+        currentData, fetchResumeData,
         activeTab,
         setActiveTab,
         isModalOpen,
         openModal,
-        closeModal,
+        closeModal, list, setList, page, limit, setLimit, setPage
       }}
     >
       {children}

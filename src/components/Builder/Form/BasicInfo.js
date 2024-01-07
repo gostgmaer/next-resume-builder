@@ -7,12 +7,14 @@ import { socialMediaData } from "@/assets/data";
 import { patch, post } from "@/lib/http";
 import { findIndex } from "@/utils/custom";
 import { appId, resumeContainer } from "@/config/setting";
+import { useFormik } from "formik";
+import { baiscValidationSchema } from "@/utils/validationSchema";
 
 const BasicInfo = () => {
   // @ts-ignore
   const { user } = useAuthContext();
   const {
-    fetchResumedata,
+    fetchSingleresume,
     updateResumeRecord,
     activeTab,
     setActiveTab,
@@ -31,10 +33,29 @@ const BasicInfo = () => {
     summary: "",
   });
 
-
   
   const [imagePreview, setImagePreview] = useState(null);
   const [network, setNetwork] = useState([]);
+  const initialValues = {
+    name: '',
+    position: '',
+    email: '',
+    phone: '',
+    url: '',
+    summary: '',
+  };
+
+  const formik = useFormik({
+    initialValues,
+    validationSchema:baiscValidationSchema,
+    onSubmit: (values) => {
+      // Handle form submission
+      handleSubmit()
+    },
+  });
+
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -48,7 +69,7 @@ const BasicInfo = () => {
       profiles: network,
     };
 
-    const basic = { ...extra, ...formData };
+    const basic = { ...extra, ...formik.values };
     try {
       const data = await post(`/record/${appId}/container/${resumeContainer}`, basic); // Replace with your collection name
       setId(data.result.record_id);
@@ -59,7 +80,7 @@ const BasicInfo = () => {
   };
 
   const fetchResumeData = async () => {
-    const res = await fetchResumedata(id);
+    const res = await fetchSingleresume(id);
     setFormData(res.result);
     setImagePreview(res.result.image);
     setNetwork(res.result.profiles);
@@ -351,7 +372,7 @@ const SocialProfiles = ({ network, setNetwork }) => {
                       Social media Name
                     </label>
                     <select
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
                       id="network"
                       name="network"
                       value={formData.network}

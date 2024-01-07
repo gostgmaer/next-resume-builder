@@ -1,46 +1,37 @@
 import Modal from "@/components/global/Modal";
+import PaginationBlock from "@/components/global/fields/Pagination";
 import { firebaseDatabaseConn } from "@/config/firebase";
+import { appId, resumeContainer } from "@/config/setting";
 import { useAuthContext } from "@/context/authContext";
 import { useGlobalAppContext } from "@/context/context";
-import { get } from "@/lib/http";
+import { del, get } from "@/lib/http";
 
 import moment from "moment";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
 
 const UserResumes = () => {
   const router = useRouter();
-  const { user, userId } = useAuthContext();
-  // Replace this with the actual data from your JSON
-  // @ts-ignore
-
+  const { data: session } = useSession()
   const {
-    fetchResumedata,
-    currentData,
-    updateResumeRecord,
-    activeTab,
-    setActiveTab,
-    id,
-    setId,
+    fetchResumeData,
+    page,limit,
+    setId, list,setLimit,setPage,setActiveTab
   } = useGlobalAppContext();
-  const [list, setList] = useState(undefined);
-
-  // var profileData = [];
-  const fetchResumeData = async () => {
-    const data = await get("/resume");
-    setList(data);
-  };
 
   useEffect(() => {
-    if (userId) {
+    if (session) {
       fetchResumeData();
     }
-  }, [userId]);
+  }, [session,page,limit]);
 
   const handleNewResume = () => {
     setId(undefined);
+    setActiveTab("basic info")
     router.push("/resume-builder");
   };
 
@@ -61,11 +52,17 @@ const UserResumes = () => {
           <h2>No resume is Found please create a resume</h2>
         </div>
       ) : (
-        <div className="space-y-2 bg-white p-2 rounded-lg">
+       <div className="">
+         <div className="space-y-2 bg-white p-2 rounded-lg max-h-[480px] overflow-auto">
           {list?.result?.map((resume, index) => (
             <ResumeItem key={index} data={resume} />
           ))}
         </div>
+        <div className=" bg-gray-800 py-1 text-white mt-10">
+        <PaginationBlock totalItems={list.total_record} limit={limit} currentPage={page} onPageChange={setPage} onItemsPerPageChange={setLimit}/>
+        </div>
+       </div>
+       
       )}
     </div>
   );
@@ -74,9 +71,14 @@ const UserResumes = () => {
 export default UserResumes;
 
 const ResumeItem = ({ data }) => {
-  const { setId, openModal, closeModal } = useGlobalAppContext();
+
+  const {
+    fetchResumeData,
+    setId, openModal, closeModal
+  } = useGlobalAppContext();
 
   const router = useRouter();
+
   const EditID = () => {
     setId(data._id);
     router.push("/resume-builder");
@@ -90,7 +92,13 @@ const ResumeItem = ({ data }) => {
     openModal();
   };
 
-  const deleteResumeFunction = () => {};
+  const deleteResumeFunction = async () => {
+    const request = await del(`/record/${appId}/container/${resumeContainer}`, data._id)
+    closeModal()
+    console.log(request);
+    fetchResumeData();
+
+  };
 
   return (
     <div className="border p-4 flex flex-col bg-slate-50 rounded-lg md:flex-row justify-between items-start">
@@ -124,21 +132,21 @@ const ResumeItem = ({ data }) => {
       <div className="mt-2 md:mt-0  flex items-start flex-col gap-2">
         <Link
           href={`/resume/${data["_id"]}`}
-          className="bg-blue-500 text-white px-2 text-center w-24 py-1 rounded hover:bg-blue-600"
+          className="bg-blue-500 text-white px-2 text-center  py-2 rounded hover:bg-blue-600"
         >
-          View
+          <FaEye/>
         </Link>
         <button
-          className="bg-yellow-500 text-white px-2 w-24 py-1 rounded hover:bg-yellow-600"
+          className="bg-yellow-500 text-white px-2  py-1 rounded hover:bg-yellow-600"
           onClick={EditID}
         >
-          Edit
+          <FaEdit/>
         </button>
         <button
           onClick={openDeleteModal}
-          className="bg-red-500 text-white px-2 w-24 py-1 rounded hover:bg-red-600"
+          className="bg-red-500 text-white px-2  py-2 rounded hover:bg-red-600"
         >
-          Delete
+        <FaTrash/>
         </button>
       </div>
       <Modal>

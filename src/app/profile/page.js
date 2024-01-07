@@ -10,20 +10,19 @@ import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 export default function Profile({ data }) {
-  const [axios, spinner] = useAxios();
-  const { user, userId } = useAuthContext();
-  // const { loader } = useGlobalAppContext();
-  const router = useRouter();
+  // const [axios, spinner] = useAxios();
+  // const { user, userId } = useAuthContext();
+  // // const { loader } = useGlobalAppContext();
+  // const router = useRouter();
 
-  useEffect(() => {
-    if (!userId) router.push("/auth/login");
-    console.log(spinner);
-  }, [userId, router]);
+  // useEffect(() => {
+  //   if (!userId) router.push("/auth/login");
+  //   console.log(spinner);
+  // }, [userId, router]);
 
   return (
     <div>
       <Personal />
-      {spinner}
     </div>
   );
 }
