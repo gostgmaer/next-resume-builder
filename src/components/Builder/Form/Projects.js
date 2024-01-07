@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 
 const Projects = () => {
   const {
-    fetchResumedata,
+    fetchSingleresume,
     currentData,
     updateResumeRecord,
     activeTab,
@@ -52,7 +52,7 @@ const Projects = () => {
     setProjects(updatedExperiences);
   };
   const fetchResumeData = async () => {
-    const res = await fetchResumedata(id);
+    const res = await fetchSingleresume(id);
     if (res.result?.projects) {
       setProjects(res.result.projects);
     }

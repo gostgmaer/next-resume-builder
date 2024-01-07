@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
               <AuthContextProvider>
                 <main className="">
                   <Header />
-                  <div className=" bg-gray-50 min-h-[calc(100vh-1.25rem)] mx-16 py-10 px-10">
+                  <div className=" bg-gray-50 min-h-[calc(100vh-1.25rem)] mx-16 py-10 my-10 px-10 print:p-0 print:m-0">
                     {children}
                   </div>
                   <Footer />

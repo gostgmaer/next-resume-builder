@@ -69,10 +69,10 @@ const BasicInfo = () => {
       profiles: network,
     };
 
-    const basic = { ...extra, ...formik.values };
+    const basic = { ...extra, ...formData };
     try {
       const data = await post(`/record/${appId}/container/${resumeContainer}`, basic); // Replace with your collection name
-      setId(data.result.record_id);
+      setId(data.result.insertedId);
       setActiveTab("work experience");
     } catch (error) {
       console.error("Error getting data:", error);

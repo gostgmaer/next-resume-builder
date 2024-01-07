@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 
 const Skills = () => {
   const {
-    fetchResumedata,
+    fetchSingleresume,
     currentData,
     updateResumeRecord,
     activeTab,
@@ -47,7 +47,7 @@ const Skills = () => {
   };
 
   const fetchResumeData = async () => {
-    const res = await fetchResumedata(id);
+    const res = await fetchSingleresume(id);
  
     if (res.result?.skills) {
       setSkills(res.result?.skills);

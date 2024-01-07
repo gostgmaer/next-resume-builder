@@ -3,10 +3,10 @@ import React, { useState, useEffect } from "react";
 
 const Resume = () => {
   const [resumeData, setResumeData] = useState(null);
-  const { fetchResumedata, id } = useGlobalAppContext();
+  const { fetchSingleresume, id } = useGlobalAppContext();
 
   const fetchResumeData = async () => {
-    const res = await fetchResumedata(id);
+    const res = await fetchSingleresume(id);
     if (res?.result) {
       setResumeData(res.result);
     }
