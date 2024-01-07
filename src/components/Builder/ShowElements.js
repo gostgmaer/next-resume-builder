@@ -32,7 +32,6 @@ const ShowElements = ({ currentTab }) => {
       return <Projects />;
     case "others":
       return <Others />;
-
     case "view":
       return <Resume />;
 

@@ -7,18 +7,18 @@ import UserResumes from "@/components/Pages/resumelist/Resumes";
 import { useAuthContext } from "@/context/authContext";
 import { useAxios } from "@/lib/interceptors";
 const Page = () => {
-  const { userId } = useAuthContext();
-  const [axios, spinner] = useAxios();
-  const router = useRouter();
+  // const { userId } = useAuthContext();
+  // const [axios, spinner] = useAxios();
+  // const router = useRouter();
 
-  useEffect(() => {
-    if (!userId) router.push("/auth/login");
-  }, [userId, router]);
+  // useEffect(() => {
+  //   if (!userId) router.push("/auth/login");
+  // }, [userId, router]);
 
   return (
     <div className=" py-10">
       <UserResumes />
-      {spinner}
+ 
     </div>
   );
 };

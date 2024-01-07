@@ -5,8 +5,9 @@ import { useGlobalAppContext } from "./context";
 import jwt_decode, { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
 import { post } from "@/lib/http";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { setToken, storeCookiesOfObject } from "@/helper/function";
+import Cookies from "js-cookie";
 
 export const AuthContext = React.createContext(null);
 
@@ -53,30 +54,39 @@ export const AuthContextProvider = ({ children }) => {
   //   } catch (error) {}
   // };
 
-  const Logout = async () => {
-    function deleteCookie(name) {
-      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-    }
-    try {
-      loaderTrue();
-      const res = await post("/user/auth/signout");
-      if (res.statusCode == "200") {
-        sessionStorage.removeItem("user");
-        deleteCookie("accessToken");
-        deleteCookie("session");
-        window.sessionStorage.clear();
-        window.localStorage.clear();
-        setUser(undefined);
-        setUserId(undefined);
-        router.push("/auth/login");
+  // const Logout = async () => {
+  //   function deleteCookie(name) {
+  //     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+  //   }
+  //   try {
+  //     loaderTrue();
+  //     const res = await post("/user/auth/signout");
+  //     if (res.statusCode == "200") {
+  //       sessionStorage.removeItem("user");
+  //       deleteCookie("accessToken");
+  //       deleteCookie("session");
+  //       window.sessionStorage.clear();
+  //       window.localStorage.clear();
+  //       setUser(undefined);
+  //       setUserId(undefined);
+  //       router.push("/auth/login");
 
-        loaderFalse();
-      }
-    } catch (error) {
-      loaderFalse();
-    }
-  };
+  //       loaderFalse();
+  //     }
+  //   } catch (error) {
+  //     loaderFalse();
+  //   }
+  // };
 
+  const handleLogout = () => {
+    signOut()
+    window.sessionStorage.clear();
+    window.localStorage.clear();
+    const cookies = Cookies.get();
+    for (const cookie in cookies) {
+      Cookies.remove(cookie);
+    }
+  }
   // const unsubscribe = async () => {
   //   try {
   //     loaderTrue();
@@ -102,7 +112,7 @@ export const AuthContextProvider = ({ children }) => {
   // }, []);
 
   return (
-    <AuthContext.Provider value={{ user, Logout, userId }}>
+    <AuthContext.Provider value={{ user, handleLogout, userId }}>
       {children}
     </AuthContext.Provider>
   );

@@ -56,7 +56,7 @@ const Resumeone = ({ data }) => {
           <div>
             <h2 className="text-xl font-semibold">Education</h2>
             <ul className="mt-2 list-disc pl-4">
-              {data.education.map((edu, index) => (
+              {data?.education?.map((edu, index) => (
                 <li key={index}>
                   <p className="font-semibold">{edu.educationTitle}</p>
                   <p>{edu.schoolName}</p>
@@ -71,7 +71,7 @@ const Resumeone = ({ data }) => {
           <div>
             <h2 className="text-xl font-semibold mt-4">Skills</h2>
             <ul className="mt-2 list-disc pl-4">
-              {data.skills.map((skill, index) => (
+              {data?.skills?.map((skill, index) => (
                 <li key={index}>
                   <p className="font-semibold">{skill.name}</p>
                   <p>Years of Experience: {skill.total_years}</p>
@@ -84,7 +84,7 @@ const Resumeone = ({ data }) => {
         <div className="mt-8">
           <h2 className="text-xl font-semibold">Work Experience</h2>
           <ul className="mt-2">
-            {data.work.map((exp, index) => (
+            {data?.work?.map((exp, index) => (
               <li key={index} className="mb-4">
                 <p className="font-semibold">{exp.title}</p>
                 <p>{exp.company}</p>
@@ -109,7 +109,7 @@ const Resumeone = ({ data }) => {
         <div className="mt-8">
           <h2 className="text-xl font-semibold">Projects</h2>
           <ul className="mt-2">
-            {data.projects.map((project, index) => (
+            {data?.projects?.map((project, index) => (
               <li key={index} className="mb-4">
                 <p className="font-semibold">{project.projectTitle}</p>
                 <p>{project.overview}</p>

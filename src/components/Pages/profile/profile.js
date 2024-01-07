@@ -5,32 +5,41 @@ import { useAuthContext } from "@/context/authContext";
 import { useGlobalAppContext } from "@/context/context";
 import { get, getsingle, patch } from "@/lib/http";
 import { countries } from "countries-list";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 
 const Personal = () => {
-  const { user, userId } = useAuthContext();
-  const { loaderFalse, loaderTrue } = useGlobalAppContext();
+  // const { user, userId } = useAuthContext();
+  // const { loaderFalse, loaderTrue } = useGlobalAppContext();
   const [profileInfo, setProfileInfo] = useState(undefined);
   const [close, setClose] = useState(true);
+  const { data: session } = useSession()
 
+  const route = useRouter()
   const getProfile = async () => {
-    loaderTrue();
     try {
-      if (userId?.user_id) {
-        const res = await get(`/user/profile`, null, userId.user_id);
-        setProfileInfo(res);
-      }
+      const res = await get(`/authentication/user/current/profile`);
+      setProfileInfo(res);
     } catch (error) {
       console.log(error);
     }
-    loaderFalse();
   };
 
   useEffect(() => {
+    console.log(session);
+   if (session) {
     getProfile();
-  }, []);
+   }
+  }, [session]);
+
+
+  if (!session) {
+    route.push('/auth/signin')
+  }
+
 
   return (
     <div className="container mx-auto py-8 text-black">

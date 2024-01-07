@@ -3,7 +3,7 @@
 
 import axios from "axios";
 import instance from '../lib/interceptors'
-import { notifySuccess, notifyerror } from "./notify/notice";
+import { notifySuccess, notifyerror, notifyinfo } from "./notify/notice";
 import { parseCookies } from "nookies";
 import { getTokenFromCookies } from "@/helper/function";
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL; // Replace with your Firebase URL
@@ -12,21 +12,21 @@ const baseURL = process.env.NEXT_PUBLIC_BASE_URL; // Replace with your Firebase 
 // axios.defaults.withCredentials=true
 
 
-export const get = async (endpint, query, id) => {
+export const get = async (endpint, query) => {
  
   const cookies = parseCookies();
   const token = getTokenFromCookies()
   const session = cookies["session"];
-  let reqUrl = undefined;
-  if (id) {
-    reqUrl = baseURL + endpint + `/${id}`;
-  }
-  if (!id) {
-    reqUrl = baseURL + endpint;
-  }
+  // let reqUrl = undefined;
+  // if (id) {
+  //   reqUrl = baseURL + endpint + `/${id}`;
+  // }
+  // if (!id) {
+  //   reqUrl = baseURL + endpint;
+  // }
   const option = {
     method: "get",
-    url: reqUrl,
+    url: baseURL + endpint,
     headers: {
       Authorization: token,
       session_id: session,
@@ -221,7 +221,7 @@ export const del = async (endpint, id) => {
   let error;
   try {
     response = await instance.request(option);
-    notifySuccess(response.data.message, 2000);
+    notifyinfo(response.data.message, 2000);
   } catch (e) {
     error = e.response.data;
     notifyerror(e.response.data.message, 2000);

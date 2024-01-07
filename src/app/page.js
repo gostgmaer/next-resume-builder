@@ -6,7 +6,7 @@ import Testimonials from "@/components/Pages/HomePage/Testimonials";
 export default function Home() {
 
   return (
-    <div className=" bg-black">
+    <div className=" bg-gray-50 px-10">
       <HeroSection />
       <Features />
       <Testimonials />

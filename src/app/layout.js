@@ -23,32 +23,25 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-
     <html lang="en">
-      <body
-        className={`${roboto.className}`}
-        suppressHydrationWarning={true}
-      >
-
+      <body className={`${roboto.className}`} suppressHydrationWarning={true}>
         <Suspense fallback={<Loader />}>
           <NextAuthProvider>
             <AppProvider>
               <AuthContextProvider>
-                <main>
+                <main className="">
                   <Header />
-                  <div className=" bg-slate-50 min-h-[calc(100vh-1.25rem)]">
+                  <div className=" bg-gray-50 min-h-[calc(100vh-1.25rem)] mx-16 py-10 px-10">
                     {children}
                   </div>
                   <Footer />
-                </main></AuthContextProvider></AppProvider>
+                </main>
+              </AuthContextProvider>
+            </AppProvider>
           </NextAuthProvider>
           <ToastContainer />
         </Suspense>
-
       </body>
-
     </html>
-
-
   );
 }

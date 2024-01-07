@@ -39,9 +39,9 @@ const Signup = () => {
     };
 
     try {
-      const res = await post("/user/register", body);
+      const res = await post("/authentication/user/register", body);
       if (res) {
-        router.push("/auth/login");
+        router.push("/auth/signin");
       }
     } catch (error) {
       setError(error);
@@ -203,12 +203,12 @@ const Signup = () => {
 
         <p className="text-gray-700">
           Already have an account?{" "}
-          <Link href="/auth/login" className="text-blue-500 hover:underline">
+          <Link href="/auth/signin" className="text-blue-500 hover:underline">
             Login here
           </Link>
         </p>
       </div>
-      {spinner}
+  
     </div>
   );
 };
