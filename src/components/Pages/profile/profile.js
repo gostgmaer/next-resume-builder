@@ -29,16 +29,15 @@ const Personal = () => {
   };
 
   useEffect(() => {
-    console.log(session);
-   if (session) {
-    getProfile();
-   }
+    if (session) {
+      getProfile();
+    }
   }, [session]);
 
 
-  if (!session) {
-    route.push('/auth/signin')
-  }
+  // if (!session) {
+  //   route.push('/auth/signin')
+  // }
 
 
   return (
@@ -57,7 +56,7 @@ const Personal = () => {
         )}
       </div>
       {profileInfo && (
-        <UserprofileDetails userData={profileInfo.result} setClose={setClose} />
+        <UserprofileDetails userData={profileInfo?.result} setClose={setClose} />
       )}
       {!close && (
         <UserProfile
@@ -81,22 +80,22 @@ const UserProfile = ({ data, setClose, setProfileInfo }) => {
     profilePicture: data?.profilePicture,
     contactNumber: data?.contactNumber,
   });
-  const [address, setAddress] = useState({
-    street: data?.address?.street,
-    city: data?.address?.city,
-    state: data?.address?.state,
-    postalCode: data?.address?.postalCode,
-    country: data?.address?.country,
-  });
+  // const [address, setAddress] = useState({
+  //   street: data?.address?.street,
+  //   city: data?.address?.city,
+  //   state: data?.address?.state,
+  //   postalCode: data?.address?.postalCode,
+  //   country: data?.address?.country,
+  // });
   const [imagePreview, setimagePreview] = useState(data?.profilePicture);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-  const handleChangeAddress = (e) => {
-    const { name, value } = e.target;
-    setAddress({ ...address, [name]: value });
-  };
+  // const handleChangeAddress = (e) => {
+  //   const { name, value } = e.target;
+  //   setAddress({ ...address, [name]: value });
+  // };
 
   const UpdateProfile = async (e) => {
     loaderTrue();
@@ -104,7 +103,7 @@ const UserProfile = ({ data, setClose, setProfileInfo }) => {
 
     const recordData = {
       ...formData,
-      address: address,
+      // address: address,
       profilePicture: imagePreview,
     };
 
@@ -121,7 +120,7 @@ const UserProfile = ({ data, setClose, setProfileInfo }) => {
         setProfileInfo(userInfoDaa);
       } else {
       }
-    } catch (error) {}
+    } catch (error) { }
     loaderFalse();
   };
 
@@ -206,7 +205,7 @@ const UserProfile = ({ data, setClose, setProfileInfo }) => {
           />
         </div>
 
-        <div className="col-span-2 mt-10">
+        {/* <div className="col-span-2 mt-10">
           <h2 className="block text-gray-600 font-semibold mb-2 text-2xl">
             Address:
           </h2>
@@ -278,9 +277,9 @@ const UserProfile = ({ data, setClose, setProfileInfo }) => {
             value={address.postalCode}
             onChange={handleChangeAddress}
           />
-        </div>
+        </div> */}
 
-        {
+        {/* {
           <SelectField
             options={countryArray}
             value={address.country}
@@ -289,7 +288,7 @@ const UserProfile = ({ data, setClose, setProfileInfo }) => {
             label={"Country"}
             placeholder={undefined}
           />
-        }
+        } */}
       </div>
       <div className="col-span-1 mt-4 flex justify-end">
         <button
@@ -344,7 +343,7 @@ const UserprofileDetails = ({ userData, setClose }) => {
           <span className="text-gray-800">{userData.role}</span>
         </div>
 
-        {userData?.address?.city && (
+        {/* {userData?.address?.city && (
           <div className="col-span-2">
             <label
               className="text-gray-700 font-bold text-lg mb-4 pb-4"
@@ -398,7 +397,7 @@ const UserprofileDetails = ({ userData, setClose }) => {
               </div>
             </div>
           </div>
-        )}
+        )} */}
 
         <div className=" col-span-2 flex justify-end">
           <button
