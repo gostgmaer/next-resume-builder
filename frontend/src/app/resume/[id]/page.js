@@ -24,7 +24,7 @@ const Page = () => {
 
   console.log(param);
   // const fetchResumeData = async () => {
-  //   const res = await getsingle("/resume", {}, param.id);
+  //   const res = await getsingle("/resumes", {}, param.id);
   //   setData(res);
   // };
 

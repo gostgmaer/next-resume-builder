@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 
-const PasswordField = ({ value, handleChange, placeholder, name }) => {
+const PasswordField = ({ value, handleChange, placeholder, name ,...rest}) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -14,20 +14,16 @@ const PasswordField = ({ value, handleChange, placeholder, name }) => {
         type={showPassword ? "text" : "password"}
         id={name}
         name={name}
-        className="w-full px-4 py-2  border-none rounded-md focus:outline-none focus:border-blue-500"
-        placeholder={placeholder ? placeholder : "Enter your password"}
+        className="w-full px-4 py-2 placeholder:text-sm dark:bg-gray-50 bg-white dark:text-gray-700   border-none rounded-md focus:outline-none focus:border-blue-500 pr-0"
+        placeholder={placeholder ? placeholder : "Enter password"}
         value={value}
         onChange={handleChange}
         autoComplete="off"
-        
         required
+        {...rest}
       />
 
-      <button
-        type="button"
-        className=" px-2"
-        onClick={togglePasswordVisibility}
-      >
+      <button className="px-2" type="button" onClick={togglePasswordVisibility}>
         {showPassword ? (
           <FaEyeSlash className=" w-5 h-5" onClick={togglePasswordVisibility} />
         ) : (

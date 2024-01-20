@@ -34,7 +34,7 @@ const AppProvider = ({ children }) => {
   const fetchSingleresume = async (id) => {
 
     try {
-      const data = await getsingle(`/record/${appId}/container/${resumeContainer}`, {}, id); // Replace with your collection name
+      const data = await getsingle(`/resumes`, {}, id); // Replace with your collection name
       setCurrentData(data);
       // setActiveTab(data.result.last_step)
       return data;
@@ -48,7 +48,7 @@ const AppProvider = ({ children }) => {
   const updateResumeRecord = async (nav, body, id) => {
 
     try {
-      const response = await patch(`/record/${appId}/container/${resumeContainer}`, body, id);
+      const response = await patch(`/resumes`, body, id);
       setActiveTab(nav);
       console.log("Record updated successfully:", response);
     } catch (error) {
@@ -61,7 +61,7 @@ const AppProvider = ({ children }) => {
     const query = {
       page: page, limit: limit
     }
-    const data = await get(`/record/${appId}/container/${resumeContainer}`, query);
+    const data = await get(`/resumes`, query);
     setList(data);
   };
 

@@ -9,6 +9,7 @@ import { findIndex } from "@/utils/custom";
 import { appId, resumeContainer } from "@/config/setting";
 import { useFormik } from "formik";
 import { baiscValidationSchema } from "@/utils/validationSchema";
+import { BasicForm } from "./basic";
 
 const BasicInfo = () => {
   // @ts-ignore
@@ -26,28 +27,28 @@ const BasicInfo = () => {
     name: "",
     position: "",
     email: "",
-    phone: "",
+    phoneNumber: "",
     linkedin: "",
     github: "",
     url: "",
     summary: "",
   });
 
-  
+
   const [imagePreview, setImagePreview] = useState(null);
   const [network, setNetwork] = useState([]);
   const initialValues = {
     name: '',
     position: '',
     email: '',
-    phone: '',
+    phoneNumber: '',
     url: '',
     summary: '',
   };
 
   const formik = useFormik({
     initialValues,
-    validationSchema:baiscValidationSchema,
+    validationSchema: baiscValidationSchema,
     onSubmit: (values) => {
       // Handle form submission
       handleSubmit()
@@ -71,7 +72,7 @@ const BasicInfo = () => {
 
     const basic = { ...extra, ...formData };
     try {
-      const data = await post(`/record/${appId}/container/${resumeContainer}`, basic); // Replace with your collection name
+      const data = await post(`/resumes`, basic); // Replace with your collection name
       setId(data.result.insertedId);
       setActiveTab("work experience");
     } catch (error) {
@@ -92,14 +93,14 @@ const BasicInfo = () => {
       image: imagePreview,
       profiles: network,
     };
-    const { name, position, email, phone, linkedin, github, url, summary } =
+    const { name, position, email, phoneNumber, linkedin, github, url, summary } =
       formData;
     var body = {
       ...extra,
       name,
       position,
       email,
-      phone,
+      phoneNumber,
       linkedin,
       github,
       url,
@@ -116,7 +117,60 @@ const BasicInfo = () => {
 
   return (
     <div className="w-full max-w-screen-xl mx-auto">
-      <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <BasicForm props={undefined} initialValues={{
+        property_id: "",
+        name: "",
+        type: "",
+        location: {
+          city: "",
+          state: "",
+          country: "",
+          zipcode: "",
+        },
+        description: "",
+        amenities: [],
+        capacity: 0,
+        bedrooms: 0,
+        sale_price: 0,
+        is_featured: false,
+        bathrooms: 0,
+        price_per_night: 0,
+        currency: "",
+        availability: {
+          start_date: "",
+          end_date: "",
+        },
+        images: [],
+        host: {
+          host_id: "",
+          host_name: "",
+          host_contact: "",
+          host_image: [],
+        },
+        year_of_construction: 0,
+        construction_status: "",
+        parking: false,
+        is_furnished: "",
+        floor: {
+          number: 0,
+          total_floors: 0,
+        },
+        size: {
+          area: 0,
+          unit: "",
+        },
+        rating: 0,
+        reviews: [],
+        rules: [],
+        contact_person: {
+          name: "",
+          email: "",
+          phone: "",
+        },
+        booking_policy: "",
+        additional_info: "",
+      }} />
+      {/* <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <h2 className="text-2xl font-bold mb-4">Basic Information</h2>
         <div className="mb-4">
           <div className="title mb-6  w-full"></div>
@@ -202,7 +256,7 @@ const BasicInfo = () => {
                 placeholder="Phone"
                 id="phone"
                 name="phone"
-                value={formData.phone}
+                value={formData.phoneNumber}
                 onChange={handleChange}
               />
             </div>
@@ -235,7 +289,7 @@ const BasicInfo = () => {
                 name: "",
                 position: "",
                 email: "",
-                phone: "",
+                phoneNumber: "",
                 linkedin: "",
                 github: "",
                 url: "",
@@ -263,7 +317,7 @@ const BasicInfo = () => {
             </button>
           )}
         </div>
-      </form>
+      </form> */}
     </div>
   );
 };
@@ -279,9 +333,9 @@ const SocialProfiles = ({ network, setNetwork }) => {
     username: "",
     url: "",
   });
-  
+
   const [editIndex, setEditIndex] = useState(-1);
- 
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;

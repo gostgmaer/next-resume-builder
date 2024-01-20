@@ -1,6 +1,6 @@
 import Modal from "@/components/global/Modal";
-import PaginationBlock from "@/components/global/fields/Pagination";
-import { firebaseDatabaseConn } from "@/config/firebase";
+import PaginationBlock from "@/components/global/block/pagination/paginationBlock";
+
 import { appId, resumeContainer } from "@/config/setting";
 import { useAuthContext } from "@/context/authContext";
 import { useGlobalAppContext } from "@/context/context";
@@ -59,7 +59,7 @@ const UserResumes = () => {
           ))}
         </div>
         <div className=" bg-gray-800 py-1 text-white mt-10">
-        <PaginationBlock totalItems={list.total_record} limit={limit} currentPage={page} onPageChange={setPage} onItemsPerPageChange={setLimit}/>
+        <PaginationBlock totalItems={list.total_record} limit={limit} currentPage={page} setPage={setPage} setLimit={setLimit}   />
         </div>
        </div>
        
@@ -79,13 +79,14 @@ const ResumeItem = ({ data }) => {
 
   const router = useRouter();
 
-  const EditID = () => {
+  const EditID = (id) => {
     setId(data._id);
-    router.push("/resume-builder");
+    router.push(`/resume/${data._id}/edit`);
   };
+
   const viewResume = (id) => {
     setId(data._id);
-    router.push(`/resume/${id}`);
+    router.push(`/resume/${data._id}`);
   };
 
   const openDeleteModal = () => {
@@ -93,7 +94,7 @@ const ResumeItem = ({ data }) => {
   };
 
   const deleteResumeFunction = async () => {
-    const request = await del(`/record/${appId}/container/${resumeContainer}`, data._id)
+    const request = await del(`/resumes`, data._id)
     closeModal()
     console.log(request);
     fetchResumeData();
@@ -136,12 +137,13 @@ const ResumeItem = ({ data }) => {
         >
           <FaEye/>
         </Link>
-        <button
+        <Link
+      href={`/resume/${data["_id"]}/view`}
           className="bg-yellow-500 text-white px-2  py-1 rounded hover:bg-yellow-600"
           onClick={EditID}
         >
           <FaEdit/>
-        </button>
+        </Link>
         <button
           onClick={openDeleteModal}
           className="bg-red-500 text-white px-2  py-2 rounded hover:bg-red-600"
