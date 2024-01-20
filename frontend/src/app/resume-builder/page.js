@@ -9,18 +9,15 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
-const Page = (req,res) => {
+const Page = (req, res) => {
   const { data: session } = useSession()
+  const route = useRouter()
+
   // if (!session) {
-  //   return {
-  //     redirect: {
-  //       destination: "/auth/signin",
-  //       permanent: false,
-  //     },
-  //   };
+  //   route.push('/auth/signin')
   // }
 
-console.log(session);
+
   return (
     <div>
       <div className=" text-white min-h-screen flex  justify-center items-start">
