@@ -5,7 +5,7 @@ const Resumeone = ({ data }) => {
   return (
     <div className="min-w-[8.3in] max-w-[8.3in]  my-5 print:m-0 ">
       <div className=" flex justify-end print:hidden mb-5">
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={()=>window.print()}>Print</button>
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" >Print</button>
       </div>
       <div className="bg-white text-black min-h-[11.7in]  p-7 shadow-lg rounded print:px-10 print:py-10">
         <div className="flex flex-col md:flex-row items-center md:items-start">
