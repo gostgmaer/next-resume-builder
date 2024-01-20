@@ -1,20 +1,45 @@
-import React from 'react'
-import Languages from './Languages'
-import Interest from './Interest'
-import Achivements from './Achivements'
-import Referances from './Referances'
-import { useGlobalAppContext } from '@/context/context'
+import React, { useEffect, useState } from "react";
+import Interest from "./Interest";
+import Referances from "./Referances";
+import { useGlobalAppContext } from "@/context/context";
+import UserLanguages from "./Languages";
+import UserAchivements from "./Achivements";
 
-const Others = ({id}) => {
-  const { fetchResumedata, currentData,updateResumeRecord,activeTab, setActiveTab } = useGlobalAppContext();
+const Others = () => {
+  const {
+    fetchResumedata,
+    id
+  } = useGlobalAppContext();
+
+  const [Languages, setLanguages] = useState([]);
+  const [interests, setInterestes] = useState([]);
+  const [references, setReferences] = useState([]);
+  const [achivements, setAchivements] = useState([]);
+
+  const fetchResumeData = async () => {
+    const res = await fetchResumedata(id);
+    if (res?.result) {
+      setLanguages(res.result.languages);
+      setAchivements(res.result.awards);
+      setReferences(res.result.references);
+      setInterestes(res.result.interests);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      fetchResumeData();
+    }
+  }, [id]);
+
   return (
     <div>
-      <Languages/>
-      <Interest/>
-      {/* <Achivements/> */}
-      <Referances/>
+      <UserLanguages Languages={Languages} setLanguages={setLanguages}  />
+      <Interest interests={interests} setInterestes={setInterestes} />
+      <Referances references={references} setReferences={setReferences} />
+      <UserAchivements achivements={achivements} setAchivements={setAchivements} />
     </div>
-  )
-}
+  );
+};
 
-export default Others
+export default Others;

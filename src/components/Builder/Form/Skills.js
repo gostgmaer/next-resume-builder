@@ -1,15 +1,15 @@
 import { useGlobalAppContext } from "@/context/context";
 import { findIndex } from "@/utils/custom";
-import { put } from "@/utils/http";
 import React, { useEffect, useState } from "react";
 
-const Skills = ({ id }) => {
+const Skills = () => {
   const {
-    fetchResumedata,
+    fetchSingleresume,
     currentData,
     updateResumeRecord,
     activeTab,
-    setActiveTab,
+    setActiveTab,  id,
+    setId,
   } = useGlobalAppContext();
 
   const [formData, setFormData] = useState({
@@ -19,7 +19,7 @@ const Skills = ({ id }) => {
     last_used: "",
     scale: "",
   });
-  const [mydata, setMydata] = useState(null);
+
 
   const [skills, setSkills] = useState([]);
 
@@ -47,10 +47,10 @@ const Skills = ({ id }) => {
   };
 
   const fetchResumeData = async () => {
-    const res = await fetchResumedata(id);
-    setMydata(res);
-    if (res?.skill) {
-      setSkills(res.skill);
+    const res = await fetchSingleresume(id);
+ 
+    if (res.result?.skills) {
+      setSkills(res.result?.skills);
     }
     if (currentData) {
       // console.log(currentData);
@@ -61,14 +61,17 @@ const Skills = ({ id }) => {
   const updateRecord = async () => {
     try {
       // Replace '/yourCollectionName/${recordId}.json' with your desired API endpoint
-      console.log(mydata);
+ 
+      // const extra = {
+      //   last_step:activeTab
+      // };
       var data = {
-        ...mydata,
-        skill: skills,
+        last_step:activeTab,
+        skills: skills,
       };
-      const response = await put(`/resume/${id}.json`, data);
-      setActiveTab('projects')
-      console.log("Record updated successfully:", response);
+      updateResumeRecord("projects", data, id);
+      // setActiveTab('projects')
+     // console.log("Record updated successfully:", response);
     } catch (error) {
       console.error("Error updating record:", error);
     }
@@ -223,7 +226,7 @@ const Skills = ({ id }) => {
                 )}
               </div>
             </form>
-            <div className="flex flex-wrap">
+            <div className="flex flex-wrap justify-between gap-2">
               {skills.map((experience, index) => (
                 <SkillCard
                   key={index}
@@ -277,7 +280,7 @@ const SkillCard = ({
   onDelete,
 }) => {
   return (
-    <div className="bg-white shadow-lg rounded-lg overflow-hidden m-4 p-4">
+    <div className="bg-white w-1/5 shadow-lg rounded-lg overflow-hidden p-4">
       <div className="mb-4">
         <h2 className="text-xl font-semibold">{title}</h2>
         <p className="text-gray-600">{name}</p>

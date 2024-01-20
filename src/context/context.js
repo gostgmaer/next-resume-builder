@@ -1,14 +1,29 @@
 "use client";
-import { getSingleRecord, put } from "@/utils/http";
+
+import { appId, resumeContainer } from "@/config/setting";
+import { get, getsingle, patch } from "@/lib/http";
 import React, { useContext, useState, useEffect } from "react";
 const AppContext = React.createContext(null);
 
 const AppProvider = ({ children }) => {
   const [loader, setLoader] = useState(false);
-  const [appLoader, setAppLoader] = useState(false);
-  const [id, setId] = useState("");
   const [currentData, setCurrentData] = useState(null);
   const [activeTab, setActiveTab] = useState("basic info");
+  const [id, setId] = useState(undefined);
+  const [list, setList] = useState(undefined);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   const loaderFalse = () => {
     setLoader(false);
   };
@@ -16,29 +31,38 @@ const AppProvider = ({ children }) => {
     setLoader(true);
   };
 
-  const fetchResumedata = async (id) => {
-    loaderTrue();
+  const fetchSingleresume = async (id) => {
+
     try {
-      const data = await getSingleRecord("/resume", id); // Replace with your collection name
+      const data = await getsingle(`/record/${appId}/container/${resumeContainer}`, {}, id); // Replace with your collection name
       setCurrentData(data);
-      console.log(data);
+      // setActiveTab(data.result.last_step)
       return data;
     } catch (error) {
       console.error("Error getting data:", error);
+      return error
     }
-    loaderFalse();
+
   };
 
-  const updateResumeRecord = async (nav, body,id) => {
-    loaderTrue();
+  const updateResumeRecord = async (nav, body, id) => {
+
     try {
-      const response = await put(`/resume/${id}.json`, body);
+      const response = await patch(`/record/${appId}/container/${resumeContainer}`, body, id);
       setActiveTab(nav);
       console.log("Record updated successfully:", response);
     } catch (error) {
       console.error("Error updating record:", error);
     }
-    loaderFalse();
+
+  };
+
+  const fetchResumeData = async () => {
+    const query = {
+      page: page, limit: limit
+    }
+    const data = await get(`/record/${appId}/container/${resumeContainer}`, query);
+    setList(data);
   };
 
   return (
@@ -50,8 +74,13 @@ const AppProvider = ({ children }) => {
         updateResumeRecord,
         id,
         setId,
-        fetchResumedata,
-        currentData,activeTab, setActiveTab
+        fetchSingleresume,
+        currentData, fetchResumeData,
+        activeTab,
+        setActiveTab,
+        isModalOpen,
+        openModal,
+        closeModal, list, setList, page, limit, setLimit, setPage
       }}
     >
       {children}

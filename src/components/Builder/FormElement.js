@@ -4,16 +4,21 @@ import React, { useState } from "react";
 import ShowElements from "./ShowElements";
 import { useGlobalAppContext } from "@/context/context";
 
-const HeaderElement = () => {
-  const { fetchResumedata, currentData,updateResumeRecord,activeTab, setActiveTab } = useGlobalAppContext();
+const ResumeBlock = () => {
+  const {
+    fetchResumedata,
+    currentData,
+    updateResumeRecord,
+    activeTab,
+    setActiveTab,
+  } = useGlobalAppContext();
   const [isDivVisible, setIsDivVisible] = useState(false);
-  const [id, setId] = useState('');
+  const [id, setId] = useState("");
 
   const handleTabClick = (tabName) => {
     if (activeTab !== tabName) {
       setActiveTab(tabName);
       setIsDivVisible(!isDivVisible);
-      console.log(tabName);
     }
   };
 
@@ -37,11 +42,11 @@ const HeaderElement = () => {
         })}
       </div>
 
-      <div className="bg-white p-4 text-black rounded">
-       <ShowElements currentTab={activeTab} />
+      <div className="bg-white flex justify-center p-4 text-black rounded">
+        <ShowElements currentTab={activeTab} />
       </div>
     </div>
   );
 };
 
-export default HeaderElement;
+export default ResumeBlock;
