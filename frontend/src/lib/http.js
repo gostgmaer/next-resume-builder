@@ -6,8 +6,7 @@ import instance from '../lib/interceptors'
 import { notifySuccess, notifyerror, notifyinfo } from "./notify/notice";
 import { parseCookies } from "nookies";
 import { getTokenFromCookies } from "@/helper/function";
-const baseURL = process.env.NEXT_PUBLIC_BASE_URL; // Replace with your Firebase URL
-
+import { baseurl } from "@/config/setting";
 
 // axios.defaults.withCredentials=true
 
@@ -26,7 +25,7 @@ export const get = async (endpint, query) => {
   // }
   const option = {
     method: "get",
-    url: baseURL + endpint,
+    url: baseurl + endpint,
     headers: {
       Authorization: token,
       session_id: session,
@@ -59,7 +58,7 @@ export const getsingle = async (endpint, query, id) => {
 
   const option = {
     method: "get",
-    url: baseURL + endpint + `/${id}`,
+    url: baseurl + endpint + `/${id}`,
     headers: {
       Authorization: token,
       session_id: session,
@@ -92,7 +91,7 @@ export const getServerSingle = async (endpint, query, id) => {
 
   const option = {
     method: "get",
-    url: baseURL + endpint + `/${id}`,
+    url: baseurl + endpint + `/${id}`,
     headers: {
       Authorization: token,
       session_id: session,
@@ -124,7 +123,7 @@ export const post = async (endpint, data) => {
   const session = cookies["session"];
   const option = {
     method: "post",
-    url: baseURL + endpint,
+    url: baseurl + endpint,
     headers: {
       Authorization: token,
       session_id: session,
@@ -181,7 +180,7 @@ export const patch = async (endpint, data, id) => {
   const session = cookies["session"];
   const option = {
     method: "patch",
-    url: baseURL + endpint + `/${id}`,
+    url: baseurl + endpint + `/${id}`,
     headers: {
       Authorization: token,
       session_id: session,
@@ -209,7 +208,7 @@ export const del = async (endpint, id) => {
 
   const option = {
     method: "delete",
-    url: baseURL + endpint + `/${id}`,
+    url: baseurl + endpint + `/${id}`,
     headers: {
       Authorization: token,
       session_id: session,
@@ -229,3 +228,4 @@ export const del = async (endpint, id) => {
   }
   return response?.data ? response?.data : error; // or set initial value
 };
+

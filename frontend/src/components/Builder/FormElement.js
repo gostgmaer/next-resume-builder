@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import ShowElements from "./ShowElements";
 import { useGlobalAppContext } from "@/context/context";
 
-const ResumeBlock = () => {
+const ResumeBlock = ({data}) => {
   const {
     fetchResumedata,
     currentData,
@@ -21,6 +21,8 @@ const ResumeBlock = () => {
       setIsDivVisible(!isDivVisible);
     }
   };
+
+  console.log(data);
 
   return (
     <div className=" w-2/3">
