@@ -1,7 +1,7 @@
 import { useGlobalAppContext } from "@/context/context";
 import React, { useState, useEffect } from "react";
 
-const Resume = () => {
+const Resume = (props) => {
   const [resumeData, setResumeData] = useState(null);
   const { fetchSingleresume, id } = useGlobalAppContext();
 

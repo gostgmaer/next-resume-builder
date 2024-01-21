@@ -1,9 +1,10 @@
 const Mailgen = require("mailgen");
+const { emailName } = require("../config/setting");
 
 const MailGenerator = new Mailgen({
     theme: "default",
     product: {
-      name: process.env.EMAIL_NAME,
+      name: emailName,
       link: "https://google.com",
     },
   });

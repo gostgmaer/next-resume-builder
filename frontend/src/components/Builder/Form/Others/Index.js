@@ -5,7 +5,7 @@ import { useGlobalAppContext } from "@/context/context";
 import UserLanguages from "./Languages";
 import UserAchivements from "./Achivements";
 
-const Others = () => {
+const Others = (props) => {
   const {
     fetchResumedata,
     id

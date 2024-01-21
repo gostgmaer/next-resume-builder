@@ -22,10 +22,10 @@ const ResumeBlock = ({data}) => {
     }
   };
 
-  console.log(data);
+  // console.log(data);
 
   return (
-    <div className=" w-2/3">
+    <div className=" w-2/3 m-auto">
       <div className=" p-4 flex justify-between items-center">
         {builderHeader.map((item) => {
           return (
@@ -44,8 +44,8 @@ const ResumeBlock = ({data}) => {
         })}
       </div>
 
-      <div className="bg-white flex justify-center p-4 text-black rounded">
-        <ShowElements currentTab={activeTab} />
+      <div className="bg-white flex justify-center text-black rounded">
+        <ShowElements currentTab={activeTab} data={data} />
       </div>
     </div>
   );
