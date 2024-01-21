@@ -388,7 +388,6 @@ const logout = async (req, res) => {
           message: err.message,
           statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
           status: ReasonPhrases.INTERNAL_SERVER_ERROR,
-          cause: err,
         });
       } else {
         // Successfully destroyed the session, now remove it from the database
@@ -405,7 +404,6 @@ const logout = async (req, res) => {
       message: error.message,
       statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
       status: ReasonPhrases.INTERNAL_SERVER_ERROR,
-      cause: error,
     });
   }
 };
@@ -702,12 +700,10 @@ const profile = async (req, res) => {
   } else {
     try {
       const userId = await User.findOne({ _id: user }).select([
-        "_id",
         "firstName",
         "lastName",
         "username",
         "email",
-        "role",
         "updatedAt",
         "contactNumber",
         "profilePicture",
@@ -853,10 +849,9 @@ const update = async (req, res) => {
           (data, err) => {
             if (err)
               res.status(StatusCodes.NOT_MODIFIED).json({
-                message: "Update Failed",
+                message: err.message,
                 status: ReasonPhrases.NOT_MODIFIED,
                 statusCode: StatusCodes.NOT_MODIFIED,
-                cause: err,
               });
             else {
 
@@ -874,7 +869,6 @@ const update = async (req, res) => {
           message: error.message,
           statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
           status: ReasonPhrases.INTERNAL_SERVER_ERROR,
-          cause: error,
         });
       }
     } else {

@@ -19,9 +19,7 @@ const getData = async (req, res) => {
     const { sort, page, limit, filter, select_keys } = req.query;
     const filterData = FilterOptions(sort, page, limit, filter, select_keys);
     let query = { ...filterData.query };
-    let projection = { projection: filterData.arrayOfValues };
-
-    const objects = await Resume.find(query).sort(filterData.options.sort)
+    const objects = await Resume.find(query).select(select_keys).sort(filterData.options.sort)
       .skip(filterData.options.skip)
       .limit(parseInt(filterData.options.limit)).exec()
     const totalCount = await Resume.countDocuments(query);
@@ -54,8 +52,8 @@ const getSingleRecord = async (req, res) => {
         status: ReasonPhrases.NOT_FOUND,
       });
     }
-
-    const object = await Resume.findById(objectId);
+    const {  select_keys } = req.query;
+    const object = await Resume.findById(objectId).select(select_keys);
     if (!object) {
       res.status(StatusCodes.NOT_FOUND).json({
         result: object,
@@ -76,7 +74,7 @@ const getSingleRecord = async (req, res) => {
       message: error.message,
       statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
       status: ReasonPhrases.INTERNAL_SERVER_ERROR,
-      cause: error,
+      
     });
   }
 };
@@ -134,7 +132,6 @@ const remove = async (req, res) => {
       message: error.message,
       statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
       status: ReasonPhrases.INTERNAL_SERVER_ERROR,
-      cause: error,
     });
   }
 };
@@ -175,7 +172,6 @@ const removeMany = async (req, res) => {
       message: error.message,
       statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
       status: ReasonPhrases.INTERNAL_SERVER_ERROR,
-      cause: error,
     });
   }
 };
@@ -219,7 +215,7 @@ const update = async (req, res) => {
       message: error.message,
       statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
       status: ReasonPhrases.INTERNAL_SERVER_ERROR,
-      cause: error,
+      
     });
   }
 };

@@ -21,6 +21,7 @@ const resumeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  status:String,
   address: String,
   website: String,
   linkedinProfile: String,

@@ -1,3 +1,4 @@
+"use client"
 import Modal from "@/components/global/Modal";
 import PaginationBlock from "@/components/global/block/pagination/paginationBlock";
 
@@ -14,20 +15,18 @@ import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
 
-const UserResumes = () => {
+const UserResumes = ({ data }) => {
   const router = useRouter();
   const { data: session } = useSession()
   const {
     fetchResumeData,
-    page,limit,
-    setId, list,setLimit,setPage,setActiveTab
+    page, limit,
+    setId, list, setLimit, setPage, setActiveTab, handleSearch
   } = useGlobalAppContext();
 
   useEffect(() => {
-    if (session) {
-      fetchResumeData();
-    }
-  }, [session,page,limit]);
+    handleSearch()
+  }, [page, limit]);
 
   const handleNewResume = () => {
     setId(undefined);
@@ -47,22 +46,22 @@ const UserResumes = () => {
           Create New Resume
         </button>
       </div>
-      {!list?.result ? (
+      {!data.result ? (
         <div className="space-y-2 bg-white text-center p-5 py-20 text-black text-lg rounded-lg">
           <h2>No resume is Found please create a resume</h2>
         </div>
       ) : (
-       <div className="">
-         <div className="space-y-2 bg-white p-2 rounded-lg max-h-[480px] overflow-auto">
-          {list?.result?.map((resume, index) => (
-            <ResumeItem key={index} data={resume} />
-          ))}
+        <div className="">
+          <div className="space-y-2 bg-white p-2 rounded-lg max-h-[480px] overflow-auto">
+            {data.result?.map((item, index) => (
+              <ResumeItem key={index} data={item} />
+            ))}
+          </div>
+          <div className=" bg-gray-800 py-1 text-white mt-10">
+            <PaginationBlock totalItems={data.total_record} limit={limit} currentPage={page} setPage={setPage} setLimit={setLimit} />
+          </div>
         </div>
-        <div className=" bg-gray-800 py-1 text-white mt-10">
-        <PaginationBlock totalItems={list.total_record} limit={limit} currentPage={page} setPage={setPage} setLimit={setLimit}   />
-        </div>
-       </div>
-       
+
       )}
     </div>
   );
@@ -79,15 +78,13 @@ const ResumeItem = ({ data }) => {
 
   const router = useRouter();
 
-  const EditID = (id) => {
-    setId(data._id);
-    router.push(`/resume/${data._id}/edit`);
-  };
+  // const EditID = (id) => {
+  //   router.push(`/resume/${data._id}/edit`);
+  // };
 
-  const viewResume = (id) => {
-    setId(data._id);
-    router.push(`/resume/${data._id}`);
-  };
+  // const viewResume = (id) => {
+  //   router.push(`/resume/${data._id}`);
+  // };
 
   const openDeleteModal = () => {
     openModal();
@@ -96,8 +93,7 @@ const ResumeItem = ({ data }) => {
   const deleteResumeFunction = async () => {
     const request = await del(`/resumes`, data._id)
     closeModal()
-    console.log(request);
-    fetchResumeData();
+    router.push(`/resume`);
 
   };
 
@@ -135,20 +131,19 @@ const ResumeItem = ({ data }) => {
           href={`/resume/${data["_id"]}`}
           className="bg-blue-500 text-white px-2 text-center  py-2 rounded hover:bg-blue-600"
         >
-          <FaEye/>
+          <FaEye />
         </Link>
         <Link
-      href={`/resume/${data["_id"]}/view`}
+          href={`/resume/${data["_id"]}/edit`}
           className="bg-yellow-500 text-white px-2  py-1 rounded hover:bg-yellow-600"
-          onClick={EditID}
         >
-          <FaEdit/>
+          <FaEdit />
         </Link>
         <button
           onClick={openDeleteModal}
           className="bg-red-500 text-white px-2  py-2 rounded hover:bg-red-600"
         >
-        <FaTrash/>
+          <FaTrash />
         </button>
       </div>
       <Modal>

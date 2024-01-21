@@ -1,35 +1,32 @@
-// @ts-nocheck
-"use client";
+
+
 import Personal from "@/components/Pages/profile/profile";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-export default function Profile({ data }) {
+import { serverMethod } from "@/lib/serverMethod";
 
-  const { data: session } = useSession()
+import { cookies } from 'next/headers'
+export default async function Profile(props) {
 
 
-  // const [axios, spinner] = useAxios();
-  // const { user, userId } = useAuthContext();
-  // // const { loader } = useGlobalAppContext();
-  const router = useRouter();
+const requestData= await fetchCurrentProfile()
 
-  // useEffect(() => {
-  //   if (!session) router.push("/auth/signin");
-  // }, [session]);
-
-  // if (!session) {
-  //   router.push("/auth/signin");
-  // }
 
   return (
     <div>
-      <Personal />
+      <Personal data={requestData} />
     </div>
   );
 }
 
-// export async function getServerSideProps() {
-//   const res = await fetch('https://api.github.com/repos/vercel/next.js')
-//   const data = await res.json()
-//   return { props: { data } }
-// }
+export const fetchCurrentProfile = async () => {
+
+  const cookieStore = cookies()
+  const tokendata = "Bearer " + cookieStore.get("headerPayload").value + "." + cookieStore.get("signature").value;
+  const param = {
+    method: "get",
+    header: {
+      Authorization: tokendata,
+    },
+  }
+  const result = await serverMethod(`/authentication/user/current/profile`, param)
+  return result
+}

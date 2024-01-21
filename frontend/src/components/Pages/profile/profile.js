@@ -11,58 +11,36 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 
-const Personal = () => {
-  // const { user, userId } = useAuthContext();
-  // const { loaderFalse, loaderTrue } = useGlobalAppContext();
-  const [profileInfo, setProfileInfo] = useState(undefined);
+const Personal = ({data}) => {
+
   const [close, setClose] = useState(true);
   const { data: session } = useSession()
-
   const route = useRouter()
-  const getProfile = async () => {
-    try {
-      const res = await get(`/authentication/user/current/profile`);
-      setProfileInfo(res);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    if (session) {
-      getProfile();
-    }
-  }, [session]);
-
-
-  // if (!session) {
-  //   route.push('/auth/signin')
-  // }
 
 
   return (
     <div className="container mx-auto py-8 text-black">
       <div className=" flex justify-between items-center">
         <h1 className="text-3xl font-semibold mb-4">My Profile</h1>
-        {profileInfo?.result?.profilePicture && (
+        {data?.result?.profilePicture && (
           <Image
             width={100}
             height={100}
             property="false"
-            src={profileInfo.result.profilePicture}
+            src={data.result.profilePicture}
             style={{ borderRadius: "50%", height: "100px" }}
             alt=""
           />
         )}
       </div>
-      {profileInfo && (
-        <UserprofileDetails userData={profileInfo?.result} setClose={setClose} />
+      {data && (
+        <UserprofileDetails userData={data?.result} setClose={setClose} />
       )}
       {!close && (
         <UserProfile
-          data={profileInfo.result}
+          data={data.result}
           setClose={setClose}
-          setProfileInfo={setProfileInfo}
+          setProfileInfo={data}
         />
       )}
     </div>
@@ -108,14 +86,13 @@ const UserProfile = ({ data, setClose, setProfileInfo }) => {
     };
 
     try {
-      const res = await patch(`/user`, recordData, userId.user_id);
+      const res = await patch(`/authentication/user/current/profile/update`, recordData, userId.user_id);
 
       if (res) {
         setClose(true);
-        const userInfoDaa = await getsingle(
-          `/user/profile`,
+        const userInfoDaa = await get(
+          `/authentication/user/current/profile`,
           null,
-          userId.user_id
         );
         setProfileInfo(userInfoDaa);
       } else {

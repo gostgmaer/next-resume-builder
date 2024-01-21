@@ -3,9 +3,7 @@ import { serverMethod } from "@/lib/serverMethod";
 
 const Page = async(props) => {
 
-  // console.log(props);
   const request = await fetchSingleResume(props.params.id)
-  // console.log("request",request);
 
   return (
     <div className=" py-10">
