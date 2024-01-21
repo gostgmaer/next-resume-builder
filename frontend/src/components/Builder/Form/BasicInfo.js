@@ -8,6 +8,7 @@ import { findIndex } from "@/utils/custom";
 import { useFormik } from "formik";
 import { baiscValidationSchema } from "@/utils/validationSchema";
 import Input from "@/components/global/fields/input";
+import SelectField from "@/components/global/fields/SelectField";
 
 const BasicInfo = (props) => {
 
@@ -100,7 +101,7 @@ const BasicInfo = (props) => {
       url,
       summary,
     };
-    updateResumeRecord("work experience", body, id);
+    updateResumeRecord("work experience", formData, props.data.result._id);
   };
 
 
@@ -179,19 +180,19 @@ const BasicInfo = (props) => {
             onClick={() =>
               setFormData({
                 name: "",
-    position: "",
-    email: "",
-    phoneNumber: "",
-    linkedin: "", website: "", linkedinProfile: "", githubProfile: "",
-    github: "",
-    url: "",
-    summary: "",
+                position: "",
+                email: "",
+                phoneNumber: "",
+                linkedin: "", website: "", linkedinProfile: "", githubProfile: "",
+                github: "",
+                url: "",
+                summary: "",
               })
             }
           >
             Clear
           </button>
-          {id ? (
+          {props.data.result ? (
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="button"
@@ -304,88 +305,48 @@ const SocialProfiles = ({ network, setNetwork }) => {
   return (
     <div className="">
       <h2 className="text-2xl font-bold mb-4">Social media</h2>
-      <div className="mb-6 border-b-2 pb-4">
-        <div className="mb-4">
-          <div className="w-full max-w-screen-xl mx-auto">
-            <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-              <div className="mb-4">
-                <div className="mb-6 flex  items-center gap-10">
-                  <div className="w-full ">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="network"
-                    >
-                      Social media Name
-                    </label>
-                    <select
-                      className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-                      id="network"
-                      name="network"
-                      value={formData.network}
-                      onChange={handleChange}
-                    >
-                      <option value="" disabled>
-                        Select a Social Media Type
-                      </option>
-                      {socialMediaData.map((option) => (
-                        <option key={option.value} value={option.name}>
-                          {option.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="w-full ">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="url"
-                    >
-                      Profile Url
-                    </label>
-                    <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      type="text"
-                      placeholder=" url"
-                      id="url"
-                      name="url"
-                      value={formData.url}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="mb-6">
-                {editIndex === -1 ? (
-                  <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    type="button"
-                    onClick={handleAdd}
-                  >
-                    Add
-                  </button>
-                ) : (
-                  <button
-                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    type="button"
-                    onClick={handleSaveEdit}
-                  >
-                    Update
-                  </button>
-                )}
-              </div>
+      <div className="w-full max-w-screen-xl mx-auto">
+        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mx-auto mt-5 p-5 gap-5  grid rounded-lg">
+          <div className=" mt-8 grid  gap-3 sm:grid-cols-2 col-span-full">
+            <div className="">
+              <SelectField options={socialMediaData} id={"network"} label={"Social Media"} additionalAttrs={{ value: formData.network, onChange: handleChange, placeholder: "Select" }} placeholder={undefined} optionkeys={{ key: "name", value: "value" }} />
+
             </div>
-            <div className="flex flex-wrap justify-between gap-2">
-              {network.map((experience, index) => (
-                <NetwordInfo
-                  key={index}
-                  {...experience}
-                  onEdit={() => handleEdit(index)}
-                  onDelete={() => handleRemove(index)}
-                />
-              ))}
+            <div className="">
+              <Input label={"Profile Url"} type={"text"} additionalAttrs={{ value: formData.url, onChange: handleChange, placeholder: "https:://example.com" }} classes={undefined} icon={undefined} id={'url'} />
+
             </div>
           </div>
+          <div className="mb-6">
+            {editIndex === -1 ? (
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="button"
+                onClick={handleAdd}
+              >
+                Add
+              </button>
+            ) : (
+              <button
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="button"
+                onClick={handleSaveEdit}
+              >
+                Update
+              </button>
+            )}
+          </div>
         </div>
-        <div className="flex items-center justify-between"></div>
+        <div className="flex flex-wrap justify-start gap-2">
+          {network.map((experience, index) => (
+            <NetwordInfo
+              key={index}
+              {...experience}
+              onEdit={() => handleEdit(index)}
+              onDelete={() => handleRemove(index)}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
