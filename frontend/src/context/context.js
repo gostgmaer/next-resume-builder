@@ -1,11 +1,14 @@
 "use client";
 
 import { appId, resumeContainer } from "@/config/setting";
+import { generateUrlFromNestedObject } from "@/helper/function";
 import { get, getsingle, patch } from "@/lib/http";
+import { useRouter } from "next/navigation";
 import React, { useContext, useState, useEffect } from "react";
 const AppContext = React.createContext(null);
 
 const AppProvider = ({ children }) => {
+  const router = useRouter();
   const [loader, setLoader] = useState(false);
   const [currentData, setCurrentData] = useState(null);
   const [activeTab, setActiveTab] = useState("basic info");
@@ -31,6 +34,13 @@ const AppProvider = ({ children }) => {
     setLoader(true);
   };
 
+  const handleSearch = () => {
+    const paramsQuery = {  page, limit };
+    const checkQuerydata = generateUrlFromNestedObject({ ...paramsQuery });
+    router.push(`/resume${checkQuerydata}`);
+  };
+
+  
   const fetchSingleresume = async (id) => {
 
     try {
@@ -80,7 +90,7 @@ const AppProvider = ({ children }) => {
         setActiveTab,
         isModalOpen,
         openModal,
-        closeModal, list, setList, page, limit, setLimit, setPage
+        closeModal, list, setList, page, limit, setLimit, setPage,handleSearch
       }}
     >
       {children}

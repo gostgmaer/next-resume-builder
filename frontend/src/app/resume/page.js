@@ -1,26 +1,30 @@
-// @ts-nocheck
-"use client";
+
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
-
 import UserResumes from "@/components/Pages/resumelist/Resumes";
-import { useAuthContext } from "@/context/authContext";
-import { useAxios } from "@/lib/interceptors";
-const Page = () => {
-  // const { userId } = useAuthContext();
-  // const [axios, spinner] = useAxios();
-  // const router = useRouter();
+import { serverMethod } from "@/lib/serverMethod";
+const Page = async (props) => {
 
-  // useEffect(() => {
-  //   if (!userId) router.push("/auth/login");
-  // }, [userId, router]);
+  const { params, searchParams } = props
+  const list = await fetchResumes(searchParams)
 
   return (
     <div className=" py-10">
-      <UserResumes />
- 
+      <UserResumes data={list} />
+
     </div>
   );
 };
 
 export default Page;
+
+
+export const fetchResumes = async (query) => {
+
+  const param = {
+    method: "get",
+    header: {},
+    query: { ...query, select_keys: ['position', 'phone', 'email', 'updatedAt', 'image'] }
+  }
+  const result = await serverMethod(`/resumes`, param)
+  return result
+}
