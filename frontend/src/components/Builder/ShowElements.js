@@ -10,7 +10,7 @@ import Others from "./Form/Others/Index";
 import Resume from "./view/ViewResume";
 import { useGlobalAppContext } from "@/context/context";
 
-const ShowElements = ({ currentTab }) => {
+const ShowElements = ({ currentTab,data }) => {
   const {
     fetchResumedata,
     currentData,
@@ -21,19 +21,19 @@ const ShowElements = ({ currentTab }) => {
 
   switch (currentTab) {
     case "basic info":
-      return <BasicInfo />;
+      return <BasicInfo data={data} />;
     case "work experience":
-      return <Experiances />;
+      return <Experiances data={data} />;
     case "education":
-      return <Educations />;
+      return <Educations data={data} />;
     case "skills":
-      return <Skills />;
+      return <Skills data={data} />;
     case "projects":
-      return <Projects />;
+      return <Projects data={data} />;
     case "others":
-      return <Others />;
+      return <Others data={data} />;
     case "view":
-      return <Resume />;
+      return <Resume data={data} />;
 
     default:
       return null;

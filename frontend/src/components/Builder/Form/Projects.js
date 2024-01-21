@@ -2,7 +2,7 @@ import { useGlobalAppContext } from "@/context/context";
 import { findIndex } from "@/utils/custom";
 import React, { useEffect, useState } from "react";
 
-const Projects = () => {
+const Projects = (props) => {
   const {
     fetchSingleresume,
     currentData,

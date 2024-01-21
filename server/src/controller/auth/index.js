@@ -4,7 +4,7 @@ const {
   getReasonPhrase,
   getStatusCode,
 } = require("http-status-codes");
-const { jwtSecret, refressSecret } = require("../../config/setting");
+const { jwtSecret, refressSecret, loginPath, host, confirmPath, applicaionName } = require("../../config/setting");
 const User = require("../../models/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
@@ -55,7 +55,7 @@ const register = async (req, res) => {
         email: userData.email,
         id: userData.id,
       },
-      process.env.JWT_SECRET,
+      jwtSecret,
       {
         expiresIn: "1h",
       }
@@ -75,14 +75,14 @@ const register = async (req, res) => {
         let mailBody = {
           body: {
             name: data.fullName,
-            intro: `Welcome to ${process.env.APPLICATION_NAME}! We are excited to have you on board.`,
-            additionalInfo: `Thank you for choosing ${process.env.APPLICATION_NAME}. You now have access to our premium features, including unlimited storage and priority customer support.`,
+            intro: `Welcome to ${applicaionName}! We are excited to have you on board.`,
+            additionalInfo: `Thank you for choosing ${applicaionName}. You now have access to our premium features, including unlimited storage and priority customer support.`,
             action: {
-              instructions: `To get started with ${process.env.APPLICATION_NAME}, please click here:`,
+              instructions: `To get started with ${applicaionName}, please click here:`,
               button: {
                 color: "#22BC66", // Optional action button color
                 text: "Confirm Your Account",
-                link: `${process.env.LOGINHOST}/${process.env.CLIENTCONFIRMURL}?token=${token}`,
+                link: `${host}/${confirmPath}?token=${token}`,
               },
             },
             outro:
@@ -94,7 +94,7 @@ const register = async (req, res) => {
             createMailOptions(
               "salted",
               data.email,
-              `Welcome to ${process.env.APPLICATION_NAME} - Confirm Your Email`,
+              `Welcome to ${applicaionName} - Confirm Your Email`,
               mailBody
             )
           )
@@ -141,7 +141,7 @@ const login = async (req, res, next) => {
               email: user.email,
               id: user.id,
             },
-            process.env.JWT_SECRET,
+            jwtSecret,
             {
               expiresIn: "2h",
             }
@@ -162,14 +162,14 @@ const login = async (req, res, next) => {
               let mailBody = {
                 body: {
                   name: user.fullName,
-                  intro: `Welcome to ${process.env.APPLICATION_NAME}! We are excited to have you on board.`,
-                  additionalInfo: `Thank you for choosing ${process.env.APPLICATION_NAME}. You now have access to our premium features, including unlimited storage and priority customer support.`,
+                  intro: `Welcome to ${applicaionName}! We are excited to have you on board.`,
+                  additionalInfo: `Thank you for choosing ${applicaionName}. You now have access to our premium features, including unlimited storage and priority customer support.`,
                   action: {
-                    instructions: `To get started with ${process.env.APPLICATION_NAME}, please click here:`,
+                    instructions: `To get started with ${applicaionName}, please click here:`,
                     button: {
                       color: "#22BC66", // Optional action button color
                       text: "Confirm Your Account",
-                      link: `${process.env.LOGINHOST}/${process.env.CLIENTCONFIRMURL}?token=${token}`,
+                      link: `${host}/${confirmPath}?token=${token}`,
                     },
                   },
                   outro:
@@ -181,7 +181,7 @@ const login = async (req, res, next) => {
                   createMailOptions(
                     "salted",
                     user.email,
-                    `Welcome to ${process.env.APPLICATION_NAME} - Confirm Your Email`,
+                    `Welcome to ${applicaionName} - Confirm Your Email`,
                     mailBody
                   )
                 )
@@ -327,7 +327,7 @@ const reset = async (req, res) => {
             button: {
               color: "#22BC66", // Optional action button color
               text: "Login Now",
-              link: `${process.env.LOGINHOST}/${process.env.CLIENTLOGINPAGE}`,
+              link: `${host}/${loginPath}`,
             },
           },
           outro:
@@ -527,7 +527,7 @@ const forget = async (req, res) => {
           role: user.role,
           email: user.email,
         },
-        process.env.JWT_SECRET,
+        jwtSecret,
         {
           expiresIn: "1h",
         }
@@ -558,7 +558,7 @@ const forget = async (req, res) => {
               button: {
                 color: "#22BC66", // Optional action button color
                 text: "Reset Password",
-                link: `${process.env.LOGINHOST}/${process.env.CLIENTRESETPASSURL}?token=${resetToken}`,
+                link: `${host}/${resetPath}?token=${resetToken}`,
               },
             },
             outro:

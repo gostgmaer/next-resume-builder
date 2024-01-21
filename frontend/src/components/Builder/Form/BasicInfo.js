@@ -1,18 +1,18 @@
 import { useAuthContext } from "@/context/authContext";
 import { useGlobalAppContext } from "@/context/context";
 import React, { useEffect, useState } from "react";
-import firebase from "firebase/database";
 import ImageUpload from "./comp/ImageUpload";
 import { socialMediaData } from "@/assets/data";
 import { patch, post } from "@/lib/http";
 import { findIndex } from "@/utils/custom";
-import { appId, resumeContainer } from "@/config/setting";
 import { useFormik } from "formik";
 import { baiscValidationSchema } from "@/utils/validationSchema";
-import { BasicForm } from "./basic";
+import Input from "@/components/global/fields/input";
+import SelectField from "@/components/global/fields/SelectField";
 
-const BasicInfo = () => {
-  // @ts-ignore
+const BasicInfo = (props) => {
+
+  console.log(props);
   const { user } = useAuthContext();
   const {
     fetchSingleresume,
@@ -28,7 +28,7 @@ const BasicInfo = () => {
     position: "",
     email: "",
     phoneNumber: "",
-    linkedin: "",
+    linkedin: "", website: "", linkedinProfile: "", githubProfile: "",
     github: "",
     url: "",
     summary: "",
@@ -37,10 +37,11 @@ const BasicInfo = () => {
 
   const [imagePreview, setImagePreview] = useState(null);
   const [network, setNetwork] = useState([]);
+
   const initialValues = {
     name: '',
     position: '',
-    email: '',
+    email: '', website: "", linkedinProfile: "", githubProfile: "",
     phoneNumber: '',
     url: '',
     summary: '',
@@ -80,12 +81,6 @@ const BasicInfo = () => {
     }
   };
 
-  const fetchResumeData = async () => {
-    const res = await fetchSingleresume(id);
-    setFormData(res.result);
-    setImagePreview(res.result.image);
-    setNetwork(res.result.profiles);
-  };
 
   const updateResume = (e) => {
     e.preventDefault();
@@ -106,177 +101,75 @@ const BasicInfo = () => {
       url,
       summary,
     };
-    updateResumeRecord("work experience", body, id);
+    updateResumeRecord("work experience", formData, props.data.result._id);
   };
 
+
+
   useEffect(() => {
-    if (id) {
-      fetchResumeData();
+    if (props.data) {
+      setFormData(props.data.result);
+      setImagePreview(props.data.result.image);
+      setNetwork(props.data.result.profiles);
+      console.log(props.data);
     }
-  }, [id]);
+  }, []);
 
   return (
-    <div className="w-full max-w-screen-xl mx-auto">
-      <BasicForm props={undefined} initialValues={{
-        property_id: "",
-        name: "",
-        type: "",
-        location: {
-          city: "",
-          state: "",
-          country: "",
-          zipcode: "",
-        },
-        description: "",
-        amenities: [],
-        capacity: 0,
-        bedrooms: 0,
-        sale_price: 0,
-        is_featured: false,
-        bathrooms: 0,
-        price_per_night: 0,
-        currency: "",
-        availability: {
-          start_date: "",
-          end_date: "",
-        },
-        images: [],
-        host: {
-          host_id: "",
-          host_name: "",
-          host_contact: "",
-          host_image: [],
-        },
-        year_of_construction: 0,
-        construction_status: "",
-        parking: false,
-        is_furnished: "",
-        floor: {
-          number: 0,
-          total_floors: 0,
-        },
-        size: {
-          area: 0,
-          unit: "",
-        },
-        rating: 0,
-        reviews: [],
-        rules: [],
-        contact_person: {
-          name: "",
-          email: "",
-          phone: "",
-        },
-        booking_policy: "",
-        additional_info: "",
-      }} />
-      {/* <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <h2 className="text-2xl font-bold mb-4">Basic Information</h2>
-        <div className="mb-4">
-          <div className="title mb-6  w-full"></div>
-          <div className="mb-6 flex items-center gap-10">
-            <div className=" w-full ">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="name"
-              >
-                Name
-              </label>
-              <ImageUpload
-                imagePreview={imagePreview}
-                setImagePreview={setImagePreview}
-              />
-            </div>
-          </div>
-          <div className="mb-6 flex items-center gap-10">
-            <div className=" w-full ">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="name"
-              >
-                Name
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                type="text"
-                placeholder="Name"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-              />
-            </div>
-            <div className=" w-full">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="position"
-              >
-                Position
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                type="text"
-                placeholder="Position"
-                id="position"
-                name="position"
-                value={formData.position}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-          <div className="contact flex item-center gap-10">
-            <div className="mb-6 w-full">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="email"
-              >
-                Email
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                type="email"
-                placeholder="Email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-              />
-            </div>
+    <div className="w-full  mx-auto">
+      <form className="mx-auto mt-5 p-5  grid rounded-lg">
+        <div className="col-span-full">
+          <h2 className="text-2xl font-bold mb-4">Basic Information</h2>
+        </div>
 
-            <div className="mb-6 w-full ">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="phone"
-              >
-                Phone
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                type="tel"
-                placeholder="Phone"
-                id="phone"
-                name="phone"
-                value={formData.phoneNumber}
-                onChange={handleChange}
-              />
-            </div>
+        <div className="mb-4 col-span-full">
+          <div className="mb-6 flex items-center gap-10 col-span-full">
+            <ImageUpload
+              imagePreview={imagePreview}
+              setImagePreview={setImagePreview}
+            />
+          </div>
+        </div>
+        <div className=" mt-8 grid  gap-3 sm:grid-cols-2 col-span-full">
+
+          <div className=" ">
+            <Input label={"Name"} type={"text"} additionalAttrs={{ value: formData.name, onChange: handleChange, placeholder: "John" }} classes={undefined} icon={undefined} id={'name'} />
+          </div>
+          <div className=" ">
+            <Input label={"Position"} type={"text"} additionalAttrs={{ value: formData.position, onChange: handleChange, placeholder: "UI developer" }} classes={undefined} icon={undefined} id={'position'} />
+          </div>
+          <div className=" ">
+            <Input label={"email"} type={"email"} additionalAttrs={{ value: formData.email, onChange: handleChange, placeholder: "info@mail.com" }} classes={undefined} icon={undefined} id={'email'} />
           </div>
 
-          <div className="social-media flex item center gap-10">
-            <div className="mb-6 w-full">
-              <label className="block mb-2 text-gray-600" htmlFor="summary">
-                OverView
-              </label>
-              <textarea
-                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none h-40 focus:ring focus:ring-blue-200"
-                id="summary"
-                name="summary"
-                value={formData.summary}
-                onChange={handleChange}
-              ></textarea>
-            </div>
+          <div className=" ">
+            <Input label={"Phone Number"} type={"text"} additionalAttrs={{ value: formData.phoneNumber, onChange: handleChange, placeholder: "+9100000000" }} classes={undefined} icon={undefined} id={'phoneNumber'} />
           </div>
-          <div className="social-media flex item center gap-10">
+          <div className=" ">
+            <Input label={"linkedin Profile"} type={"text"} additionalAttrs={{ value: formData.linkedinProfile, onChange: handleChange, placeholder: "john.doi" }} classes={undefined} icon={undefined} id={'linkedinProfile'} />
+          </div>
+          <div className=" ">
+            <Input label={"Github Profile"} type={"text"} additionalAttrs={{ value: formData.githubProfile, onChange: handleChange, placeholder: "john.doi" }} classes={undefined} icon={undefined} id={'githubProfile'} />
+          </div>
+          <div className=" ">
+            <Input label={"Portfolio Url"} type={"text"} additionalAttrs={{ value: formData.website, onChange: handleChange, placeholder: "https:://example.com" }} classes={undefined} icon={undefined} id={'website'} />
+          </div>
+
+
+          <div className="mb-6 col-span-full">
+            <label className="block mb-2 text-gray-600" htmlFor="summary">
+              Summary
+            </label>
+            <textarea
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none h-40 focus:ring focus:ring-blue-200"
+              id="summary"
+              name="summary"
+              value={formData.summary}
+              onChange={handleChange}
+            ></textarea>
+          </div>
+
+          <div className="social-media mb-6 col-span-full">
             <SocialProfiles network={network} setNetwork={setNetwork} />
           </div>
         </div>
@@ -290,7 +183,7 @@ const BasicInfo = () => {
                 position: "",
                 email: "",
                 phoneNumber: "",
-                linkedin: "",
+                linkedin: "", website: "", linkedinProfile: "", githubProfile: "",
                 github: "",
                 url: "",
                 summary: "",
@@ -299,7 +192,7 @@ const BasicInfo = () => {
           >
             Clear
           </button>
-          {id ? (
+          {props.data.result ? (
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="button"
@@ -317,7 +210,7 @@ const BasicInfo = () => {
             </button>
           )}
         </div>
-      </form> */}
+      </form>
     </div>
   );
 };
@@ -357,35 +250,35 @@ const SocialProfiles = ({ network, setNetwork }) => {
     setNetwork(updateNetwork);
   };
 
-  const fetchResumeData = async () => {
-    const res = await fetchResumedata(id);
-    if (res?.profiles) {
-      setNetwork(res.profiles);
-    }
-    if (currentData) {
-      // console.log(currentData);
-      // console.log(formData);
-    }
-  };
+  // const fetchResumeData = async () => {
+  //   const res = await fetchResumedata(id);
+  //   if (res?.profiles) {
+  //     setNetwork(res.profiles);
+  //   }
+  //   if (currentData) {
+  //     // console.log(currentData);
+  //     // console.log(formData);
+  //   }
+  // };
 
-  const updateRecord = async () => {
-    try {
-      // Replace '/yourCollectionName/${recordId}.json' with your desired API endpoint
+  // const updateRecord = async () => {
+  //   try {
+  //     // Replace '/yourCollectionName/${recordId}.json' with your desired API endpoint
 
-      const extra = {
-        updated_time: new Date(),
-        last_step: activeTab,
-      };
-      var data = {
-        profiles: network,
-      };
-      const response = await patch(`/resume`, data, id);
-      setActiveTab("projects");
-      console.log("Record updated successfully:", response);
-    } catch (error) {
-      console.error("Error updating record:", error);
-    }
-  };
+  //     const extra = {
+  //       updated_time: new Date(),
+  //       last_step: activeTab,
+  //     };
+  //     var data = {
+  //       profiles: network,
+  //     };
+  //     const response = await patch(`/resume`, data, id);
+  //     setActiveTab("projects");
+  //     console.log("Record updated successfully:", response);
+  //   } catch (error) {
+  //     console.error("Error updating record:", error);
+  //   }
+  // };
 
 
 
@@ -410,90 +303,50 @@ const SocialProfiles = ({ network, setNetwork }) => {
   };
 
   return (
-    <div className="w-full max-w-screen-xl mx-auto">
+    <div className="">
       <h2 className="text-2xl font-bold mb-4">Social media</h2>
-      <div className="mb-6 border-b-2 pb-4">
-        <div className="mb-4">
-          <div className="w-full max-w-screen-xl mx-auto">
-            <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-              <div className="mb-4">
-                <div className="mb-6 flex  items-center gap-10">
-                  <div className="w-full ">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="network"
-                    >
-                      Social media Name
-                    </label>
-                    <select
-                      className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-                      id="network"
-                      name="network"
-                      value={formData.network}
-                      onChange={handleChange}
-                    >
-                      <option value="" disabled>
-                        Select a Social Media Type
-                      </option>
-                      {socialMediaData.map((option) => (
-                        <option key={option.value} value={option.name}>
-                          {option.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="w-full ">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="url"
-                    >
-                      Profile Url
-                    </label>
-                    <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      type="text"
-                      placeholder=" url"
-                      id="url"
-                      name="url"
-                      value={formData.url}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="mb-6">
-                {editIndex === -1 ? (
-                  <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    type="button"
-                    onClick={handleAdd}
-                  >
-                    Add
-                  </button>
-                ) : (
-                  <button
-                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    type="button"
-                    onClick={handleSaveEdit}
-                  >
-                    Update
-                  </button>
-                )}
-              </div>
+      <div className="w-full max-w-screen-xl mx-auto">
+        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mx-auto mt-5 p-5 gap-5  grid rounded-lg">
+          <div className=" mt-8 grid  gap-3 sm:grid-cols-2 col-span-full">
+            <div className="">
+              <SelectField options={socialMediaData} id={"network"} label={"Social Media"} additionalAttrs={{ value: formData.network, onChange: handleChange, placeholder: "Select" }} placeholder={undefined} optionkeys={{ key: "name", value: "value" }} />
+
             </div>
-            <div className="flex flex-wrap justify-between gap-2">
-              {network.map((experience, index) => (
-                <NetwordInfo
-                  key={index}
-                  {...experience}
-                  onEdit={() => handleEdit(index)}
-                  onDelete={() => handleRemove(index)}
-                />
-              ))}
+            <div className="">
+              <Input label={"Profile Url"} type={"text"} additionalAttrs={{ value: formData.url, onChange: handleChange, placeholder: "https:://example.com" }} classes={undefined} icon={undefined} id={'url'} />
+
             </div>
           </div>
+          <div className="mb-6">
+            {editIndex === -1 ? (
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="button"
+                onClick={handleAdd}
+              >
+                Add
+              </button>
+            ) : (
+              <button
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="button"
+                onClick={handleSaveEdit}
+              >
+                Update
+              </button>
+            )}
+          </div>
         </div>
-        <div className="flex items-center justify-between"></div>
+        <div className="flex flex-wrap justify-start gap-2">
+          {network.map((experience, index) => (
+            <NetwordInfo
+              key={index}
+              {...experience}
+              onEdit={() => handleEdit(index)}
+              onDelete={() => handleRemove(index)}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
+import { baseurl } from "@/config/setting";
 import axios from "axios";
 // import { apiUrl } from "./setting";
- const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
+//  const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
 // const Authorization = {
 //   Authorization: `${BEARER} ${token}`,
 // };
@@ -15,7 +16,7 @@ export const invokeExternalAPI = async (
 
   const options = {
     method: method,
-    url: baseURL+endpoint,
+    url: baseurl+endpoint,
     headers: header,
     params: query,
     data: body,

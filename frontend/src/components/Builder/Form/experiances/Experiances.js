@@ -5,7 +5,7 @@ import ExperienceCard from "./Card";
 import { findIndex } from "@/utils/custom";
 import { patch } from "@/lib/http";
 
-const Experiances = () => {
+const Experiances = (props) => {
   const {
     fetchSingleresume,
     currentData,

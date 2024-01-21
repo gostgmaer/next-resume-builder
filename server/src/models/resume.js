@@ -26,6 +26,7 @@ const resumeSchema = new mongoose.Schema({
   website: String,
   linkedinProfile: String,
   githubProfile: String,
+  image:String,
   summary: String, // Additional key for a brief professional summary
   photoURL: String, // Additional key for the URL of the resume owner's photo
   socialMedia: [
