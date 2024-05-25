@@ -15,9 +15,14 @@ const Page = (req, res) => {
 
 
   return (
-    <div>
-      <div className=" text-white min-h-screen flex  justify-center items-start">
-        <ResumeBlock />
+    <div className=" text-white min-h-screen flex  justify-center items-start w-full">
+      <div className="w-2/3 m-auto">
+
+        <div className="bg-white flex justify-center text-black rounded">
+
+          <ResumeBlock />
+
+        </div>
       </div>
     </div>
   );

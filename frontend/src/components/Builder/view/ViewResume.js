@@ -19,7 +19,7 @@ const Resume = (props) => {
   }, [id]);
 
   if (!resumeData) {
-    return <div>Loading...</div>;
+    return <div className="min-h-screen m-auto flex justify-center items-center">Loading...</div>;
   }
 
   return (

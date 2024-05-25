@@ -46,7 +46,7 @@ const UserResumes = ({ data }) => {
           Create New Resume
         </button>
       </div>
-      {!data.result ? (
+      {!data?.result ? (
         <div className="space-y-2 bg-white text-center p-5 py-20 text-black text-lg rounded-lg">
           <h2>No resume is Found please create a resume</h2>
         </div>
