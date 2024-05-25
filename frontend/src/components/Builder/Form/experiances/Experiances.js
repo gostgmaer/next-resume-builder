@@ -1,9 +1,10 @@
+"use client"
 import { useGlobalAppContext } from "@/context/context";
-
 import React, { useEffect, useState } from "react";
 import ExperienceCard from "./Card";
 import { findIndex } from "@/utils/custom";
 import { patch } from "@/lib/http";
+import Input from "@/components/global/fields/input";
 
 const Experiances = (props) => {
   const {
@@ -103,7 +104,7 @@ const Experiances = (props) => {
         last_step: activeTab,
         work: expriance,
       };
-      const response = await  updateResumeRecord("education", expriances, id);
+      const response = await updateResumeRecord("education", expriances, id);
       // setActiveTab("education");
       return response;
     } catch (error) {
@@ -124,7 +125,7 @@ const Experiances = (props) => {
 
   const fetchResumeData = async () => {
     const response = await fetchSingleresume(id);
-   
+
     if (response?.result?.work) {
       setExpriance(response.result.work);
     }
@@ -136,161 +137,76 @@ const Experiances = (props) => {
     }
   }, [id]);
 
- 
+
 
   return (
     <div className="w-full max-w-screen-xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Work Experience</h2>
+      <h2 className="text-2xl font-bold mb-4 mt-5 p-5">Work Experience</h2>
       <div className="mb-6 border-b-2 pb-4">
-        <div className="mb-4">
-          <div className="w-full max-w-screen-xl mx-auto">
+      <div className="w-full max-w-screen-xl mx-auto">
             <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-              <div className="mb-4">
-                <div className="mb-6 flex  items-center gap-10">
+              <div className="mx-auto mt-5 p-5  grid rounded-lg">
+                <div className="mt-8 grid  gap-3 sm:grid-cols-2 col-span-full">
                   <div className="w-full ">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="name"
-                    >
-                      Position
-                    </label>
-                    <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      type="text"
-                      placeholder="Name"
-                      id="name"
-                      name="name"
-                      value={currentExperience.name}
-                      onChange={handleChange}
-                    />
+                    <Input label={"Position"} type={"text"} additionalAttrs={{ value: currentExperience.name, onChange: { handleChange }, name: "name", placeholder: "John" }} classes={undefined} icon={undefined} id={"name"} />
                   </div>
                   <div className="w-full ">
+                    <Input label={"Company"} type={"text"} additionalAttrs={{ value: currentExperience.company, onChange: { handleChange }, name: "company", placeholder: "Kishor" }} classes={undefined} icon={undefined} id={"company"} />
+                  </div>
+                  <div className="w-full ">
+                    <Input label={"Location"} type={"text"} additionalAttrs={{ value: currentExperience.location, onChange: { handleChange }, name: "location", placeholder: "Kolkata" }} classes={undefined} icon={undefined} id={"location"} />
+                  </div>
+                  <div className="w-full ">
+                    <Input label={"Experience Letter"} type={"text"} additionalAttrs={{ value: currentExperience.experienceLetter, onChange: { handleChange }, name: "experienceLetter", placeholder: "Letter" }} classes={undefined} icon={undefined} id={"experienceLetter"} />
+                  </div>
+                  <div className="w-full ">
+                    <Input label={"Start Date"} type={"date"} additionalAttrs={{ value: currentExperience.startDate, onChange: { handleChange }, name: "startDate", placeholder: "20/11/2011" }} classes={undefined} icon={undefined} id={"startDate"} />
+                  </div>
+                  <div className="w-full ">
+                    <Input label={"End Date"} type={"date"} additionalAttrs={{ value: currentExperience.endDate, onChange: { handleChange }, name: "endDate", placeholder: "20/12/2012" }} classes={undefined} icon={undefined} id={"endDate"} />
+                  </div>
+                  <div className="col-span-full">
                     <label
                       className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="company"
+                      htmlFor="summary"
                     >
-                      Company
+                      Descriptions
                     </label>
-                    <input
+                    <textarea
                       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      type="text"
-                      placeholder="Company"
-                      id="company"
-                      name="company"
-                      value={currentExperience.company}
+                      placeholder="Descriptions...."
+                      id="summary"
+                      name="summary"
+                      value={currentExperience.summary}
                       onChange={handleChange}
                     />
                   </div>
                 </div>
+                <div className="mt-8 grid  gap-3 sm:grid-cols-2 col-span-full">
+                  <div className="w-full ">
+                    {editIndex === -1 ? (
+                      <button
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        type="button"
+                        onClick={handleAddExperience}
+                      >
+                        Add Experience
+                      </button>
+                    ) : (
+                      <button
+                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        type="button"
+                        onClick={handleSaveEdit}
+                      >
+                        Update Experience
+                      </button>
+                    )}
+                  </div>
 
-                <div className="mb-6 flex items-center gap-10">
-                  <div className="w-1/2 ">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="experienceLetter"
-                    >
-                      Experience Letter
-                    </label>
-                    <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      type="text"
-                      placeholder="Experience Letter"
-                      id="experienceLetter"
-                      name="experienceLetter"
-                      value={currentExperience.experienceLetter}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="w-1/2 ">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="location"
-                    >
-                      Location
-                    </label>
-                    <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      type="text"
-                      placeholder="Location"
-                      id="location"
-                      name="location"
-                      value={currentExperience.location}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-                <div className="mb-6 flex items-center gap-10">
-                  <div className="w-full ">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="startDate"
-                    >
-                      Start Date
-                    </label>
-                    <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      type="date"
-                      placeholder="Start Date"
-                      id="startDate"
-                      name="startDate"
-                      value={currentExperience.startDate}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="w-full ">
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="endDate"
-                    >
-                      End Date
-                    </label>
-                    <input
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      type="date"
-                      placeholder="End Date"
-                      id="endDate"
-                      name="endDate"
-                      value={currentExperience.endDate}
-                      onChange={handleChange}
-                    />
-                  </div>
                 </div>
               </div>
-              <div className="mb-6">
-                <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                  htmlFor="summary"
-                >
-                  Descriptions
-                </label>
-                <textarea
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  placeholder="Descriptions...."
-                  id="summary"
-                  name="summary"
-                  value={currentExperience.summary}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="mb-6">
-                {editIndex === -1 ? (
-                  <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    type="button"
-                    onClick={handleAddExperience}
-                  >
-                    Add Experience
-                  </button>
-                ) : (
-                  <button
-                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    type="button"
-                    onClick={handleSaveEdit}
-                  >
-                    Update Experience
-                  </button>
-                )}
-              </div>
+
+          
             </form>
             <div className="flex flex-wrap">
               {expriance.map((experience, index) => (
@@ -333,7 +249,6 @@ const Experiances = (props) => {
               Save
             </button>
           </div>
-        </div>
       </div>
     </div>
   );

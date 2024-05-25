@@ -1,8 +1,9 @@
 import { useGlobalAppContext } from "@/context/context";
 
-import { get, getSingleRecord, put } from "@/utils/http";
+
 import React, { useEffect, useState } from "react";
 import ExperienceCard from "./Card";
+import { patch } from "@/lib/http";
 
 const Experiances = ({ id }) => {
   const {
@@ -66,7 +67,7 @@ const Experiances = ({ id }) => {
         ...mydata,
         experiances: workExperiences,
       };
-      const response = await put(`/resume/${id}.json`, expriances);
+      const response = await patch(`/resume/${id}.json`, expriances);
 
       return response;
     } catch (error) {

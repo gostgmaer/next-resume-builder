@@ -1,3 +1,4 @@
+"use client"
 import { useGlobalAppContext } from "@/context/context";
 import { findIndex } from "@/utils/custom";
 import React, { useEffect, useState } from "react";
@@ -109,7 +110,7 @@ const Educations = (props) => {
 
   return (
     <div className="w-full max-w-screen-xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Qualifications</h2>
+      <h2 className="text-2xl font-bold mb-4 mt-5 p-5">Qualifications</h2>
       <div className="mb-6 border-b-2 pb-4">
         <div className="mb-4">
           <div className=" w-full max-w-screen-xl mx-auto">

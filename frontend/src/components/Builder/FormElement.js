@@ -25,7 +25,7 @@ const ResumeBlock = ({data}) => {
   // console.log(data);
 
   return (
-    <div className=" w-2/3 m-auto">
+    <div className=" w-full m-auto min-h-screen">
       <div className=" p-4 flex justify-between items-center">
         {builderHeader.map((item) => {
           return (
